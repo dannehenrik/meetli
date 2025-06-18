@@ -7,6 +7,8 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { i18n } from '../_layout';
+
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -29,21 +31,21 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Hem',
+          title: i18n.t('home'),
           tabBarIcon: ({ color, focused }) => <IconSymbol size={28} name={focused ? 'house.fill' : 'house'} color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Chatt',
+          title: i18n.t('chat'),
           tabBarIcon: ({ color, focused }) => <IconSymbol size={28} name={focused ? "message.fill" : 'message'} color={color} />,
         }}
       />
        <Tabs.Screen
         name="settings"
         options={{
-          title: 'Inställningar',
+          title: i18n.t('settings'),
           tabBarIcon: ({ color, focused }) => <IconSymbol size={28} name={focused ? "gearshape.fill" : 'gearshape'} color={color} />,
         }}
       />
