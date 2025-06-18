@@ -17,6 +17,8 @@ import { createClient } from '@supabase/supabase-js';
 
 // Supabase
 import { supabase } from '@/utils/supabase';
+import { useQuery } from '@tanstack/react-query';
+import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 	
 function ActionSheetTest(){
         const [showActionsheet, setShowActionsheet] = React.useState(false);
@@ -54,15 +56,14 @@ function ActionSheetTest(){
         }
 
 export default function SettingsScreen() {
-    const [data, setData] = useState<string[] | null>(null)
 
-    useEffect(() => {
-        async function fetchInitialData() {
-            const result = await fetchTestData();
-            setData(result)
-        }
-        fetchInitialData();
-    }, [])
+    const {data, error, isPending, refetch} = useQuery({
+        queryKey: ["test"],
+        queryFn: async () => await fetchTestData()
+    })
+
+    useRefreshOnFocus(refetch)
+    
 
     return (
         <ParallaxScrollView
@@ -79,25 +80,20 @@ export default function SettingsScreen() {
                 <ThemedText type="title">Inställningar</ThemedText>
             </ThemedView>
             <ActionSheetTest/>
-            {data ? (
-            <>
-                {data.map((d, i) => <ThemedText key={i}>{d}</ThemedText>)}
-            </>
-            ) : (
-                <ThemedText>Laddar...</ThemedText>
-            )}
+            {error && <ThemedText lightColor='#f54242'>Något gick fel...</ThemedText>}
+            {isPending && ( <ThemedText>Laddar...</ThemedText>)}
+            
+            {data && data.map((d, i) => <ThemedText key={i}>{d}</ThemedText>)}
       
     </ParallaxScrollView>
   );
 }
 
 async function fetchTestData() : Promise<string[]>{
+    console.log("Nu hämtades data")
     const {data, error} = await supabase.from('test').select('text')
 
-    if (error) { 
-        console.error("Något gick fel: ", error.message) 
-        return []
-    }
+    if (error) { throw new Error("Något gick fel när vi försökte hämta data: " + error.message)}
 
     return data.map((r) => r.text)
 }
