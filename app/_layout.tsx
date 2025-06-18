@@ -30,6 +30,7 @@ import * as SplashScreenExpo from "expo-splash-screen";
 import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { translations } from '@/constants/translations'
+import { TH } from '@expo/html-elements'
 
 
 export const i18n = new I18n(translations);
@@ -89,6 +90,7 @@ export default function RootLayout() {
 
     return (
         <QueryClientProvider client={queryClient}>
+
             <GluestackUIProvider mode={"system"}>
                 <StatusBar
                     barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}

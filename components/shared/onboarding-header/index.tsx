@@ -50,7 +50,7 @@ export const OnboardingHeader = () => {
         className={`bg-transparent data-[active=true]:bg-transparent ${
           !isLastPath && enabledSkipButton ? "opacity-100" : "opacity-0"
         }`}
-        // onPress={() => router.push("/home")}
+        onPress={() => router.navigate("/home")}
         isDisabled={isLastPath || !enabledSkipButton}
         size="sm"
       >
