@@ -8,6 +8,47 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
+
+
+import { Actionsheet, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper, ActionsheetBackdrop } from "@/components/ui/actionsheet";
+import { Button, ButtonText } from "@/components/ui/button";
+import React from "react";
+	
+function ActionSheetTest(){
+        const [showActionsheet, setShowActionsheet] = React.useState(false);
+        const handleClose = () => setShowActionsheet(false);
+          return (
+            <>
+              <Button onPress={() => setShowActionsheet(true)}>
+                <ButtonText>Open Actionsheet</ButtonText>
+              </Button>
+              <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
+                <ActionsheetBackdrop />
+                <ActionsheetContent>
+                  <ActionsheetDragIndicatorWrapper>
+                    <ActionsheetDragIndicator />
+                  </ActionsheetDragIndicatorWrapper>
+                  <ActionsheetItem onPress={handleClose}>
+                    <ActionsheetItemText>Edit Message</ActionsheetItemText>
+                  </ActionsheetItem>
+                  <ActionsheetItem onPress={handleClose}>
+                    <ActionsheetItemText>Mark Unread</ActionsheetItemText>
+                  </ActionsheetItem>
+                  <ActionsheetItem onPress={handleClose}>
+                    <ActionsheetItemText>Remind Me</ActionsheetItemText>
+                  </ActionsheetItem>
+                  <ActionsheetItem onPress={handleClose}>
+                    <ActionsheetItemText>Add to Saved Items</ActionsheetItemText>
+                  </ActionsheetItem>
+                  <ActionsheetItem isDisabled onPress={handleClose}>
+                    <ActionsheetItemText>Delete</ActionsheetItemText>
+                  </ActionsheetItem>
+                </ActionsheetContent>
+              </Actionsheet>
+            </>
+          );
+        }
+
 export default function SettingsScreen() {
   return (
     <ParallaxScrollView
@@ -23,6 +64,7 @@ export default function SettingsScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Inställningar</ThemedText>
       </ThemedView>
+      <ActionSheetTest/>
       <ThemedText>This app includes example code to help you get started.</ThemedText>
       <Collapsible title="File-based routing">
         <ThemedText>
