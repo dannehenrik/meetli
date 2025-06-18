@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AppState, Platform } from 'react-native'
 import NetInfo from '@react-native-community/netinfo'
 import { onlineManager, focusManager } from '@tanstack/react-query'
 import type { AppStateStatus } from 'react-native'
+import { SplashScreen } from '@/components/shared/splash-screen'
+import { StatusBar } from 'react-native'
+import { SafeAreaView } from "react-native-safe-area-context";
+import { BottomSheetModalProvider } from "@/components/shared/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+// Tanstack
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 const queryClient = new QueryClient()
 
 
@@ -18,12 +18,12 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { Slot, Stack } from 'expo-router';
 import 'react-native-reanimated';
 
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import * as SplashScreenExpo from "expo-splash-screen";
 
 
 // Translation
@@ -41,6 +41,8 @@ i18n.locale = getLocales()[0].languageCode ?? 'en';
 i18n.enableFallback = true;
 
 export default function RootLayout() {
+    const [isReady, setIsReady] = useState(false);
+
     const colorScheme = useColorScheme();
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -50,7 +52,7 @@ export default function RootLayout() {
     // Setup online status once on mount
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
-        onlineManager.setOnline(!!state.isConnected)
+            onlineManager.setOnline(!!state.isConnected)
         })
         return () => unsubscribe()
     }, [])
@@ -67,21 +69,38 @@ export default function RootLayout() {
         return () => subscription.remove()
     }, [])
 
-     if (!loaded) {
+
+    useEffect(() => {
+        // Hide the native splash screen immediately
+        SplashScreenExpo.hideAsync();
+
+        // Simulate loading time - replace with actual initialization logic
+        const timer = setTimeout(() => {
+            setIsReady(true);
+        }, 1800); // Show splash screen for 1.8 seconds
+
+        return () => clearTimeout(timer);
+    }, []);
+
+     if (!isReady || !loaded) {
         // Async font loading only occurs in development.
-        return null;
+        return <SplashScreen/>;
     }
 
     return (
         <QueryClientProvider client={queryClient}>
-            <GluestackUIProvider mode="light">
-                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-                    <Stack>
-                        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                        <Stack.Screen name="+not-found" />
-                    </Stack>
-                    <StatusBar style="auto" />
-                </ThemeProvider>
+            <GluestackUIProvider mode={"system"}>
+                <StatusBar
+                    barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+                    backgroundColor={colorScheme === "light" ? "#fff" : "#121212"}
+                />
+                    <SafeAreaView className="flex-1 bg-background-0">
+                        <GestureHandlerRootView style={{ flex: 1 }}>
+                            <BottomSheetModalProvider>
+                                <Slot/>
+                            </BottomSheetModalProvider>
+                        </GestureHandlerRootView>
+                    </SafeAreaView>
             </GluestackUIProvider>
         </QueryClientProvider>
     );
