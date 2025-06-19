@@ -2,15 +2,16 @@
 
 
 const swedishLanguage = {
-    home: "Hem",
-    chat: "Chatt",
-    settings: "Inställningar",
+    loginInstruction: "Ange ditt mobilnummer",
+    loginSubInstruction: "Vi skickar en verifieringskod för att bekräfta ditt nummer",
+    enterPhoneNumber: "Skriv telefonnummer",
 }
 
 const englishLanguage = {
-    home: "Home",
-    chat: "Chat",
-    settings: "Settings",
+    loginInstruction: "Please enter your mobile number",
+    loginSubInstruction: "We'll send you a verification code to confirm your number",
+    enterPhoneNumber: "Enter phone number",
+    enterPhoneNumberError: "Please enter a valid 10-digit phone number"
 }
 
 

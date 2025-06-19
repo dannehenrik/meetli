@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/form-control";
 import { ChevronDownIcon } from "@/components/ui/icon";
 
+import { i18n } from "@/app/_layout";
+
 // Country codes data
 const countryCodes = [
   { code: "+1", country: "USA" },
@@ -47,7 +49,7 @@ export const PhoneInput = ({
     const isValid = phoneRegex.test(number);
 
     if (!isValid && number.length > 0) {
-      setError("Please enter a valid 10-digit phone number");
+      setError(i18n.t("enterPhoneNumberError"));
     } else {
       setError("");
     }
@@ -104,12 +106,14 @@ export const PhoneInput = ({
           size="lg"
         >
           <InputField
-            placeholder="Enter phone number"
+            placeholder={i18n.t("enterPhoneNumber")}
             keyboardType="number-pad"
             value={phoneNumber}
             onChangeText={handlePhoneChange}
             maxLength={10}
             returnKeyType="default"
+            onBlur={() => validatePhoneNumber(phoneNumber)}
+            
             // autoFocus={false}
             // onEndEditing={() => Keyboard.dismiss()}
           />

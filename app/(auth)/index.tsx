@@ -6,52 +6,46 @@ import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
 import { ChevronRightIcon } from "@/components/ui/icon";
 import { Fab, FabIcon } from "@/components/ui/fab";
+import { i18n } from "../_layout";
 
-const INSTRUCTIONS_TEXT = [
-  { loginInstruction: "Please enter your mobile number" },
-  {
-    loginSubInstruction:
-      "We'll send you a verification code to confirm your number",
-  },
-];
 
 export default function Index() {
-  const router = useRouter();
-  const [isValid, setIsValid] = useState(true);
+    const router = useRouter();
+    const [isValid, setIsValid] = useState(true);
 
-  const handleValidationChange = (isValid: boolean) => {
-    setIsValid(isValid);
-  };
-  const insets = useSafeAreaInsets();
+    const handleValidationChange = (isValid: boolean) => {
+        setIsValid(isValid);
+    };
+    const insets = useSafeAreaInsets();
 
-  return (
-    <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
-      {/* <OnboardingHeader/> */}
-      <Box className="flex-1 justify-start items-center gap-12 px-5 top-20">
-        <Box className="flex justify-start gap-3">
-          <Text className="font-roboto text-2xl font-semibold leading-7">
-            {INSTRUCTIONS_TEXT[0].loginInstruction}
-          </Text>
-          <Text className="font-roboto text-typography-500 leading-6">
-            {INSTRUCTIONS_TEXT[1].loginSubInstruction}
-          </Text>
+    return (
+        <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
+            {/* <OnboardingHeader/> */}
+            <Box className="flex-1 justify-start items-center gap-12 px-5 top-20">
+                <Box className="flex justify-start gap-3">
+                    <Text className="font-roboto text-2xl font-semibold leading-7">
+                        {i18n.t('loginInstruction')}
+                    </Text>
+                    <Text className="font-roboto text-typography-500 leading-6">
+                        {i18n.t('loginSubInstruction')}
+                    </Text>
+                </Box>
+                <PhoneInput
+                    onPhoneChange={() => {}}
+                    onValidationChange={handleValidationChange}
+                />
+            </Box>
+            <Fab
+                size="lg"
+                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
+                style={{ marginBottom: -1 * insets.bottom }}
+                isDisabled={!isValid}
+                onPress={() => {
+                    router.push("/onboarding/otp");
+                }}
+            >
+                <FabIcon as={ChevronRightIcon} />
+            </Fab>
         </Box>
-        <PhoneInput
-          onPhoneChange={() => {}}
-          onValidationChange={handleValidationChange}
-        />
-      </Box>
-      <Fab
-        size="lg"
-        className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-        style={{ marginBottom: -1 * insets.bottom }}
-        // isDisabled={!isValid}
-        onPress={() => {
-          router.push("./onboarding/otp");
-        }}
-      >
-        <FabIcon as={ChevronRightIcon} />
-      </Fab>
-    </Box>
-  );
+    );
 }
