@@ -1,3 +1,4 @@
+import "@/global.css";
 import React, { useEffect, useState } from 'react'
 import { AppState, Platform } from 'react-native'
 import NetInfo from '@react-native-community/netinfo'
@@ -30,9 +31,6 @@ import * as SplashScreenExpo from "expo-splash-screen";
 import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { translations } from '@/constants/translations'
-import { TH } from '@expo/html-elements'
-
-
 export const i18n = new I18n(translations);
 
 // Set the locale once at the beginning of your app.
@@ -41,15 +39,13 @@ i18n.locale = getLocales()[0].languageCode ?? 'en';
 // When a value is missing from a language it'll fall back to another language with the key present.
 i18n.enableFallback = true;
 
+
+
+
 export default function RootLayout() {
     const [isReady, setIsReady] = useState(false);
 
-    // const colorScheme = useColorScheme();
     const colorScheme = "dark" as "light" | "dark";
-    // const [loaded] = useFonts({
-    //     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    // });
-
 
     // Setup online status once on mount
     useEffect(() => {
