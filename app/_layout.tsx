@@ -44,10 +44,11 @@ i18n.enableFallback = true;
 export default function RootLayout() {
     const [isReady, setIsReady] = useState(false);
 
-    const colorScheme = useColorScheme();
-    const [loaded] = useFonts({
-        SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    });
+    // const colorScheme = useColorScheme();
+    const colorScheme = "dark" as "light" | "dark";
+    // const [loaded] = useFonts({
+    //     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    // });
 
 
     // Setup online status once on mount
@@ -83,7 +84,7 @@ export default function RootLayout() {
         return () => clearTimeout(timer);
     }, []);
 
-     if (!isReady || !loaded) {
+     if (!isReady) {
         // Async font loading only occurs in development.
         return <SplashScreen/>;
     }

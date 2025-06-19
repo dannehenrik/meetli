@@ -127,6 +127,7 @@ module.exports = {
           white: '#FFFFFF',
           gray: '#D4D4D4',
           black: '#181718',
+          green: "#16A34A",
         },
         outline: {
           0: 'rgb(var(--color-outline-0)/<alpha-value>)',
@@ -162,6 +163,7 @@ module.exports = {
           info: 'rgb(var(--color-background-info)/<alpha-value>)',
           light: '#FBFBFB',
           dark: '#181719',
+          pink: "#341320",
         },
         indicator: {
           primary: 'rgb(var(--color-indicator-primary)/<alpha-value>)',
@@ -169,11 +171,18 @@ module.exports = {
           error: 'rgb(var(--color-indicator-error)/<alpha-value>)',
         },
       },
+      // fontFamily: {
+      //   heading: undefined,
+      //   body: undefined,
+      //   mono: undefined,
+      //   roboto: ['Roboto', 'sans-serif'],
+      // },
       fontFamily: {
-        heading: undefined,
-        body: undefined,
-        mono: undefined,
-        roboto: ['Roboto', 'sans-serif'],
+        heading: ["Roboto", "sans-serif"],
+        body: ["Roboto", "sans-serif"],
+        mono: ["Space Mono", "monospace"],
+        satoshi: ["Satoshi", "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
       },
       fontWeight: {
         extrablack: '950',
@@ -193,6 +202,6 @@ module.exports = {
         'soft-4': '0px 0px 40px rgba(38, 38, 38, 0.1)',
       },
     },
+    plugins: [gluestackPlugin],
   },
-  plugins: [gluestackPlugin],
 };
