@@ -11,7 +11,7 @@ import { i18n } from "../_layout";
 
 export default function Index() {
     const router = useRouter();
-    const [isValid, setIsValid] = useState(true);
+    const [isValid, setIsValid] = useState(false);
 
     const handleValidationChange = (isValid: boolean) => {
         setIsValid(isValid);

@@ -29,6 +29,7 @@ const countryCodes = [
   { code: "+91", country: "India" },
   { code: "+61", country: "Australia" },
   { code: "+86", country: "China" },
+  { code: "+46", country: "Sweden" },
 ];
 
 interface PhoneInputProps {
