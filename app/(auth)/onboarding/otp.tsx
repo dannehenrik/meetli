@@ -6,6 +6,7 @@ import { Text } from "@/components/ui/text";
 import { OTPComponent } from "@/components/shared/otp-input";
 import { ChevronRightIcon } from "@/components/ui/icon";
 import { Fab, FabIcon } from "@/components/ui/fab";
+import { i18n } from "@/app/_layout";
 
 const INSTRUCTIONS_TEXT = [
   {
@@ -29,10 +30,10 @@ export default function Otp() {
       <Box className="flex-1 justify-start items-center gap-12 px-5 top-20">
         <Box className="flex justify-start gap-3">
           <Text className="font-roboto text-2xl font-semibold leading-7">
-            {INSTRUCTIONS_TEXT[0].otpInstruction}
+            {i18n.t("otpInstruction")}
           </Text>
           <Text className="font-roboto text-typography-500 leading-6">
-            {INSTRUCTIONS_TEXT[0].otpSubInstruction}
+            {i18n.t("otpSubInstruction")}
           </Text>
         </Box>
         <OTPComponent onComplete={handleOtpChange} />

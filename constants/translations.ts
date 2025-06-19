@@ -11,7 +11,9 @@ const englishLanguage = {
     loginInstruction: "Please enter your mobile number",
     loginSubInstruction: "We'll send you a verification code to confirm your number",
     enterPhoneNumber: "Enter phone number",
-    enterPhoneNumberError: "Please enter a valid 10-digit phone number"
+    enterPhoneNumberError: "Please enter a valid 10-digit phone number",
+    otpInstruction: "Enter verification code",
+    otpSubInstruction: "We have sent you a verification code to your mobile number",
 }
 
 
