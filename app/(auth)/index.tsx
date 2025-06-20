@@ -76,7 +76,7 @@ export default function Index() {
 
 async function sendOtp(phoneNumber: string) {
     const { data, error } = await supabase.auth.signInWithOtp({
-        phone: "46733760263",
+        phone: "46702343351",
     })
 
     if (error || !data) throw new Error("Something went wrong when sending OTP: " + error?.message);

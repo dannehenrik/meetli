@@ -21,7 +21,7 @@ export default function Otp() {
     };
 
     const mutation = useMutation({
-        mutationFn: async () => handleOtpVerification("46733760263", otpValue),
+        mutationFn: async () => handleOtpVerification("46702343351", otpValue),
         onError: (error) => {
             console.error("Something went wrong when sending OTP: ", error.message)
         },
