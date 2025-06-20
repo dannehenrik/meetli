@@ -62,7 +62,7 @@ export const PhoneInput = ({
   const handlePhoneChange = (value: string) => {
     const cleanNumber = value.replace(/\D/g, "");
     setPhoneNumber(cleanNumber);
-    // validatePhoneNumber(cleanNumber);
+    
     if (cleanNumber.length === 10) {
       onPhoneChange(`${selectedCode}${cleanNumber}`);
     }

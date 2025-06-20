@@ -10,7 +10,15 @@ import { Text } from "@/components/ui/text";
 import { ChevronRightIcon, Icon } from "@/components/ui/icon";
 const AnimatedHstack = Animated.createAnimatedComponent(HStack);
 const AnimatedText = Animated.createAnimatedComponent(Text);
+import { useEffect } from "react";
+import { supabase } from "@/utils/supabase";
 const verified = () => {
+  useEffect(() => {
+      async function checkInitalUser() {
+          await checkUser();
+      }
+      checkInitalUser();
+    }, [])
   const insets = useSafeAreaInsets();
   return (
     <Box className="px-5 gap-4 flex-1 items-center justify-center">
@@ -45,3 +53,10 @@ const verified = () => {
 };
 
 export default verified;
+
+async function checkUser() {
+    const { data: { user } } = await supabase.auth.getUser()
+
+    console.log("User: ", user);
+}
+

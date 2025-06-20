@@ -25,6 +25,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import * as SplashScreenExpo from "expo-splash-screen";
+import { supabase } from "@/utils/supabase";
 
 
 // Translation
@@ -80,6 +81,13 @@ export default function RootLayout() {
         return () => clearTimeout(timer);
     }, []);
 
+    useEffect(() => {
+        async function checkInitalUser() {
+            await checkUser();
+        }
+        checkInitalUser()
+    }, [])
+
      if (!isReady) {
         // Async font loading only occurs in development.
         return <SplashScreen/>;
@@ -103,4 +111,10 @@ export default function RootLayout() {
             </GluestackUIProvider>
         </QueryClientProvider>
     );
+}
+
+async function checkUser() {
+    const { data: { user } } = await supabase.auth.getUser()
+
+    console.log("User: ", user);
 }

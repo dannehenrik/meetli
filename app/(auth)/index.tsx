@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PhoneInput } from "@/components/shared/phone-input";
@@ -7,16 +7,38 @@ import { Text } from "@/components/ui/text";
 import { ChevronRightIcon } from "@/components/ui/icon";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { i18n } from "../_layout";
+import { supabase } from "@/utils/supabase";
+import { useMutation } from "@tanstack/react-query";
+// import useCustomToast, { toastTest } from "@/utils/toast";
+import { useToast } from "@/components/ui/toast";
+import { useErrorToast } from "@/utils/toast";
+import { Button, ButtonText } from "@/components/ui/button";
 
 
 export default function Index() {
+    // const { successToast, errorToast, warningToast, infoToast, updateToast } = useCustomToast();
+    const { showToast: showError } = useErrorToast();
+
     const router = useRouter();
     const [isValid, setIsValid] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState("");
+
 
     const handleValidationChange = (isValid: boolean) => {
         setIsValid(isValid);
     };
     const insets = useSafeAreaInsets();
+
+    const mutation = useMutation({
+        mutationFn: async (phoneNumber: string) => sendOtp(phoneNumber),
+        onError: (error) => {
+            console.error("Something went wrong when sending OTP: ", error.message)
+            router.back();
+        },
+        onSuccess: (data) => {
+            console.log("Success: ", data)
+        }
+    })
 
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
@@ -31,7 +53,7 @@ export default function Index() {
                     </Text>
                 </Box>
                 <PhoneInput
-                    onPhoneChange={() => {}}
+                    onPhoneChange={setPhoneNumber}
                     onValidationChange={handleValidationChange}
                 />
             </Box>
@@ -42,10 +64,22 @@ export default function Index() {
                 isDisabled={!isValid}
                 onPress={() => {
                     router.push("/onboarding/otp");
+                    mutation.mutate(phoneNumber);
                 }}
             >
                 <FabIcon as={ChevronRightIcon} />
             </Fab>
         </Box>
     );
+}
+
+
+async function sendOtp(phoneNumber: string) {
+    const { data, error } = await supabase.auth.signInWithOtp({
+        phone: "46733760263",
+    })
+
+    if (error || !data) throw new Error("Something went wrong when sending OTP: " + error?.message);
+
+    return data
 }
