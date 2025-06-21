@@ -1,85 +1,68 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { PhoneInput } from "@/components/shared/phone-input";
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
-import { ChevronRightIcon } from "@/components/ui/icon";
-import { Fab, FabIcon } from "@/components/ui/fab";
-import { i18n } from "../_layout";
-import { supabase } from "@/utils/supabase";
-import { useMutation } from "@tanstack/react-query";
-// import useCustomToast, { toastTest } from "@/utils/toast";
-import { useToast } from "@/components/ui/toast";
-import { useErrorToast } from "@/utils/toast";
 import { Button, ButtonText } from "@/components/ui/button";
+import { Icon, MailIcon } from "@/components/ui/icon"; // Assume you have these icons or similar
+import { Apple, AppleIcon, Mail } from "lucide-react-native";
+import { i18n } from "../_layout";
+import { useRouter } from "expo-router";
 
 
-export default function Index() {
-    // const { successToast, errorToast, warningToast, infoToast, updateToast } = useCustomToast();
-    const { showToast: showError } = useErrorToast();
-
+export default function LoginMain() {
     const router = useRouter();
-    const [isValid, setIsValid] = useState(false);
-    const [phoneNumber, setPhoneNumber] = useState("");
-
-
-    const handleValidationChange = (isValid: boolean) => {
-        setIsValid(isValid);
-    };
     const insets = useSafeAreaInsets();
 
-    const mutation = useMutation({
-        mutationFn: async (phoneNumber: string) => sendOtp(phoneNumber),
-        onError: (error) => {
-            console.error("Something went wrong when sending OTP: ", error.message)
-            router.back();
-        },
-        onSuccess: (data) => {
-            console.log("Success: ", data)
-        }
-    })
-
     return (
-        <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
-            {/* <OnboardingHeader/> */}
-            <Box className="flex-1 justify-start items-center gap-12 px-5 top-20">
-                <Box className="flex justify-start gap-3">
-                    <Text className="font-roboto text-2xl font-semibold leading-7">
-                        {i18n.t('loginInstruction')}
-                    </Text>
-                    <Text className="font-roboto text-typography-500 leading-6">
-                        {i18n.t('loginSubInstruction')}
-                    </Text>
-                </Box>
-                <PhoneInput
-                    onPhoneChange={setPhoneNumber}
-                    onValidationChange={handleValidationChange}
-                />
+        <Box
+            className="flex-1 bg-background-0 justify-between items-center px-6"
+            style={{ paddingBottom: insets.bottom + 40, paddingTop: insets.top + 60 }}
+        >
+            {/* Header */}
+            <Box className="gap-2 items-center">
+                <Text className="text-3xl font-bold text-center">
+                    {i18n.t("welcomeBack")}
+                </Text>
+                <Text className="text-base text-typography-500 text-center">
+                    {i18n.t("signInToContinue")}
+                </Text>
             </Box>
-            <Fab
-                size="lg"
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
-                isDisabled={!isValid}
-                onPress={() => {
-                    router.push("/onboarding/otp");
-                    mutation.mutate(phoneNumber);
-                }}
-            >
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
+
+            {/* Auth Buttons */}
+            <Box className="w-full gap-4">
+                <Button className="w-full flex-row gap-3 items-center justify-center text-white">
+                    {/* <GoogleLogo className="w-5 h-5" /> */}
+                    <ButtonText className="text-base font-medium text-white">
+                        {i18n.t("continueWithGoogle")}
+                    </ButtonText>
+                </Button>
+
+                <Button className="w-full flex-row gap-3 items-center justify-center text-white">
+                    {/* <Icon as={Apple}></Icon> */}
+                    <ButtonText className="text-base font-medium text-white">
+                        {i18n.t("continueWithApple")}
+                    </ButtonText>
+                </Button>
+
+                <Box className="border-t border-background-200 my-4" />
+
+                <Button 
+                    variant="outline" 
+                    className="w-full flex-row gap-3 items-center justify-center"
+                    onPress={() => router.push("/onboarding/email")}
+                >
+                    <Icon size="lg" className="text-primary-600" as={Mail}/>
+                    <ButtonText className="text-base font-medium text-primary-600">
+                        {i18n.t("continueWithEmail")}
+                    </ButtonText>
+                </Button>
+            </Box>
+
+            {/* Footer (optional) */}
+            <Box className="items-center">
+                <Text className="text-xs text-typography-400 text-center">
+                    {i18n.t("agreeToTermsAndPolicy")}
+                </Text>
+            </Box>
         </Box>
     );
-}
-
-
-async function sendOtp(phoneNumber: string) {
-    const { data, error } = await supabase.auth.signInWithOtp({
-        phone: "46702343351",
-    })
-
-    if (error || !data) throw new Error("Something went wrong when sending OTP: " + error?.message);
-
-    return data
 }

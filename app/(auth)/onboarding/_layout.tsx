@@ -10,6 +10,7 @@ const layout = () => {
         <Box className="flex-1 bg-background-0">{children}</Box>
       )}
     >
+      <Stack.Screen name="email" />
       <Stack.Screen name="dob" />
       <Stack.Screen name="done" />
       <Stack.Screen name="gender" />

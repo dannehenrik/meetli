@@ -8,6 +8,12 @@ const swedishLanguage = {
 }
 
 const englishLanguage = {
+    welcomeBack: "Welcome Back",
+    signInToContinue: "Sign in to continue",
+    continueWithGoogle: "Continue with Google",
+    continueWithApple: "Continue with Apple",
+    continueWithEmail: "Continue with Email",
+    agreeToTermsAndPolicy: "By continuing, you agree to our Terms and Privacy Policy.",
     loginInstruction: "Please enter your mobile number",
     loginSubInstruction: "We'll send you a verification code to confirm your number",
     enterPhoneNumber: "Enter phone number",
