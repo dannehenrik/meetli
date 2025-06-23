@@ -1,12 +1,14 @@
 import { getUser } from "@/server/auth/getUser";
 import { useQuery } from "@tanstack/react-query";
 import { Redirect } from "expo-router";
+import { USER_STALE_TIME } from "@/constants/staleTimes";
 
 export default function Main() {
 
     const {data, error, isPending} = useQuery({
         queryKey: ['user'],
-        queryFn: async () => await getUser()
+        queryFn: async () => await getUser(),
+        staleTime: USER_STALE_TIME,
     })
 
     console.log("Data: ", data);

@@ -7,6 +7,7 @@ import { Input, InputField } from "@/components/ui/input";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { VStack } from "@/components/ui/vstack";
 import { ONBOARDING_PAGES } from "@/constants/constants";
+import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -20,14 +21,15 @@ export default function name() {
 
     const {data: user, error, isPending} = useQuery({
         queryKey: ['user'],
-        queryFn: async () => await getUser()
+        queryFn: async () => await getUser(),
+        staleTime: USER_STALE_TIME,
     })
 
     const mutation = useMutation({
         mutationFn: async () => updateUser(user?.id ?? "", firstName, lastName),
         onError: (error) => {
             console.error(error.message)
-            router.back
+            router.back();
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['user']})
@@ -40,7 +42,6 @@ export default function name() {
 
     // Set initial values when user data is loaded
     useEffect(() => {
-        console.log("TJeenare")
         if (user) {
             setFirstName(user.first_name ?? ''); // adjust to match your user schema
             setLastName(user.last_name ?? '');
