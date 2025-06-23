@@ -29,6 +29,8 @@ const englishLanguage = {
     accountVerifiedSubText: "Your email has been successfully verified. Now, let's set up your profile details to get started.",
     enterDetails: "Enter Details",
     
+    changeInformationLaterInfo: "You can change these details after onboarding as well!",
+
     // Onboarding -name- page
     firstName: "First name",
     lastName: "Last name",
@@ -36,7 +38,13 @@ const englishLanguage = {
 
     // Onboarding -age- page
     whatIsYourAge: "What is your age?",
-    age: "Age"
+    age: "Age",
+
+    // Onboarding -gender- page
+    howDoYouIdentify: "How do you identify yourself?",
+    woman: "Woman",
+    male: "Man",
+    nonBinary: "Nonbinary"
 
 }
 
