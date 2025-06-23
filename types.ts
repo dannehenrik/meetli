@@ -5,7 +5,8 @@ export interface User {
     created_at: string,
     email: string,
     phone_number: string,
-    name: string,
+    first_name: string,
+    last_name: string,
     age: number, 
     gender: Gender
     gender_preference: Gender,

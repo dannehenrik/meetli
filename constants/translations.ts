@@ -28,6 +28,11 @@ const englishLanguage = {
     accountVerifiedText: "Yayy! Your account is verified!",
     accountVerifiedSubText: "Your email has been successfully verified. Now, let's set up your profile details to get started.",
     enterDetails: "Enter Details",
+    
+    // Onboarding -name- page
+    firstName: "First name",
+    lastName: "Last name",
+    whatIsYourName: "What is your name?"
 }
 
 
