@@ -10,6 +10,7 @@ export async function getUser() : Promise<User | null>{
 
     if (error || !data) { throw new Error("Something went wrong when fetching the user: " + error?.message) }
 
+    console.log("User: ", data);
     return data
 }
 

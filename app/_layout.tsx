@@ -77,7 +77,7 @@ export default function RootLayout() {
                 await SplashScreenExpo.hideAsync();
 
                 // 🔑 Fetch user manually
-                const user = getUser();
+                const user = await getUser();
 
                 // ✅ Pre-populate user data into TanStack cache
                 queryClient.setQueryData(['user'], user);

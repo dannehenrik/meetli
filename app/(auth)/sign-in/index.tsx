@@ -4,7 +4,7 @@ import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Icon, MailIcon } from "@/components/ui/icon"; // Assume you have these icons or similar
 import { Apple, AppleIcon, Mail } from "lucide-react-native";
-import { i18n } from "../_layout";
+import { i18n } from "@/app/_layout";
 import { useRouter } from "expo-router";
 import { useColorScheme } from "react-native";
 import { useQuery } from "@tanstack/react-query";
@@ -15,11 +15,6 @@ export default function LoginMain() {
     const colorScheme = useColorScheme();
     const router = useRouter();
     const insets = useSafeAreaInsets();
-
-    const {data, error, isPending} = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => await getUser()
-    })
 
     return (
         <Box
@@ -65,7 +60,7 @@ export default function LoginMain() {
                 <Button 
                     variant="outline" 
                     className="w-full flex-row gap-3 items-center justify-center"
-                    onPress={() => router.push("/onboarding/email")}
+                    onPress={() => router.push("/sign-in/onboarding/email")}
                 >
                     <Icon size="lg" className="text-primary-500" as={Mail}/>
                     <ButtonText className="text-base font-medium text-primary-500">

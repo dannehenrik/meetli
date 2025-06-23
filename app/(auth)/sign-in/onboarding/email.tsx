@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { i18n } from "../../_layout";
+import { i18n } from "../../../_layout";
 // import useCustomToast, { toastTest } from "@/utils/toast";
 import { Input, InputField } from "@/components/ui/input";
 import { useErrorToast } from "@/utils/toast";
@@ -52,7 +52,7 @@ export default function Email() {
     function handleSubmit(value: string) {
         const validation = handleValidation(value);
         if (!validation) return
-        router.push("/onboarding/otp");
+        router.push("/sign-in/onboarding/otp");
         mutation.mutate(email);
     }
 

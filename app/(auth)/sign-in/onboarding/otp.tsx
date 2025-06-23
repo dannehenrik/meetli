@@ -36,7 +36,7 @@ export default function Otp() {
             if (data?.onboarding_completed) {
                 router.push("/home")
             } else {
-                router.push("/onboarding/verified")
+                router.push("/sign-in/onboarding/verified")
             }
         }
     })
