@@ -32,7 +32,12 @@ const englishLanguage = {
     // Onboarding -name- page
     firstName: "First name",
     lastName: "Last name",
-    whatIsYourName: "What is your name?"
+    whatIsYourName: "What is your name?",
+
+    // Onboarding -age- page
+    whatIsYourAge: "What is your age?",
+    age: "Age"
+
 }
 
 

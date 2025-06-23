@@ -8,12 +8,12 @@ import { ChevronLeftIcon } from "@/components/ui/icon";
 export const OnboardingHeader = () => {
   const pathname = usePathname();
   const isRootRoute = pathname === "/";
-  const isOtpRoute = pathname === "/otp";
-  const isVerifiedRoute = pathname === "/verified";
-  const isLastPath = pathname === "/onboarding/done";
-  const isOnboardingRoute = pathname.startsWith("/onboarding");
+  const isOtpRoute = pathname === "/sign-in/onboarding/otp";
+  const isVerifiedRoute = pathname === "/sign-in/onboarding/verified";
+  const isLastPath = pathname === "/sign-in/onboarding/done";
+  const isOnboardingRoute = pathname.startsWith("/sign-in/onboarding");
 
-  const enabledBackButton = isOtpRoute || isOnboardingRoute;
+  const enabledBackButton = (isOtpRoute || isOnboardingRoute) && !isVerifiedRoute;
   const enabledSkipButton = isRootRoute || enabledBackButton;
   return (
     <HStack className="justify-between items-center w-full px-4 py-2">

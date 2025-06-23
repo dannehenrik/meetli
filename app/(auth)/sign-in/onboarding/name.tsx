@@ -78,8 +78,9 @@ export default function name() {
             </Box>
             <Fab
                 size="lg"
+                disabled={firstName.length === 0 || lastName.length === 0 }
                 onPress={() => {
-                    router.push("/sign-in/onboarding/gender");
+                    router.push("/sign-in/onboarding/age");
                     mutation.mutate();
                 }}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
