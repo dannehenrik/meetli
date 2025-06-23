@@ -6,9 +6,11 @@ import { Icon, MailIcon } from "@/components/ui/icon"; // Assume you have these 
 import { Apple, AppleIcon, Mail } from "lucide-react-native";
 import { i18n } from "../_layout";
 import { useRouter } from "expo-router";
+import { useColorScheme } from "react-native";
 
 
 export default function LoginMain() {
+    const colorScheme = useColorScheme();
     const router = useRouter();
     const insets = useSafeAreaInsets();
 
@@ -43,15 +45,23 @@ export default function LoginMain() {
                     </ButtonText>
                 </Button>
 
-                <Box className="border-t border-background-200 my-4" />
+                {/* <Box className="border-t border-background-200 my-4" /> */}
+                <Box className="flex-row items-center my-6">
+                    <Box className="flex-1 h-px bg-gray-300" />
+                        <Text className="mx-3 text-gray-500 font-medium">
+                            {i18n.t("or")} {/* or just "or"/"eller" directly */}
+                        </Text>
+                    <Box className="flex-1 h-px bg-gray-300" />
+                </Box>
+
 
                 <Button 
                     variant="outline" 
                     className="w-full flex-row gap-3 items-center justify-center"
                     onPress={() => router.push("/onboarding/email")}
                 >
-                    <Icon size="lg" className="text-primary-600" as={Mail}/>
-                    <ButtonText className="text-base font-medium text-primary-600">
+                    <Icon size="lg" className="text-primary-500" as={Mail}/>
+                    <ButtonText className="text-base font-medium text-primary-500">
                         {i18n.t("continueWithEmail")}
                     </ButtonText>
                 </Button>

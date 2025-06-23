@@ -2,9 +2,10 @@
 
 
 const swedishLanguage = {
-    loginInstruction: "Ange ditt mobilnummer",
-    loginSubInstruction: "Vi skickar en verifieringskod för att bekräfta ditt nummer",
+    loginInstruction: "Ange din emailadress",
+    loginSubInstruction: "Vi skickar en verifieringskod för att bekräfta din email adress",
     enterPhoneNumber: "Skriv telefonnummer",
+    or: "eller"
 }
 
 const englishLanguage = {
@@ -14,12 +15,16 @@ const englishLanguage = {
     continueWithApple: "Continue with Apple",
     continueWithEmail: "Continue with Email",
     agreeToTermsAndPolicy: "By continuing, you agree to our Terms and Privacy Policy.",
-    loginInstruction: "Please enter your mobile number",
-    loginSubInstruction: "We'll send you a verification code to confirm your number",
+    loginInstruction: "Please enter your email adress",
+    loginSubInstruction: "We'll send you a verification code to confirm your email address",
     enterPhoneNumber: "Enter phone number",
     enterPhoneNumberError: "Please enter a valid 10-digit phone number",
+    enterEmail: "Enter email",
+    emailExample: "example@gmail.com",
+    enterEmailError: "Must be a valid email adress",
     otpInstruction: "Enter verification code",
     otpSubInstruction: "We have sent you a verification code to your mobile number",
+    or: "or"
 }
 
 

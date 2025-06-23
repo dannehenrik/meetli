@@ -21,7 +21,7 @@ export default function Otp() {
     };
 
     const mutation = useMutation({
-        mutationFn: async () => handleOtpVerification("46702343351", otpValue),
+        mutationFn: async () => handleOtpVerification("dannehenrik2@gmail.com", otpValue),
         onError: (error) => {
             console.error("Something went wrong when sending OTP: ", error.message)
         },
@@ -63,13 +63,14 @@ export default function Otp() {
     );
 }
 
-async function handleOtpVerification(phoneNumber: string, otp: string) {
+async function handleOtpVerification(email: string, otp: string) {
+    console.log("Email: ", email);
     const { data, error} = await supabase
     .auth
     .verifyOtp({
-        phone: phoneNumber,
+        email: email,
         token: otp,
-        type: 'sms',
+        type: 'email',
     })
     if (error || !data) throw new Error("OTP verification failed: " + error?.message)
 
