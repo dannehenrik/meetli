@@ -7,12 +7,19 @@ import { Apple, AppleIcon, Mail } from "lucide-react-native";
 import { i18n } from "../_layout";
 import { useRouter } from "expo-router";
 import { useColorScheme } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import { getUser } from "@/server/auth/getUser";
 
 
 export default function LoginMain() {
     const colorScheme = useColorScheme();
     const router = useRouter();
     const insets = useSafeAreaInsets();
+
+    const {data, error, isPending} = useQuery({
+        queryKey: ['user'],
+        queryFn: async () => await getUser()
+    })
 
     return (
         <Box

@@ -8,11 +8,14 @@ import { ChevronRightIcon } from "@/components/ui/icon";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { i18n } from "@/app/_layout";
 import { supabase } from "@/utils/supabase";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
+import { getUser, getUserFromId } from "@/server/auth/getUser";
+import { User } from "@/types";
 
 
 export default function Otp() {
+    const queryClient = useQueryClient();
     const [otpValue, setOtpValue] = useState("");
     const router = useRouter();
 
@@ -20,14 +23,21 @@ export default function Otp() {
         setOtpValue(otp);
     };
 
+    // const {data, error, isPending} = useQuery({
+    //     queryKey: ["user"],
+    //     queryFn: async () => getUser()
+    // })
+
     const mutation = useMutation({
         mutationFn: async () => handleOtpVerification("dannehenrik2@gmail.com", otpValue),
-        onError: (error) => {
-            console.error("Something went wrong when sending OTP: ", error.message)
-        },
+        onError: (error) => { console.error("Something went wrong when sending OTP: ", error.message) },
         onSuccess: (data) => {
-            console.log("Success: ", data)
-            router.push("./verified")
+            queryClient.invalidateQueries({ queryKey: ['user']})
+            if (data?.onboarding_completed) {
+                router.push("/home")
+            } else {
+                router.push("/onboarding/verified")
+            }
         }
     })
     const insets = useSafeAreaInsets();
@@ -64,7 +74,6 @@ export default function Otp() {
 }
 
 async function handleOtpVerification(email: string, otp: string) {
-    console.log("Email: ", email);
     const { data, error} = await supabase
     .auth
     .verifyOtp({
@@ -72,7 +81,9 @@ async function handleOtpVerification(email: string, otp: string) {
         token: otp,
         type: 'email',
     })
-    if (error || !data) throw new Error("OTP verification failed: " + error?.message)
+    if (error || !data || !data.user) throw new Error("OTP verification failed: " + error?.message)
 
-    return data
+    const user = await getUserFromId(data.user.id);
+
+    return user
 }

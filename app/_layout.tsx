@@ -2,7 +2,7 @@ import "@/global.css";
 import React, { useEffect, useState } from 'react'
 import { AppState, Platform } from 'react-native'
 import NetInfo from '@react-native-community/netinfo'
-import { onlineManager, focusManager } from '@tanstack/react-query'
+import { onlineManager, focusManager, useQuery } from '@tanstack/react-query'
 import type { AppStateStatus } from 'react-native'
 import { SplashScreen } from '@/components/shared/splash-screen'
 import { StatusBar } from 'react-native'
@@ -32,6 +32,7 @@ import { supabase } from "@/utils/supabase";
 import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { translations } from '@/constants/translations'
+import { getUser } from "@/server/auth/getUser";
 export const i18n = new I18n(translations);
 
 // Set the locale once at the beginning of your app.
@@ -70,23 +71,30 @@ export default function RootLayout() {
 
 
     useEffect(() => {
-        // Hide the native splash screen immediately
-        SplashScreenExpo.hideAsync();
+        async function prepareApp() {
+            try {
+                // Hide native splash screen
+                await SplashScreenExpo.hideAsync();
 
-        // Simulate loading time - replace with actual initialization logic
-        const timer = setTimeout(() => {
-            setIsReady(true);
-        }, 1800); // Show splash screen for 1.8 seconds
+                // 🔑 Fetch user manually
+                const user = getUser();
 
-        return () => clearTimeout(timer);
+                // ✅ Pre-populate user data into TanStack cache
+                queryClient.setQueryData(['user'], user);
+
+                // Optional: Simulate some delay
+                await new Promise(res => setTimeout(res, 1500));
+            } catch (e) {
+                console.error(e);
+            } finally {
+                setIsReady(true);
+            }
+        };
+
+        prepareApp();
     }, []);
 
-    useEffect(() => {
-        async function checkInitalUser() {
-            await checkUser();
-        }
-        checkInitalUser()
-    }, [])
+
 
      if (!isReady) {
         // Async font loading only occurs in development.
@@ -113,8 +121,3 @@ export default function RootLayout() {
     );
 }
 
-async function checkUser() {
-    const { data: { user } } = await supabase.auth.getUser()
-
-    console.log("User: ", user);
-}

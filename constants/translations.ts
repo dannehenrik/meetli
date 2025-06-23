@@ -24,7 +24,10 @@ const englishLanguage = {
     enterEmailError: "Must be a valid email adress",
     otpInstruction: "Enter verification code",
     otpSubInstruction: "We have sent you a verification code to your mobile number",
-    or: "or"
+    or: "or",
+    accountVerifiedText: "Yayy! Your account is verified!",
+    accountVerifiedSubText: "Your email has been successfully verified. Now, let's set up your profile details to get started.",
+    enterDetails: "Enter Details",
 }
 
 

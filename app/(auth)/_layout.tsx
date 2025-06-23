@@ -3,8 +3,11 @@ import { TouchableWithoutFeedback } from "react-native";
 import { KeyboardAvoidingView, Platform, Keyboard } from "react-native";
 import { OnboardingHeader } from "@/components/shared/onboarding-header";
 import { Box } from "@/components/ui/box";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/utils/supabase";
 
 export default function RootLayout() {
+
     const handleKeyboardDismiss = () => {
         if (Platform.OS !== "web") {
             Keyboard.dismiss();
@@ -32,3 +35,4 @@ export default function RootLayout() {
         </KeyboardAvoidingView>
     );
 }
+
