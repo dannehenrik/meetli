@@ -105,10 +105,10 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
 
             <GluestackUIProvider mode={"system"}>
-                <StatusBar
+                {/* <StatusBar
                     barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
                     backgroundColor={colorScheme === "light" ? "#fff" : "#121212"}
-                />
+                /> */}
                     <SafeAreaView className="flex-1 bg-background-0">
                         <GestureHandlerRootView style={{ flex: 1 }}>
                             <BottomSheetModalProvider>
