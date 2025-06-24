@@ -1,27 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { router, useRouter } from "expo-router";
-import { ProgressFilledTrack } from "@/components/ui/progress";
-import { FormControl } from "@/components/ui/form-control";
-import { Progress } from "@/components/ui/progress";
+import { i18n } from "@/app/_layout";
+import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Box } from "@/components/ui/box";
+import { Fab, FabIcon } from "@/components/ui/fab";
+import { FormControl } from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading";
 import { ChevronRightIcon, CircleIcon } from "@/components/ui/icon";
-import { Fab, FabIcon } from "@/components/ui/fab";
+import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import {
-  Radio,
-  RadioIndicator,
-  RadioLabel,
-  RadioIcon,
-  RadioGroup,
+    Radio,
+    RadioGroup,
+    RadioIcon,
+    RadioIndicator,
+    RadioLabel,
 } from "@/components/ui/radio";
-import { CheckIcon } from "@/components/ui/icon";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { InfoOnboarding } from "@/components/shared/info-onboarding";
-import { i18n } from "@/app/_layout";
+import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUser } from "@/server/auth/getUser";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const lookingForOptions = [
     {value: "serious", label: "Serious"},
@@ -109,7 +107,7 @@ export default function lookingFor() {
                 size="lg"
                 disabled={lookingFor.length === 0}
                 onPress={() => {
-                    router.push("/sign-in/onboarding/intro");
+                    router.push("/sign-in/onboarding/location");
                     mutation.mutate()
                 }}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"

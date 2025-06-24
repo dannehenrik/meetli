@@ -11,14 +11,11 @@ export default function Main() {
         staleTime: USER_STALE_TIME,
     })
 
-    console.log("Data: ", data);
-
     if (isPending || data === undefined) return null
 
     if (!data) { return <Redirect href="./sign-in"/> } 
 
     if (!data?.onboarding_completed) { 
-        console.log("Onboooarding: ", data?.onboarding_completed);
         return <Redirect href="./sign-in/onboarding/verified"/>
     }
 

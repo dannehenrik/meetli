@@ -16,6 +16,7 @@ const layout = () => {
       <Stack.Screen name="gender" />
       <Stack.Screen name="interest" />
       <Stack.Screen name="interests" />
+      <Stack.Screen name="location" />
       <Stack.Screen name="intro" />
       <Stack.Screen name="looking-for" />
       <Stack.Screen name="name" />

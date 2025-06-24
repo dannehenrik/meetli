@@ -85,6 +85,10 @@ const englishLanguage = {
     // Onboarding -looking for- page
     lookingForInstruction: "What are you looking for on Meetli?",
     lookingForClarification: "This will help us match you to people who align to what you are looking for",
+
+    // Onboarding -location- page
+    chooseLocationInstruction: "Choose which location you will be in the most",
+    chooseLocationSubInstruction: "Meetli will later use your real location, if you allow it."
 }
 
 
