@@ -107,6 +107,7 @@ export default function lookingFor() {
             </Box>
             <Fab
                 size="lg"
+                disabled={lookingFor.length === 0}
                 onPress={() => {
                     router.push("/sign-in/onboarding/intro");
                     mutation.mutate()

@@ -14,7 +14,7 @@ import { Fab, FabIcon } from "@/components/ui/fab";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const intro = () => {
+export default function intro() {
   const [textValue, setTextValue] = useState("");
   const [wordCount, setWordCount] = useState(0);
   const insets = useSafeAreaInsets();
@@ -63,7 +63,7 @@ const intro = () => {
       <Fab
         size="lg"
         onPress={() => {
-          router.push("/onboarding/pictures");
+          router.push("/sign-in/onboarding/pictures");
         }}
         className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
         style={{ marginBottom: -1 * insets.bottom }}
@@ -73,4 +73,4 @@ const intro = () => {
     </Box>
   );
 };
-export default intro;
+
