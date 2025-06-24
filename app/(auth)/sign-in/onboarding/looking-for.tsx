@@ -76,7 +76,7 @@ export default function lookingFor() {
 
                 <FormControl className="w-full gap-6">
                     <Heading className="font-roboto font-semibold text-2xl">
-                        {i18n.t("lookingForInstruction")}
+                        {i18n.t("onboarding.lookingFor.lookingForInstruction")}
                     </Heading>
 
                     <RadioGroup className="gap-3" value={lookingFor} onChange={setLookingfor}>
@@ -98,7 +98,7 @@ export default function lookingFor() {
                     </RadioGroup>
 
                     <InfoOnboarding
-                        info={i18n.t("lookingForClarification")}
+                        info={i18n.t("onboarding.lookingFor.lookingForClarification")}
                         classNameIcon="mt-1"
                     />
                 </FormControl>

@@ -73,7 +73,7 @@ export default function interest() {
                 <FormControl className="w-full">
                     <VStack className="gap-6">
                         <Heading className="font-roboto font-semibold text-2xl">
-                            {i18n.t("genderInterestInfo")}
+                            {i18n.t("onboarding.gender.genderInterestInfo")}
                         </Heading>
 
                         <VStack className="gap-4">
@@ -88,7 +88,7 @@ export default function interest() {
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
                                     <CheckboxLabel className="font-roboto font-medium text-typography-950">
-                                        {i18n.t("woman")}
+                                        {i18n.t("onboarding.gender.woman")}
                                     </CheckboxLabel>
                                     <CheckboxIndicator>
                                         <CheckboxIcon as={CheckIcon} />
@@ -101,7 +101,7 @@ export default function interest() {
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
                                     <CheckboxLabel className="font-roboto font-medium text-typography-950">
-                                        {i18n.t("male")}
+                                        {i18n.t("onboarding.gender.male")}
                                     </CheckboxLabel>
                                     <CheckboxIndicator>
                                         <CheckboxIcon as={CheckIcon} />
@@ -114,7 +114,7 @@ export default function interest() {
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
                                     <CheckboxLabel className="font-roboto font-medium text-typography-950">
-                                        {i18n.t("nonBinary")}
+                                        {i18n.t("onboarding.gender.nonBinary")}
                                     </CheckboxLabel>
                                     <CheckboxIndicator>
                                         <CheckboxIcon as={CheckIcon} />
@@ -124,7 +124,7 @@ export default function interest() {
                         </VStack>
 
                         <InfoOnboarding
-                        info={i18n.t("changeInformationLaterInfo")}
+                        info={i18n.t("onboarding.changeInformationLaterInfo")}
                         classNameIcon="mt-1"
                         />
                     </VStack>

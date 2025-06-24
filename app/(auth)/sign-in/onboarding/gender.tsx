@@ -73,7 +73,7 @@ export default function gender() {
                 <FormControl className="w-full">
                     <VStack className="gap-6">
                         <Heading className="font-roboto font-semibold text-2xl">
-                            {i18n.t("howDoYouIdentify")}
+                            {i18n.t("onboarding.gender.howDoYouIdentify")}
                         </Heading>
 
                         <VStack className="gap-4">
@@ -84,7 +84,7 @@ export default function gender() {
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
                                     <RadioLabel className="font-roboto font-medium text-typography-950">
-                                        {i18n.t("woman")}
+                                        {i18n.t("onboarding.gender.woman")}
                                     </RadioLabel>
                                     <RadioIndicator>
                                         <RadioIcon as={CircleIcon} />
@@ -97,7 +97,7 @@ export default function gender() {
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
                                     <RadioLabel className="font-roboto font-medium text-typography-950">
-                                        {i18n.t("male")}
+                                        {i18n.t("onboarding.gender.male")}
                                     </RadioLabel>
                                     <RadioIndicator>
                                         <RadioIcon as={CircleIcon} />
@@ -110,7 +110,7 @@ export default function gender() {
                                     className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                     >
                                     <RadioLabel className="font-roboto font-medium text-typography-950">
-                                        {i18n.t("nonBinary")}
+                                        {i18n.t("onboarding.gender.nonBinary")}
                                     </RadioLabel>
                                     <RadioIndicator>
                                         <RadioIcon as={CircleIcon} />
@@ -120,7 +120,7 @@ export default function gender() {
                         </VStack>
 
                         <InfoOnboarding
-                        info={i18n.t("changeInformationLaterInfo")}
+                        info={i18n.t("onboarding.changeInformationLaterInfo")}
                         classNameIcon="mt-1"
                         />
                     </VStack>

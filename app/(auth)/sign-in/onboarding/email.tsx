@@ -62,26 +62,26 @@ export default function Email() {
             <Box className="flex-1 justify-start items-center gap-12 px-5 top-20">
                 <Box className="flex justify-start gap-3">
                     <Text className="font-roboto text-2xl font-semibold leading-7">
-                        {i18n.t('loginInstruction')}
+                        {i18n.t('onboarding.email.loginInstruction')}
                     </Text>
                     <Text className="font-roboto text-typography-500 leading-6">
-                        {i18n.t('loginSubInstruction')}
+                        {i18n.t('onboarding.email.loginSubInstruction')}
                     </Text>
                 </Box>
 
                 <FormControl isInvalid={error}>
 
                     <Input className="w-full">
-                        <InputField onFocus={() => setError(false)}  value={email} onChangeText={setEmail} placeholder={i18n.t('enterEmail')}/>
+                        <InputField onFocus={() => setError(false)}  value={email} onChangeText={setEmail} placeholder={i18n.t('onboarding.email.enterEmail')}/>
                     </Input>
 
 
                     <FormControlHelper>
-                        <FormControlHelperText>{i18n.t('emailExample')}</FormControlHelperText>
+                        <FormControlHelperText>{i18n.t('onboarding.email.emailExample')}</FormControlHelperText>
                     </FormControlHelper>
 
                     <FormControlError>
-                        <FormControlErrorText>{i18n.t('enterEmailError')}</FormControlErrorText>
+                        <FormControlErrorText>{i18n.t('onboarding.email.enterEmailError')}</FormControlErrorText>
                     </FormControlError>
                 </FormControl>
 

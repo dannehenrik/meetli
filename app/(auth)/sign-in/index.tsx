@@ -24,10 +24,10 @@ export default function LoginMain() {
             {/* Header */}
             <Box className="gap-2 items-center">
                 <Text className="text-3xl font-bold text-center">
-                    {i18n.t("welcomeBack")}
+                    {i18n.t("onboarding.signIn.welcomeBack")}
                 </Text>
                 <Text className="text-base text-typography-500 text-center">
-                    {i18n.t("signInToContinue")}
+                    {i18n.t("onboarding.signIn.signInToContinue")}
                 </Text>
             </Box>
 
@@ -36,14 +36,14 @@ export default function LoginMain() {
                 <Button className="w-full flex-row gap-3 items-center justify-center text-white">
                     {/* <GoogleLogo className="w-5 h-5" /> */}
                     <ButtonText className="text-base font-medium text-white">
-                        {i18n.t("continueWithGoogle")}
+                        {i18n.t("onboarding.signIn.continueWithGoogle")}
                     </ButtonText>
                 </Button>
 
                 <Button className="w-full flex-row gap-3 items-center justify-center text-white">
                     {/* <Icon as={Apple}></Icon> */}
                     <ButtonText className="text-base font-medium text-white">
-                        {i18n.t("continueWithApple")}
+                        {i18n.t("onboarding.signIn.continueWithApple")}
                     </ButtonText>
                 </Button>
 
@@ -51,7 +51,7 @@ export default function LoginMain() {
                 <Box className="flex-row items-center my-6">
                     <Box className="flex-1 h-px bg-gray-300" />
                         <Text className="mx-3 text-gray-500 font-medium">
-                            {i18n.t("or")} {/* or just "or"/"eller" directly */}
+                            {i18n.t("onboarding.signIn.or")} {/* or just "or"/"eller" directly */}
                         </Text>
                     <Box className="flex-1 h-px bg-gray-300" />
                 </Box>
@@ -64,7 +64,7 @@ export default function LoginMain() {
                 >
                     <Icon size="lg" className="text-primary-500" as={Mail}/>
                     <ButtonText className="text-base font-medium text-primary-500">
-                        {i18n.t("continueWithEmail")}
+                        {i18n.t("onboarding.signIn.continueWithEmail")}
                     </ButtonText>
                 </Button>
             </Box>
@@ -72,7 +72,7 @@ export default function LoginMain() {
             {/* Footer (optional) */}
             <Box className="items-center">
                 <Text className="text-xs text-typography-400 text-center">
-                    {i18n.t("agreeToTermsAndPolicy")}
+                    {i18n.t("onboarding.signIn.agreeToTermsAndPolicy")}
                 </Text>
             </Box>
         </Box>

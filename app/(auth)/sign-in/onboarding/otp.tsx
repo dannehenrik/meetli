@@ -47,10 +47,10 @@ export default function Otp() {
             <Box className="flex-1 justify-start items-center gap-12 px-5 top-20">
                 <Box className="flex justify-start gap-3">
                     <Text className="font-roboto text-2xl font-semibold leading-7">
-                        {i18n.t("otpInstruction")}
+                        {i18n.t("onboarding.otp.otpInstruction")}
                     </Text>
                     <Text className="font-roboto text-typography-500 leading-6">
-                        {i18n.t("otpSubInstruction")}
+                        {i18n.t("onboarding.otp.otpSubInstruction")}
                     </Text>
                 </Box>
                 <OTPComponent onComplete={handleOtpChange} />

@@ -63,12 +63,12 @@ export default function age() {
                 <FormControl className="w-full">
                     <VStack className="gap-6">
                         <Heading className="font-roboto font-semibold text-2xl">
-                            {i18n.t('whatIsYourAge')}
+                            {i18n.t('onboarding.age.whatIsYourAge')}
                         </Heading>
 
                         <VStack className="gap-4">
                             <Input className="rounded-lg" size="lg">
-                                <InputField placeholder={i18n.t('age')} inputMode="numeric" value={age} onChangeText={setAge}/>
+                                <InputField placeholder={i18n.t('onboarding.age.age')} inputMode="numeric" value={age} onChangeText={setAge}/>
                             </Input>
                         </VStack>
 

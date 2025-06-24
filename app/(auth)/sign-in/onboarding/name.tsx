@@ -61,15 +61,15 @@ export default function name() {
 
                 <VStack className="gap-6 w-full">
                     <Heading className="font-roboto font-semibold text-2xl">
-                        {i18n.t("whatIsYourName")}
+                        {i18n.t("onboarding.name.whatIsYourName")}
                     </Heading>
 
                     <VStack className="gap-4">
                         <Input className="rounded-lg" size="lg">
-                            <InputField placeholder={i18n.t('firstName')} value={firstName} onChangeText={setFirstName} />
+                            <InputField placeholder={i18n.t('onboarding.name.firstName')} value={firstName} onChangeText={setFirstName} />
                         </Input>
                         <Input className="rounded-lg" size="lg">
-                            <InputField placeholder={i18n.t('lastName')}value={lastName} onChangeText={setLastName} />
+                            <InputField placeholder={i18n.t('onboarding.name.lastName')}value={lastName} onChangeText={setLastName} />
                         </Input>
                     </VStack>
 

@@ -30,14 +30,14 @@ export default function Verified() {
             >
                 <Icon as={LogoIcon} className="w-[72px] h-[72px]" />
                 <Text className="font-semibold font-roboto text-4xl leading-10 text-typography-950 flex-1">
-                    {i18n.t("accountVerifiedText")}
+                    {i18n.t("onboarding.verified.accountVerifiedText")}
                 </Text>
             </AnimatedHstack>
             <AnimatedText
                 entering={FadeInDown.delay(400).duration(400)}
                 className="font-roboto text-typography-500 text-base leading-6"
             >
-                {i18n.t("accountVerifiedSubText")}
+                {i18n.t("onboarding.verified.accountVerifiedSubText")}
             </AnimatedText>
             <Fab
                 className="bg-background-950 rounded-lg w-auto h-[48px] absolute bottom-11 right-5 data-[active=true]:bg-background-900"
@@ -45,7 +45,7 @@ export default function Verified() {
                 style={{ marginBottom: -1 * insets.bottom }}
             >
                 <FabLabel className="text-typography-50 font-roboto font-medium">
-                    {i18n.t("enterDetails")}
+                    {i18n.t("onboarding.verified.enterDetails")}
                 </FabLabel>
                 <FabIcon as={ChevronRightIcon} />
             </Fab>
