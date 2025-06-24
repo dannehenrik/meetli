@@ -88,7 +88,37 @@ const englishLanguage = {
 
     // Onboarding -location- page
     chooseLocationInstruction: "Choose which location you will be in the most",
-    chooseLocationSubInstruction: "Meetli will later use your real location, if you allow it."
+    chooseLocationSubInstruction: "Meetli will later use your real location, if you allow it.",
+
+    onboarding: {
+        location: {
+            title: "To find people near you, we need access to your location.",
+            granted: "Location access granted. Thank you!",
+            denied: "Location permission not granted",
+            undetermined: "Location permission required for app functionality.",
+            accessRequired:
+                "Location access is required for all app functionality. Without it, you won't be able to find matches or appear in others' searches. You can enable location later in settings for full functionality or you can follow the instructions below.",
+            iosInstructionsTitle: "To enable location on iOS:",
+            iosInstructions: [
+                "Open Settings",
+                "Scroll down and select this app",
+                "Tap 'Location'",
+                "Select 'While Using the App' or 'Always'",
+            ],
+            androidInstructionsTitle: "To enable location on Android:",
+            androidInstructions: [
+                "Open Settings",
+                "Go to 'Apps & notifications'",
+                "Select this app",
+                "Tap 'Permissions'",
+                "Enable 'Location'",
+            ],
+            allowButton: "Allow Location Access",
+            grantedButton: "Location Access Granted",
+            openSettingsButton: "Open Settings to Enable Location",
+            info: "We never share your location and only use it to show nearby matches.",
+        }
+    }
 }
 
 
