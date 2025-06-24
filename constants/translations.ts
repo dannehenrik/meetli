@@ -38,6 +38,8 @@ const swedishLanguage = {
     male: "Man",
     nonBinary: "Icke-binär",
     genderInterestInfo: "Jag vill träffa",
+
+
 };
 
 
@@ -78,8 +80,11 @@ const englishLanguage = {
     woman: "Woman",
     male: "Man",
     nonBinary: "Nonbinary",
-    genderInterestInfo: "I would like to meet"
+    genderInterestInfo: "I would like to meet",
 
+    // Onboarding -looking for- page
+    lookingForInstruction: "What are you looking for on Meetli?",
+    lookingForClarification: "This will help us match you to people who align to what you are looking for",
 }
 
 
