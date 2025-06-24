@@ -9,7 +9,7 @@ export interface User {
     last_name: string,
     age: number, 
     gender: Gender
-    gender_preference: Gender,
+    gender_preferences: Gender[],
     location: Location,
     looking_for: LookingFor
 }
@@ -19,5 +19,5 @@ export interface Location {
     latitude: string,
 }
 
-export type Gender = "male" | "woman" | "non-binary" | "other" 
+export type Gender = "male" | "woman" | "non-binary"
 export type LookingFor = "serious" | "serious-casual" | "casual-serious" | "casual" | "not-sure" | "friends"

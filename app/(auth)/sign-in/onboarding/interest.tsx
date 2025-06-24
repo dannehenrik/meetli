@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { router } from "expo-router";
+import React, { useState, useEffect} from "react";
 import { ProgressFilledTrack } from "@/components/ui/progress";
 import { FormControl } from "@/components/ui/form-control";
 import { Progress } from "@/components/ui/progress";
@@ -17,89 +16,138 @@ import {
 } from "@/components/ui/checkbox";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
+import { ONBOARDING_PAGES } from "@/constants/constants";
+import { i18n } from "@/app/_layout";
+import { supabase } from "@/utils/supabase";
+import { router, useRouter } from "expo-router";
 
-const interest = () => {
-  const [values, setValues] = useState([]);
-  const insets = useSafeAreaInsets();
-  return (
-    <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
-      <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
-        <Progress
-          value={(4 / 9) * 100}
-          className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
-        >
-          <ProgressFilledTrack />
-        </Progress>
 
-        <FormControl className="w-full">
-          <VStack className="gap-6">
-            <Heading className="font-roboto font-semibold text-2xl">
-              I would like to meet
-            </Heading>
 
-            <VStack className="gap-4">
-              <CheckboxGroup
-                value={values}
-                onChange={(keys) => setValues(keys)}
-                className="gap-3"
-              >
-                <Checkbox
-                  value="Woman"
-                  size="md"
-                  className="bg-background-50 py-3 px-4 rounded-lg justify-between"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { getUser } from "@/server/auth/getUser";
+import { Gender } from "@/types";
+
+export default function interest() {
+
+      const queryClient = useQueryClient();
+    const router = useRouter();
+
+    const {data: user, error, isPending} = useQuery({
+        queryKey: ['user'],
+        queryFn: async () => await getUser(),
+        staleTime: USER_STALE_TIME,
+    })
+
+    const mutation = useMutation({
+        mutationFn: async () => updateUser(user?.id ?? "", genders as Gender[]),
+        onError: (error) => {
+            console.error(error.message)
+            router.back();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['user']})
+        }
+    })
+
+    const [genders, setGenders] = useState<string[]>([]);
+
+    // Set initial values when user data is loaded
+    useEffect(() => {
+        if (user && user.age) {
+            setGenders(user.gender_preferences ?? []); // adjust to match your user schema
+        }
+    }, [user]);
+
+    const insets = useSafeAreaInsets();
+    return (
+        <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
+            <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
+                <Progress
+                value={(4 / ONBOARDING_PAGES) * 100}
+                className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
                 >
-                  <CheckboxLabel className="font-roboto font-medium text-typography-950">
-                    Woman
-                  </CheckboxLabel>
-                  <CheckboxIndicator>
-                    <CheckboxIcon as={CheckIcon} />
-                  </CheckboxIndicator>
-                </Checkbox>
-                <Checkbox
-                  value="Man"
-                  size="md"
-                  className="bg-background-50 py-3 px-4 rounded-lg justify-between"
-                >
-                  <CheckboxLabel className="font-roboto font-medium text-typography-950">
-                    Man
-                  </CheckboxLabel>
-                  <CheckboxIndicator>
-                    <CheckboxIcon as={CheckIcon} />
-                  </CheckboxIndicator>
-                </Checkbox>
-                <Checkbox
-                  value="Nonbinary"
-                  size="md"
-                  className="bg-background-50 py-3 px-4 rounded-lg justify-between"
-                >
-                  <CheckboxLabel className="font-roboto font-medium text-typography-950">
-                    Nonbinary
-                  </CheckboxLabel>
-                  <CheckboxIndicator>
-                    <CheckboxIcon as={CheckIcon} />
-                  </CheckboxIndicator>
-                </Checkbox>
-              </CheckboxGroup>
-            </VStack>
+                    <ProgressFilledTrack />
+                </Progress>
 
-            <InfoOnboarding
-              info="You can change these details after onboarding as well!"
-              classNameIcon="mt-1"
-            />
-          </VStack>
-        </FormControl>
-      </Box>
-      <Fab
-        size="lg"
-        onPress={() => {
-          router.push("/onboarding/looking-for");
-        }}
-        className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-        style={{ marginBottom: -1 * insets.bottom }}
-      >
-        <FabIcon as={ChevronRightIcon} />
-      </Fab>
-    </Box>
-  );
+                <FormControl className="w-full">
+                    <VStack className="gap-6">
+                        <Heading className="font-roboto font-semibold text-2xl">
+                            {i18n.t("genderInterestInfo")}
+                        </Heading>
+
+                        <VStack className="gap-4">
+                            <CheckboxGroup
+                                value={genders}
+                                onChange={(keys) => setGenders(keys)}
+                                className="gap-3"
+                            >
+                                <Checkbox
+                                value="woman"
+                                size="md"
+                                className="bg-background-50 py-3 px-4 rounded-lg justify-between"
+                                >
+                                    <CheckboxLabel className="font-roboto font-medium text-typography-950">
+                                        {i18n.t("woman")}
+                                    </CheckboxLabel>
+                                    <CheckboxIndicator>
+                                        <CheckboxIcon as={CheckIcon} />
+                                    </CheckboxIndicator>
+                                </Checkbox>
+
+                                <Checkbox
+                                value="male"
+                                size="md"
+                                className="bg-background-50 py-3 px-4 rounded-lg justify-between"
+                                >
+                                    <CheckboxLabel className="font-roboto font-medium text-typography-950">
+                                        {i18n.t("male")}
+                                    </CheckboxLabel>
+                                    <CheckboxIndicator>
+                                        <CheckboxIcon as={CheckIcon} />
+                                    </CheckboxIndicator>
+                                </Checkbox>
+
+                                <Checkbox
+                                value="non-binary"  
+                                size="md"
+                                className="bg-background-50 py-3 px-4 rounded-lg justify-between"
+                                >
+                                    <CheckboxLabel className="font-roboto font-medium text-typography-950">
+                                        {i18n.t("nonBinary")}
+                                    </CheckboxLabel>
+                                    <CheckboxIndicator>
+                                        <CheckboxIcon as={CheckIcon} />
+                                    </CheckboxIndicator>
+                                </Checkbox>
+                            </CheckboxGroup>
+                        </VStack>
+
+                        <InfoOnboarding
+                        info={i18n.t("changeInformationLaterInfo")}
+                        classNameIcon="mt-1"
+                        />
+                    </VStack>
+                </FormControl>
+            </Box>
+            <Fab
+                size="lg"
+                onPress={() => {
+                    router.push("/sign-in/onboarding/looking-for");
+                    mutation.mutate()
+                }}
+                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
+                style={{ marginBottom: -1 * insets.bottom }}
+            >
+                <FabIcon as={ChevronRightIcon} />
+            </Fab>
+        </Box>
+    );
 };
-export default interest;
+
+
+async function updateUser(userId: string, gender: Gender[]) {
+    const {error} = await supabase.from('users').update({gender_preferences: gender}).eq('id', userId);
+
+    if (error) throw new Error("Something went wrong when updating the user: " + error.message)
+}

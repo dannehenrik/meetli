@@ -105,7 +105,7 @@ export default function gender() {
                                 </Radio>
 
                                 <Radio
-                                    value="Nonbinary"
+                                    value="non-binary"
                                     size="md"
                                     className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                     >

@@ -2,11 +2,44 @@
 
 
 const swedishLanguage = {
-    loginInstruction: "Ange din emailadress",
-    loginSubInstruction: "Vi skickar en verifieringskod för att bekräfta din email adress",
-    enterPhoneNumber: "Skriv telefonnummer",
-    or: "eller"
-}
+    welcomeBack: "Välkommen tillbaka",
+    signInToContinue: "Logga in för att fortsätta",
+    continueWithGoogle: "Fortsätt med Google",
+    continueWithApple: "Fortsätt med Apple",
+    continueWithEmail: "Fortsätt med e‑post",
+    agreeToTermsAndPolicy: "Genom att fortsätta godkänner du våra villkor och sekretesspolicy.",
+    loginInstruction: "Ange din e‑postadress",
+    loginSubInstruction: "Vi skickar en verifieringskod för att bekräfta din e‑postadress",
+    enterPhoneNumber: "Ange telefonnummer",
+    enterPhoneNumberError: "Ange ett giltigt 10‑siffrigt telefonnummer",
+    enterEmail: "Ange e‑postadress",
+    emailExample: "exempel@gmail.com",
+    enterEmailError: "Måste vara en giltig e‑postadress",
+    otpInstruction: "Ange verifieringskod",
+    otpSubInstruction: "Vi har skickat en verifieringskod till ditt mobilnummer",
+    or: "eller",
+    accountVerifiedText: "Yay! Ditt konto är verifierat!",
+    accountVerifiedSubText: "Din e‑post har verifierats. Nu kan vi sätta upp din profil för att komma igång.",
+    enterDetails: "Fyll i dina uppgifter",
+    changeInformationLaterInfo: "Du kan ändra dessa uppgifter efter onboarding också!",
+    
+    // Onboarding – namn
+    firstName: "Förnamn",
+    lastName: "Efternamn",
+    whatIsYourName: "Vad heter du?",
+
+    // Onboarding – ålder
+    whatIsYourAge: "Hur gammal är du?",
+    age: "Ålder",
+
+    // Onboarding – kön och intresse
+    howDoYouIdentify: "Hur identifierar du dig själv?",
+    woman: "Kvinna",
+    male: "Man",
+    nonBinary: "Icke-binär",
+    genderInterestInfo: "Jag vill träffa",
+};
+
 
 const englishLanguage = {
     welcomeBack: "Welcome Back",
@@ -40,11 +73,12 @@ const englishLanguage = {
     whatIsYourAge: "What is your age?",
     age: "Age",
 
-    // Onboarding -gender- page
+    // Onboarding -gender & gender interest- page
     howDoYouIdentify: "How do you identify yourself?",
     woman: "Woman",
     male: "Man",
-    nonBinary: "Nonbinary"
+    nonBinary: "Nonbinary",
+    genderInterestInfo: "I would like to meet"
 
 }
 
