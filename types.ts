@@ -10,13 +10,13 @@ export interface User {
     age: number, 
     gender: Gender
     gender_preferences: Gender[],
-    location: Location,
+    location: LocationType,
     looking_for: LookingFor
 }
 
-export interface Location {
-    longitude: string,
-    latitude: string,
+export interface LocationType {
+    longitude: number,
+    latitude: number,
 }
 
 export type Gender = "male" | "woman" | "non-binary"
