@@ -54,8 +54,9 @@ export default function gender() {
 
     // Set initial values when user data is loaded
     useEffect(() => {
-        if (user && user.age) {
-            setGender(user.gender ?? ''); // adjust to match your user schema
+        console.log("User: ", user);
+        if (user && user.gender) {
+            setGender(user.gender); // adjust to match your user schema
         }
     }, [user]);
 

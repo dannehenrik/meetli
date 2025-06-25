@@ -11,7 +11,7 @@ const layout = () => {
       )}
     >
       <Stack.Screen name="email" />
-      <Stack.Screen name="age" />
+      <Stack.Screen name="date-of-birth" />
       <Stack.Screen name="done" />
       <Stack.Screen name="gender" />
       <Stack.Screen name="interest" />

@@ -11,7 +11,8 @@ export interface User {
     gender: Gender
     gender_preferences: Gender[],
     location: LocationType,
-    looking_for: LookingFor
+    looking_for: LookingFor,
+    dob: Date //Date of birth
 }
 
 export interface LocationType {

@@ -54,8 +54,8 @@ export default function interest() {
 
     // Set initial values when user data is loaded
     useEffect(() => {
-        if (user && user.age) {
-            setGenders(user.gender_preferences ?? []); // adjust to match your user schema
+        if (user && user.gender_preferences) {
+            setGenders(user.gender_preferences); // adjust to match your user schema
         }
     }, [user]);
 

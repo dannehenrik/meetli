@@ -2,6 +2,8 @@
 
 
 const swedishLanguage = {
+    cancel: "Avbryt",
+    confirm: "Bekräfta",
     onboarding: {
         or: "eller",
         changeInformationLaterInfo: "Du kan ändra dessa uppgifter även efter onboarding!",
@@ -29,13 +31,17 @@ const swedishLanguage = {
         },
         verified: {
             accountVerifiedText: "Yay! Ditt konto är verifierat!",
-            accountVerifiedSubText: "Din e-post har verifierats. Nu sätter vi upp din profil så att du kan börja.",
+            accountVerifiedSubText: "Din e-post har verifierats. Nu sätter vi upp din profil så att du kan börja dejta 🕺🏻",
             enterDetails: "Fyll i dina uppgifter",
         },
         name: {
             firstName: "Förnamn",
             lastName: "Efternamn",
             whatIsYourName: "Vad heter du?",
+        },
+        dob: {
+            whatIsYourDOB: "Vad är ditt födelsedatum?",
+            dob: "Födelsedatum"
         },
         age: {
             whatIsYourAge: "Hur gammal är du?",
@@ -85,6 +91,9 @@ const swedishLanguage = {
 
 
 const englishLanguage = {
+    cancel: "Cancel",
+    accept: "Accept",
+    confirm: "Confirm",
     onboarding: {
         or: "or",
         changeInformationLaterInfo: "You can change these details after onboarding as well!",
@@ -112,13 +121,17 @@ const englishLanguage = {
         },
         verified: {
             accountVerifiedText: "Yayy! Your account is verified!",
-            accountVerifiedSubText: "Your email has been successfully verified. Now, let's set up your profile details to get started.",
+            accountVerifiedSubText: "Your email has been successfully verified. Now, let's set up your profile details to get started 🕺🏻",
             enterDetails: "Enter Details",
         },
         name: {
             firstName: "First name",
             lastName: "Last name",
             whatIsYourName: "What is your name?",
+        },
+        dob: {
+            whatIsYourDOB: "What is your date of birth?",
+            dob: "Date of birth"
         },
         age: {
             whatIsYourAge: "What is your age?",

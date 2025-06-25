@@ -58,8 +58,8 @@ export default function lookingFor() {
 
     // Set initial values when user data is loaded
     useEffect(() => {
-        if (user && user.age) {
-            setLookingfor(user.looking_for ?? ''); // adjust to match your user schema
+        if (user && user.looking_for) {
+            setLookingfor(user.looking_for); // adjust to match your user schema
         }
     }, [user]);
 

@@ -80,7 +80,7 @@ export default function name() {
                 size="lg"
                 disabled={firstName.length === 0 || lastName.length === 0 }
                 onPress={() => {
-                    router.push("/sign-in/onboarding/age");
+                    router.push("/sign-in/onboarding/date-of-birth");
                     mutation.mutate();
                 }}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
