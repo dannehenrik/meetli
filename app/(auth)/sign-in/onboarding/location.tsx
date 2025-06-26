@@ -167,7 +167,7 @@ export default function LocationScreen() {
             <Fab
                 size="lg"
                 onPress={() => {
-                    router.push("/sign-in/onboarding/intro");
+                    router.push("/sign-in/onboarding/pictures");
                     mutation.mutate();
                 }}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"

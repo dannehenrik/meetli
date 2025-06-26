@@ -174,6 +174,11 @@ const englishLanguage = {
             grantedButton: "Location Access Granted",
             openSettingsButton: "Open Settings",
             info: "We never share your location and only use it to show nearby matches.",
+        },
+        pictures: {
+            title: "Add your pictures",
+            instructions: "Choose photos where your face is clearly visible, also try to avoid blurred and poor quality images for your profile!",
+            dndInstructions: "Hold and draw photo/video to reorder",
         }
     }
 }
