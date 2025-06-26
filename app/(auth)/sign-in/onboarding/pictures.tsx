@@ -21,116 +21,105 @@ import { i18n } from "@/app/_layout";
 import * as ImagePicker from 'expo-image-picker';
 import { Pressable } from "@/components/ui/pressable";
 
-const fakeImages = 
-[
-    require("@/assets/images/fake-profile-images/profile_1_preview.png"),
-    require("@/assets/images/fake-profile-images/profile_2_preview.png"),
-    require("@/assets/images/fake-profile-images/profile_3_preview.png"),
-    require("@/assets/images/fake-profile-images/profile_4_preview.png"),
-    false,
-    false,
-]
+export default function Pictures() {
+  const [images, setImages] = useState<string[]>([]);
+  const insets = useSafeAreaInsets();
 
-export default function pictures() {
-    const [images, setImages] = useState<(string)[]>([])
+  async function pickImage() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-    async function pickImage() {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ['images'],
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
+    if (!result.canceled && result.assets?.length > 0) {
+      const copyImages = [...images];
+      if (copyImages.length < MAX_PROFILE_IMAGES_AMOUNT) {
+        copyImages.push(result.assets[0].uri);
+        setImages(copyImages);
+      }
+    }
+  }
 
-        console.log(result);
+  return (
+    <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
+      <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-full">
+        <Progress
+          value={(7 / ONBOARDING_PAGES) * 100}
+          className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
+        >
+          <ProgressFilledTrack />
+        </Progress>
 
-        if (!result.canceled) {
-            // setImage(result.assets[0].uri);
-            const copyImages = [...images];
-            if (images.length !== MAX_PROFILE_IMAGES_AMOUNT) {
-                copyImages.push(result.assets[0].uri);
-            }
-            setImages(copyImages);
-        }
-    };
-    const insets = useSafeAreaInsets();
-    return (
-        <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
-            <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
-                <Progress
-                value={(7 / ONBOARDING_PAGES) * 100}
-                className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
-                >
-                    <ProgressFilledTrack />
-                </Progress>
+        <VStack className="gap-6 w-full">
+          <VStack className="gap-3">
+            <Heading className="font-roboto font-semibold text-2xl">
+              {i18n.t("onboarding.pictures.title")}
+            </Heading>
+            <Text className="font-normal font-roboto text-typography-400">
+              {i18n.t("onboarding.pictures.instructions")}
+            </Text>
+          </VStack>
 
-                <VStack className="gap-6 w-full">
-                    <VStack className="gap-3">
-                        <Heading className="font-roboto font-semibold text-2xl">
-                        {i18n.t("onboarding.pictures.title")}
-                        </Heading>
-                        <Text className="font-normal font-roboto text-typography-400">
-                        {i18n.t("onboarding.pictures.instructions")}
-                        </Text>
-                    </VStack>
-                    <Box className="flex-wrap justify-between gap-y-2.5 flex-row">
-                    {/* <Box className="grid grid-cols-3 gap-3"> */}
-                        {images.map((image, index) => (
-                        <Box className="w-[31%] aspect-square" key={index}>
-                            
-                            <>
-                                <Image
-                                source={image}
-                                className="w-full h-full object-cover rounded-lg"
-                                alt="instagram"
-                                />
-                                <Box className="absolute top-3 right-2.5 bg-background-950 p-1 rounded-full">
-                                    <Icon
-                                        as={RemoveIcon}
-                                        className="text-typography-50 h-3 w-3"
-                                    />
-                                </Box>
-                                {image &&
-                                (index === 0 ? (
-                                    <Box className="absolute bottom-2 left-2 bg-secondary-500/70 py-1 px-2 rounded-full">
-                                        <Text className="text-secondary-800 text-2xs">
-                                            Main
-                                        </Text>
-                                    </Box>
-                                ) : (
-                                    <Box className="absolute bottom-2 left-2 bg-background-50 h-5 w-5 items-center justify-center rounded-full">
-                                        <Text className="text-typography-500 text-2xs">
-                                            {index + 1}
-                                        </Text>
-                                    </Box>
-                                ))}
-                            </>
+          <Box className="flex-row flex-wrap justify-between gap-y-2.5">
+            {[...Array(MAX_PROFILE_IMAGES_AMOUNT)].map((_, index) => {
+              const image = images[index];
+              return (
+                <Box className="w-[31%] aspect-square relative" key={index}>
+                  {image ? (
+                    <>
+                      <Image
+                        source={image}
+                        className="w-full h-full object-cover rounded-lg"
+                        alt="uploaded"
+                      />
+                      <Box className="absolute top-1 right-1 bg-background-950 p-1 rounded-full z-10">
+                        <Icon
+                          as={RemoveIcon}
+                          className="text-typography-50 h-3 w-3"
+                        />
+                      </Box>
+                      {index === 0 ? (
+                        <Box className="absolute bottom-2 left-2 bg-secondary-500/70 py-1 px-2 rounded-full">
+                          <Text className="text-secondary-800 text-2xs">
+                            Main
+                          </Text>
                         </Box>
-                        ))}
-                        <Box className="w-[31%] aspect-square">
-                        {images.length !== MAX_PROFILE_IMAGES_AMOUNT && (
-                        <Pressable onPress={() => pickImage()}>
-                            <Box className="w-full h-full rounded-lg items-center justify-center border border-background-100">
-                                <Icon as={AddIcon} size="lg" />
-                            </Box>
-                        </Pressable>
-                        )}
+                      ) : (
+                        <Box className="absolute bottom-2 left-2 bg-background-50 h-5 w-5 items-center justify-center rounded-full">
+                          <Text className="text-typography-500 text-2xs">
+                            {index + 1}
+                          </Text>
                         </Box>
-                    </Box>
-                    <InfoOnboarding info={i18n.t("onboarding.pictures.dndInstructions")} />
-                </VStack>
-            </Box>
-            <Fab
-                size="lg"
-                onPress={() => {
-                    router.push("/sign-in/onboarding/intro");
-                }}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
-            >
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
-        </Box>
-    );
-};
+                      )}
+                    </>
+                  ) : (
+                    images.length !== MAX_PROFILE_IMAGES_AMOUNT && (
+                      <Pressable onPress={pickImage}>
+                        <Box className="w-full h-full rounded-lg items-center justify-center border border-background-100">
+                          <Icon as={AddIcon} size="lg" />
+                        </Box>
+                      </Pressable>
+                    )
+                  )}
+                </Box>
+              );
+            })}
+          </Box>
+
+          <InfoOnboarding info={i18n.t("onboarding.pictures.dndInstructions")} />
+        </VStack>
+      </Box>
+
+      <Fab
+        size="lg"
+        onPress={() => router.push("/sign-in/onboarding/intro")}
+        className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
+        style={{ marginBottom: -1 * insets.bottom }}
+      >
+        <FabIcon as={ChevronRightIcon} />
+      </Fab>
+    </Box>
+  );
+}
