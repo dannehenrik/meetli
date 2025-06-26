@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ProgressFilledTrack } from "@/components/ui/progress";
@@ -16,10 +16,44 @@ import { Text } from "@/components/ui/text";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { Image } from "@/components/ui/image";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
-import { ONBOARDING_PAGES } from "@/constants/constants";
+import { MAX_PROFILE_IMAGES_AMOUNT, ONBOARDING_PAGES } from "@/constants/constants";
 import { i18n } from "@/app/_layout";
+import * as ImagePicker from 'expo-image-picker';
+import { Pressable } from "@/components/ui/pressable";
+
+const fakeImages = 
+[
+    require("@/assets/images/fake-profile-images/profile_1_preview.png"),
+    require("@/assets/images/fake-profile-images/profile_2_preview.png"),
+    require("@/assets/images/fake-profile-images/profile_3_preview.png"),
+    require("@/assets/images/fake-profile-images/profile_4_preview.png"),
+    false,
+    false,
+]
 
 export default function pictures() {
+    const [images, setImages] = useState<(string)[]>([])
+
+    async function pickImage() {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.canceled) {
+            // setImage(result.assets[0].uri);
+            const copyImages = [...images];
+            if (images.length !== MAX_PROFILE_IMAGES_AMOUNT) {
+                copyImages.push(result.assets[0].uri);
+            }
+            setImages(copyImages);
+        }
+    };
     const insets = useSafeAreaInsets();
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
@@ -41,27 +75,21 @@ export default function pictures() {
                         </Text>
                     </VStack>
                     <Box className="flex-wrap justify-between gap-y-2.5 flex-row">
-                        {[
-                        require("@/assets/images/fake-profile-images/profile_1_preview.png"),
-                        require("@/assets/images/fake-profile-images/profile_2_preview.png"),
-                        require("@/assets/images/fake-profile-images/profile_3_preview.png"),
-                        require("@/assets/images/fake-profile-images/profile_4_preview.png"),
-                        false,
-                        false,
-                        ].map((image, index) => (
+                    {/* <Box className="grid grid-cols-3 gap-3"> */}
+                        {images.map((image, index) => (
                         <Box className="w-[31%] aspect-square" key={index}>
-                            {image ? (
+                            
                             <>
                                 <Image
                                 source={image}
                                 className="w-full h-full object-cover rounded-lg"
                                 alt="instagram"
                                 />
-                                <Box className="absolute -top-3 right-2.5 bg-background-950 p-1 rounded-full">
-                                <Icon
-                                    as={RemoveIcon}
-                                    className="text-typography-50 h-3 w-3"
-                                />
+                                <Box className="absolute top-3 right-2.5 bg-background-950 p-1 rounded-full">
+                                    <Icon
+                                        as={RemoveIcon}
+                                        className="text-typography-50 h-3 w-3"
+                                    />
                                 </Box>
                                 {image &&
                                 (index === 0 ? (
@@ -78,13 +106,17 @@ export default function pictures() {
                                     </Box>
                                 ))}
                             </>
-                            ) : (
+                        </Box>
+                        ))}
+                        <Box className="w-[31%] aspect-square">
+                        {images.length !== MAX_PROFILE_IMAGES_AMOUNT && (
+                        <Pressable onPress={() => pickImage()}>
                             <Box className="w-full h-full rounded-lg items-center justify-center border border-background-100">
                                 <Icon as={AddIcon} size="lg" />
                             </Box>
-                            )}
+                        </Pressable>
+                        )}
                         </Box>
-                        ))}
                     </Box>
                     <InfoOnboarding info={i18n.t("onboarding.pictures.dndInstructions")} />
                 </VStack>
