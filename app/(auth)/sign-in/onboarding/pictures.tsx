@@ -20,10 +20,30 @@ import * as ImagePicker from 'expo-image-picker';
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Alert } from "react-native"; // Add this at the top
+
+import {
+  Actionsheet,
+  ActionsheetBackdrop,
+  ActionsheetContent,
+  ActionsheetItem,
+  ActionsheetDragIndicator,
+  ActionsheetDragIndicatorWrapper,
+  ActionsheetItemText,
+} from "@/components/ui/actionsheet";
+
+import { ButtonText, Button, ButtonGroup } from "@/components/ui/button";
+
+
 
 
 export default function Pictures() {
     const [images, setImages] = useState<string[]>([]);
+
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+    const [showActionsheet, setShowActionsheet] = useState(false);
+
+
     const insets = useSafeAreaInsets();
 
     async function pickImage() {
@@ -43,12 +63,32 @@ export default function Pictures() {
         }
     }
 
+    async function replaceImage(index: number) {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled && result.assets?.length > 0) {
+            setImages(prev => {
+                const copy = [...prev];
+                copy[index] = result.assets[0].uri;
+                return copy;
+            });
+        }
+    }
+
+
+
     function removeImage(index: number) {
         setImages(prevImages => prevImages.filter((_, i) => i !== index));
     }
 
 
     return (
+    <>
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-full">
                 <Progress
@@ -80,7 +120,14 @@ export default function Pictures() {
                                     className="w-full h-full object-cover rounded-lg"
                                     alt="uploaded"
                                 />
-                                <Pressable onPress={() => removeImage(index)} className="absolute top-1 right-1 bg-background-950 p-1 rounded-full z-10">
+                                <Pressable 
+                                    className="absolute top-1 right-1 bg-background-950 p-1 rounded-full z-10"
+                                    onPress={() => {
+                                        setSelectedImageIndex(index);
+                                        setShowActionsheet(true);
+                                    }}
+                                
+                                >
                                     <Icon
                                     as={RemoveIcon}
                                     className="text-typography-50 h-3 w-3"
@@ -110,7 +157,7 @@ export default function Pictures() {
                         })}
                     </Box>
 
-                    <InfoOnboarding info={i18n.t("onboarding.pictures.dndInstructions")} />
+                    {/* <InfoOnboarding info={i18n.t("onboarding.pictures.dndInstructions")} /> */}
                 </VStack>
             </Box>
 
@@ -123,9 +170,44 @@ export default function Pictures() {
                 <FabIcon as={ChevronRightIcon} />
             </Fab>
         </Box>
+
+        <Actionsheet isOpen={showActionsheet} onClose={() => setShowActionsheet(false)}>
+            <ActionsheetBackdrop />
+            <ActionsheetContent>
+                <ActionsheetDragIndicatorWrapper>
+                    <ActionsheetDragIndicator/>
+                </ActionsheetDragIndicatorWrapper>
+                <ButtonGroup className="w-full mt-3">
+                    <Button 
+                        action="negative" 
+                        className="w-full rounded-xl"
+                        onPress={() => {
+                            if (selectedImageIndex !== null) {
+                                removeImage(selectedImageIndex)
+                            }
+                            setShowActionsheet(false);
+                        }}
+                    >
+                        <ButtonText>Delete image</ButtonText>
+                    </Button>
+                    <Button 
+                        className="w-full rounded-xl"
+                        onPress={async () => {
+                            setShowActionsheet(false);
+                            if (selectedImageIndex !== null) {
+                                await replaceImage(selectedImageIndex);
+                            }
+                        }}
+                    >
+                        <ButtonText>Replace image</ButtonText>
+                    </Button>
+                    <Button className="w-full mt-3 rounded-xl" variant="outline" onPress={() => setShowActionsheet(false)}>
+                        <ButtonText>Cancel</ButtonText>
+                    </Button>
+                </ButtonGroup>
+            </ActionsheetContent>
+        </Actionsheet>
+    </>
     );
 }
-
-
-
 
