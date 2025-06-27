@@ -12,7 +12,13 @@ export interface User {
     gender_preferences: Gender[],
     location: LocationType,
     looking_for: LookingFor,
-    dob: Date //Date of birth
+    dob: Date, //Date of birth
+    images: string[]
+}
+
+export interface Image {
+    fileName: string,
+    url: string,
 }
 
 export interface LocationType {

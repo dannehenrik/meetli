@@ -18,9 +18,12 @@ import { VStack } from "@/components/ui/vstack";
 import { MAX_PROFILE_IMAGES_AMOUNT, ONBOARDING_PAGES } from "@/constants/constants";
 import * as ImagePicker from 'expo-image-picker';
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Alert } from "react-native"; // Add this at the top
+import { decode } from 'base64-arraybuffer'
+
+
 
 import {
   Actionsheet,
@@ -33,18 +36,54 @@ import {
 } from "@/components/ui/actionsheet";
 
 import { ButtonText, Button, ButtonGroup } from "@/components/ui/button";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/utils/supabase";
+import { Gender } from "@/types";
+import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { getUser } from "@/server/auth/getUser";
+import { generateUniqueUrl } from "@/utils/generateUniqueUrl";
+import { Spinner } from "@/components/ui/spinner";
 
 
 
 
 export default function Pictures() {
+    const queryClient = useQueryClient();
     const [images, setImages] = useState<string[]>([]);
 
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
     const [showActionsheet, setShowActionsheet] = useState(false);
 
+    const {data: user, error, isPending} = useQuery({
+        queryKey: ['user'],
+        queryFn: async () => await getUser(),
+        staleTime: USER_STALE_TIME,
+    })
+
+    useEffect(() => {
+        if (user && user.images) {
+            setImages(user.images)
+        }
+    }, [user])
+
 
     const insets = useSafeAreaInsets();
+
+    const newImageMutation = useMutation({
+        mutationFn: async ({base64FileData, fileName} : {base64FileData: string, fileName: string}) => { 
+            const publicUrl = await uploadImage(user?.id ?? "", base64FileData, fileName);
+            const copyImages = [...images];
+            copyImages.push(publicUrl)
+            await updateUser(user?.id ?? "", copyImages);
+        },
+        onError: (error) => {
+            console.error(error.message)
+        },
+        onSuccess: () => {
+            console.log("SUCCESS");
+            queryClient.invalidateQueries({ queryKey: ['user']})
+        }
+    })
 
     async function pickImage() {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -52,14 +91,12 @@ export default function Pictures() {
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
+            base64: true,
         });
 
         if (!result.canceled && result.assets?.length > 0) {
-            const copyImages = [...images];
-            if (copyImages.length < MAX_PROFILE_IMAGES_AMOUNT) {
-                copyImages.push(result.assets[0].uri);
-                setImages(copyImages);
-            }
+            const fileData = result.assets[0]
+            newImageMutation.mutate({base64FileData: fileData.base64 ?? "", fileName: fileData.fileName ?? ""})
         }
     }
 
@@ -110,6 +147,7 @@ export default function Pictures() {
 
                     <Box className="flex-row flex-wrap justify-between gap-y-2.5">
                         {[...Array(MAX_PROFILE_IMAGES_AMOUNT)].map((_, index) => {
+                        // const image = images[index];
                         const image = images[index];
                         return (
                             <Box className="w-[31%] aspect-square relative" key={index}>
@@ -147,7 +185,11 @@ export default function Pictures() {
                                 images.length !== MAX_PROFILE_IMAGES_AMOUNT && (
                                 <Pressable onPress={pickImage}>
                                     <Box className="w-full h-full rounded-lg items-center justify-center border border-background-100">
-                                    <Icon as={AddIcon} size="lg" />
+                                        {newImageMutation.isPending && images.length === index ? (
+                                            <Spinner size="small"/>
+                                        ) : (
+                                            <Icon as={AddIcon} size="lg" />
+                                        )}
                                     </Box>
                                 </Pressable>
                                 )
@@ -210,4 +252,33 @@ export default function Pictures() {
     </>
     );
 }
+
+async function updateUser(userId: string, images: string[]) {
+    const {error} = await supabase.from('users').update({images: images}).eq('id', userId);
+
+    if (error) throw new Error("Something went wrong when updating the user: " + error.message)
+}
+
+
+async function uploadImage(userId: string, base64FileData: string, fileName: string) {
+    const { data: uploadData, error: uploadError } = await supabase
+    .storage
+    .from('images')
+    .upload(`${userId}/${generateUniqueUrl(fileName)}`, decode(base64FileData))
+
+    if (uploadError || !uploadData) throw new Error("Something went wrong when uploading the file" + uploadError?.message)
+    
+    const { data: {publicUrl} } = supabase
+    .storage
+    .from('images')
+    .getPublicUrl(uploadData.path)
+
+    return publicUrl
+}
+
+// async function updateUser(userId: string, gender: Gender) {
+//     const {error} = await supabase.from('users').update({gender: gender}).eq('id', userId);
+
+//     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
+// }
 
