@@ -60,13 +60,6 @@ export default function Pictures() {
         staleTime: Infinity,
     })
 
-    // useEffect(() => {
-    //     if (user && user.images) {
-    //         setImages(user.images)
-    //     }
-    // }, [user])
-
-
     const insets = useSafeAreaInsets();
 
     const newImageMutation = useMutation({
@@ -217,11 +210,6 @@ export default function Pictures() {
                                 }}>
                                     <Box className="w-full h-full rounded-lg items-center justify-center border border-background-100">
                                         <Icon as={AddIcon} size="lg" />
-                                        {/* {newImageMutation.isPending && images.length === index ? (
-                                            <Spinner size="small"/>
-                                        ) : (
-                                            <Icon as={AddIcon} size="lg" />
-                                        )} */}
                                     </Box>
                                 </Pressable>
                                 )

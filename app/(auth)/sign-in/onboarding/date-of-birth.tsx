@@ -87,6 +87,8 @@ export default function dateOfBirth() {
     }
 
     const insets = useSafeAreaInsets();
+
+    if (!user) return null
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
@@ -168,7 +170,9 @@ export default function dateOfBirth() {
                 size="lg"
                 onPress={() => {
                     router.push("/sign-in/onboarding/gender");
-                    mutation.mutate();
+                    if (date !== user.dob) { 
+                        mutation.mutate();
+                    }
                 }}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
                 style={{ marginBottom: -1 * insets.bottom }}

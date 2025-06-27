@@ -60,6 +60,8 @@ export default function gender() {
     }, [user]);
 
     const insets = useSafeAreaInsets();
+
+    if (!user) return null
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
@@ -131,7 +133,9 @@ export default function gender() {
                 disabled={gender.length === 0}
                 onPress={() => {
                     router.push("/sign-in/onboarding/interest");
-                    mutation.mutate()
+                    if (gender !== user.gender) {
+                        mutation.mutate()
+                    }
                 }}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
                 style={{ marginBottom: -1 * insets.bottom }}

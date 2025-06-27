@@ -48,6 +48,8 @@ export default function name() {
         }
     }, [user]);
 
+    if (!user) return null
+
     const insets = useSafeAreaInsets();
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
@@ -81,7 +83,9 @@ export default function name() {
                 disabled={firstName.length === 0 || lastName.length === 0 }
                 onPress={() => {
                     router.push("/sign-in/onboarding/date-of-birth");
-                    mutation.mutate();
+                    if (firstName !== user.first_name || lastName !== user.last_name) {
+                        mutation.mutate();
+                    }
                 }}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
                 style={{ marginBottom: -1 * insets.bottom }}
