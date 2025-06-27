@@ -145,6 +145,8 @@ export default function Pictures() {
         return null
     }
 
+    if (!user) return null
+
     return (
     <>
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
@@ -169,7 +171,7 @@ export default function Pictures() {
                     <Box className="flex-row flex-wrap justify-between gap-y-2.5">
                         {[...Array(MAX_PROFILE_IMAGES_AMOUNT)].map((_, index) => {
                         // const image = images[index];
-                        const image = user?.images?.[index];
+                        const image = user.images[index];
                         return (
                             <Box className="w-[31%] aspect-square relative" key={index}>
                             {image ? (
@@ -225,7 +227,8 @@ export default function Pictures() {
 
             <Fab
                 size="lg"
-                onPress={() => router.push("/sign-in/onboarding/intro")}
+                disabled={user.images.length === 0}
+                onPress={() => router.push("/sign-in/onboarding/done")}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
                 style={{ marginBottom: -1 * insets.bottom }}
             >
