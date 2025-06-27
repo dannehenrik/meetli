@@ -38,7 +38,7 @@ import {
 import { ButtonText, Button, ButtonGroup } from "@/components/ui/button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
-import { Gender } from "@/types";
+import { Gender, ImageType, User } from "@/types";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { getUser } from "@/server/auth/getUser";
 import { generateUniqueUrl } from "@/utils/generateUniqueUrl";
@@ -49,7 +49,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 export default function Pictures() {
     const queryClient = useQueryClient();
-    const [images, setImages] = useState<string[]>([]);
+    const [images, setImages] = useState<ImageType[]>([]);
 
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
     const [showActionsheet, setShowActionsheet] = useState(false);
@@ -57,32 +57,82 @@ export default function Pictures() {
     const {data: user, error, isPending} = useQuery({
         queryKey: ['user'],
         queryFn: async () => await getUser(),
-        staleTime: USER_STALE_TIME,
+        staleTime: Infinity,
     })
 
-    useEffect(() => {
-        if (user && user.images) {
-            setImages(user.images)
-        }
-    }, [user])
+    // useEffect(() => {
+    //     if (user && user.images) {
+    //         setImages(user.images)
+    //     }
+    // }, [user])
 
 
     const insets = useSafeAreaInsets();
 
     const newImageMutation = useMutation({
-        mutationFn: async ({base64FileData, fileName} : {base64FileData: string, fileName: string}) => { 
-            const publicUrl = await uploadImage(user?.id ?? "", base64FileData, fileName);
-            const copyImages = [...images];
-            copyImages.push(publicUrl)
-            await updateUser(user?.id ?? "", copyImages);
+        mutationFn: async ({fileData} : {fileData: ImagePicker.ImagePickerAsset}) => {
+            const filePath = generateUniqueUrl(fileData.fileName ?? "");
+            const newImage = {fileName: fileData.fileName ?? "", filePath: filePath, url: fileData.uri}
+            const copyImages = [...(user?.images ?? [])];
+
+            queryClient.setQueryData(["user"], (oldData: User) => ({
+                ...oldData, images: [...copyImages, newImage]
+            }));
+            const publicUrl = await uploadImage(user?.id ?? "", fileData.base64 ?? "", filePath) //Upload image and return public url
+            await updateUser(user?.id ?? "", [...copyImages, {...newImage, url: publicUrl} ]); //Update the database with new data
         },
         onError: (error) => {
             console.error(error.message)
         },
-        onSuccess: () => {
-            console.log("SUCCESS");
-            queryClient.invalidateQueries({ queryKey: ['user']})
-        }
+        onSuccess: (data) => {
+            // setImages((oldImages) => [...oldImages, data])
+        },
+        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
+    })
+
+
+    const replaceImageMutation = useMutation({
+        mutationFn: async ({fileData, index} : {fileData: ImagePicker.ImagePickerAsset, index: number}) => {
+            const filePath = generateUniqueUrl(fileData.fileName ?? "");
+            const newImage = {fileName: fileData.fileName ?? "", filePath: filePath, url: fileData.uri}
+            const copyImages = [...(user?.images ?? [])];
+            copyImages[index] = newImage
+            queryClient.setQueryData(["user"], (oldData: User) => ({
+                ...oldData, images: copyImages
+            }));
+            const publicUrl = await uploadImage(user?.id ?? "", fileData.base64 ?? "", filePath) //Upload image and return public url
+            copyImages[index] = {...newImage, url: publicUrl}
+            await updateUser(user?.id ?? "", copyImages); //Update the database with new data
+            await deleteImage(newImage);
+        },
+        onError: (error) => {
+            console.error(error.message)
+        },
+        onSuccess: (data) => {
+            // setImages((oldImages) => [...oldImages, data])
+        },
+        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
+    })
+
+    const deleteImageMutation = useMutation({
+        mutationFn: async ({index} : {index: number}) => {
+            if (user?.images) {
+                const imageToDelete = user.images[index];
+                const newImages = user.images.filter((_, i) => i !== index )
+                queryClient.setQueryData(["user"], (oldData: User) => ({
+                    ...oldData, images: newImages
+                }));
+                await updateUser(user?.id ?? "", newImages); //Update the database with new data
+                await deleteImage(imageToDelete);
+            }
+        },
+        onError: (error) => {
+            console.error(error.message)
+        },
+        onSuccess: (data) => {
+            // setImages((oldImages) => [...oldImages, data])
+        },
+        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
     })
 
     async function pickImage() {
@@ -95,34 +145,12 @@ export default function Pictures() {
         });
 
         if (!result.canceled && result.assets?.length > 0) {
-            const fileData = result.assets[0]
-            newImageMutation.mutate({base64FileData: fileData.base64 ?? "", fileName: fileData.fileName ?? ""})
+            const fileData = result.assets[0];
+            return fileData
         }
+
+        return null
     }
-
-    async function replaceImage(index: number) {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ['images'],
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled && result.assets?.length > 0) {
-            setImages(prev => {
-                const copy = [...prev];
-                copy[index] = result.assets[0].uri;
-                return copy;
-            });
-        }
-    }
-
-
-
-    function removeImage(index: number) {
-        setImages(prevImages => prevImages.filter((_, i) => i !== index));
-    }
-
 
     return (
     <>
@@ -148,13 +176,13 @@ export default function Pictures() {
                     <Box className="flex-row flex-wrap justify-between gap-y-2.5">
                         {[...Array(MAX_PROFILE_IMAGES_AMOUNT)].map((_, index) => {
                         // const image = images[index];
-                        const image = images[index];
+                        const image = user?.images?.[index];
                         return (
                             <Box className="w-[31%] aspect-square relative" key={index}>
                             {image ? (
                                 <>
                                 <Image
-                                    source={image}
+                                    source={image.url}
                                     className="w-full h-full object-cover rounded-lg"
                                     alt="uploaded"
                                 />
@@ -183,13 +211,17 @@ export default function Pictures() {
                                 </>
                             ) : (
                                 images.length !== MAX_PROFILE_IMAGES_AMOUNT && (
-                                <Pressable onPress={pickImage}>
+                                <Pressable onPress={async () => {
+                                    const fileData = await pickImage();
+                                    if (fileData) newImageMutation.mutate({fileData})
+                                }}>
                                     <Box className="w-full h-full rounded-lg items-center justify-center border border-background-100">
-                                        {newImageMutation.isPending && images.length === index ? (
+                                        <Icon as={AddIcon} size="lg" />
+                                        {/* {newImageMutation.isPending && images.length === index ? (
                                             <Spinner size="small"/>
                                         ) : (
                                             <Icon as={AddIcon} size="lg" />
-                                        )}
+                                        )} */}
                                     </Box>
                                 </Pressable>
                                 )
@@ -225,7 +257,7 @@ export default function Pictures() {
                         className="w-full rounded-xl"
                         onPress={() => {
                             if (selectedImageIndex !== null) {
-                                removeImage(selectedImageIndex)
+                                deleteImageMutation.mutate({index: selectedImageIndex})
                             }
                             setShowActionsheet(false);
                         }}
@@ -237,7 +269,9 @@ export default function Pictures() {
                         onPress={async () => {
                             setShowActionsheet(false);
                             if (selectedImageIndex !== null) {
-                                await replaceImage(selectedImageIndex);
+                                const image = await pickImage()
+                                if (image) replaceImageMutation.mutate({fileData: image, index: selectedImageIndex});
+                                // await replaceImage(selectedImageIndex);
                             }
                         }}
                     >
@@ -253,20 +287,21 @@ export default function Pictures() {
     );
 }
 
-async function updateUser(userId: string, images: string[]) {
+async function updateUser(userId: string, images: ImageType[]) {
     const {error} = await supabase.from('users').update({images: images}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }
 
 
-async function uploadImage(userId: string, base64FileData: string, fileName: string) {
+async function uploadImage(userId: string, base64FileData: string, filePath: string) {
     const { data: uploadData, error: uploadError } = await supabase
     .storage
     .from('images')
-    .upload(`${userId}/${generateUniqueUrl(fileName)}`, decode(base64FileData))
+    .upload(`${userId}/${filePath}`, decode(base64FileData))
 
     if (uploadError || !uploadData) throw new Error("Something went wrong when uploading the file" + uploadError?.message)
+
     
     const { data: {publicUrl} } = supabase
     .storage
@@ -276,9 +311,17 @@ async function uploadImage(userId: string, base64FileData: string, fileName: str
     return publicUrl
 }
 
+async function deleteImage(image: ImageType) {
+    const { error } = await supabase
+    .storage
+    .from('images')
+    .remove([image.filePath])
+
+    if (error) throw new Error("Something went wrong when deleting the image: " + error.message)
+}
+
 // async function updateUser(userId: string, gender: Gender) {
 //     const {error} = await supabase.from('users').update({gender: gender}).eq('id', userId);
 
 //     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 // }
-

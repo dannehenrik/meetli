@@ -13,12 +13,13 @@ export interface User {
     location: LocationType,
     looking_for: LookingFor,
     dob: Date, //Date of birth
-    images: string[]
+    images: ImageType[],
 }
 
-export interface Image {
+export interface ImageType {
     fileName: string,
-    url: string,
+    filePath: string,
+    url: string
 }
 
 export interface LocationType {
