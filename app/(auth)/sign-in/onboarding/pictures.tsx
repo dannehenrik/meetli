@@ -228,7 +228,7 @@ export default function Pictures() {
             <Fab
                 size="lg"
                 disabled={user.images.length === 0}
-                onPress={() => router.push("/sign-in/onboarding/done")}
+                onPress={() => router.push("/sign-in/onboarding/profile-base-completed")}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
                 style={{ marginBottom: -1 * insets.bottom }}
             >

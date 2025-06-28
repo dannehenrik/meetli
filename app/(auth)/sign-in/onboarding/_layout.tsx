@@ -11,6 +11,7 @@ const layout = () => {
       )}
     >
       <Stack.Screen name="email" />
+      <Stack.Screen name="profile-base-completed" />
       <Stack.Screen name="date-of-birth" />
       <Stack.Screen name="done" />
       <Stack.Screen name="gender" />
