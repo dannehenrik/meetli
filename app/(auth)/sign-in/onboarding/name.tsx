@@ -15,19 +15,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  useToast,
-  Toast,
-  ToastTitle,
-  ToastDescription,
-} from "@/components/ui/toast"
 import { useAwesomeToast } from "@/hooks/toasts";
 
 
 
 export default function name() {
-    const {showSuccessToast, showErrorToast, showInfoToast, showWarningToast} = useAwesomeToast();
-
+    const {showErrorToast} = useAwesomeToast();
 
     const queryClient = useQueryClient();
     const router = useRouter();
