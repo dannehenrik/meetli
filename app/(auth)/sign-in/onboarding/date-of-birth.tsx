@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { router, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ProgressFilledTrack } from "@/components/ui/progress";
@@ -26,7 +26,8 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { getLocales } from 'expo-localization';
 import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
 
-export default function dateOfBirth() {
+export default function dateOfBirth() {    
+
     const queryClient = useQueryClient();
     const router = useRouter();
 
@@ -92,12 +93,6 @@ export default function dateOfBirth() {
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
-                <Progress
-                    value={(2 / 9) * 100}
-                    className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
-                >
-                    <ProgressFilledTrack />
-                </Progress>
 
                 <FormControl className="w-full">
                     <VStack className="gap-6">

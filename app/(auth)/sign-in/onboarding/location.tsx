@@ -43,7 +43,7 @@ export default function LocationScreen() {
 
     const { data: locationStatus, isPending } = useQuery({
         queryKey: ["locationPermission"],
-        queryFn: async () => checkLocationPermissions(),
+        queryFn: async () => await checkLocationPermissions(),
     });
 
     const mutation = useMutation({
@@ -55,6 +55,7 @@ export default function LocationScreen() {
 
     async function checkLocationPermissions(): Promise<LocationStatus> {
         const { status } = await Location.getForegroundPermissionsAsync();
+        console.log("Status: ", status);
         return status;
     }
 
@@ -94,12 +95,7 @@ export default function LocationScreen() {
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-5 px-5 top-11 w-[100%]">
-                <Progress
-                    value={(5 / 9) * 100}
-                    className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
-                >
-                    <ProgressFilledTrack />
-                </Progress>
+
 
                 <Heading className="font-roboto font-semibold text-2xl">
                     {i18n.t("onboarding.location.title")}

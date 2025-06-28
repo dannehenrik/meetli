@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { router, useRouter } from "expo-router";
 import { ProgressFilledTrack } from "@/components/ui/progress";
 import { FormControl } from "@/components/ui/form-control";
@@ -30,8 +30,8 @@ import { supabase } from "@/utils/supabase";
 import { Gender } from "@/types";
 
 export default function gender() {
-      const queryClient = useQueryClient();
-        const router = useRouter();
+    const queryClient = useQueryClient();
+    const router = useRouter();
 
     const {data: user, error, isPending} = useQuery({
         queryKey: ['user'],
@@ -65,12 +65,6 @@ export default function gender() {
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
-                <Progress
-                    value={(3 / ONBOARDING_PAGES) * 100}
-                    className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
-                >
-                    <ProgressFilledTrack />
-                </Progress>
 
                 <FormControl className="w-full">
                     <VStack className="gap-6">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -17,6 +17,7 @@ import { supabase } from "@/utils/supabase";
 import { i18n } from "@/app/_layout";
 import { getUser } from "@/server/auth/getUser";
 import { useQuery } from "@tanstack/react-query";
+
 
 export default function Verified() {
 

@@ -59,10 +59,10 @@ const swedishLanguage = {
             lookingForClarification: "Detta hjälper oss att matcha dig med personer som passar dina önskemål",
         },
         location: {
-            title: "För att hitta personer nära dig behöver vi tillgång till din plats.",
+            title: "Vi behöver tillgång till din plats.",
             granted: "Platsåtkomst beviljad. Tack!",
             denied: "Platsåtkomst nekad",
-            undetermined: "Platsåtkomst krävs för appens funktionalitet.",
+            undetermined: "Platsåtkomst krävs för att hitta personer nära dig.",
             accessRequired:
                 "Platsåtkomst krävs för att appen ska fungera. Utan den kan du inte hitta matchningar eller synas för andra. Du kan aktivera platsåtkomst senare i inställningarna, eller följa instruktionerna nedan.",
             iosInstructionsTitle: "Så här aktiverar du platsåtkomst på iOS:",
@@ -149,10 +149,10 @@ const englishLanguage = {
             lookingForClarification: "This will help us match you to people who align to what you are looking for",
         },
         location: {
-            title: "To find people near you, we need access to your location.",
+            title: "We need access to your location!",
             granted: "Location access granted. Thank you!",
             denied: "Location permission not granted",
-            undetermined: "Location permission required for app functionality.",
+            undetermined: "Location permission required for you to find people nearby .",
             accessRequired:
                 "Location access is required for all app functionality. Without it, you won't be able to find matches or appear in others' searches. You can enable location later in settings for full functionality or you can follow the instructions below.",
             iosInstructionsTitle: "To enable location on iOS:",

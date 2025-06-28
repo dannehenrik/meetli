@@ -50,13 +50,7 @@ export default function interests() {
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
-                <Progress
-                value={(8 / 9) * 100}
-                className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
-                >
-                <ProgressFilledTrack />
-                </Progress>
-
+    
                 <Box className="w-full gap-6">
                 <Heading className="font-roboto font-semibold text-2xl">
                     What are your interests?

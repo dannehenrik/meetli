@@ -12,10 +12,13 @@ import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+
 export default function name() {
+
+
     const queryClient = useQueryClient();
     const router = useRouter();
 
@@ -54,12 +57,6 @@ export default function name() {
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
-                <Progress
-                    value={(1 / ONBOARDING_PAGES) * 100}
-                    className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
-                >
-                    <ProgressFilledTrack />
-                </Progress>
 
                 <VStack className="gap-6 w-full">
                     <Heading className="font-roboto font-semibold text-2xl">

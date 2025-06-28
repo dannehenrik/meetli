@@ -5,8 +5,12 @@ import { OnboardingHeader } from "@/components/shared/onboarding-header";
 import { Box } from "@/components/ui/box";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
+import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
+import { ONBOARDING_PAGES } from "@/constants/constants";
+import { createContext } from "react";
 
 export default function RootLayout() {
+
 
     const handleKeyboardDismiss = () => {
         if (Platform.OS !== "web") {
@@ -22,14 +26,16 @@ export default function RootLayout() {
             <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
                 <Box className="flex-1 bg-background-0">
                     <OnboardingHeader />
-                    <Stack
-                        screenLayout={({ children }) => (
-                            <Box className="flex-1 bg-background-0">{children}</Box>
-                        )}
-                        screenOptions={{
-                            headerShown: false,
-                        }}
-                    />
+                    
+                        <Stack
+                            screenLayout={({ children }) => (
+                                <Box className="flex-1 bg-background-0">{children}</Box>
+                            )}
+                            screenOptions={{
+                                headerShown: false,
+                            }}
+                        />
+
                 </Box>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>

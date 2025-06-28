@@ -151,13 +151,7 @@ export default function Pictures() {
     <>
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-full">
-                <Progress
-                value={(7 / ONBOARDING_PAGES) * 100}
-                className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
-                >
-                <ProgressFilledTrack />
-                </Progress>
-
+   
                 <VStack className="gap-6 w-full">
                     <VStack className="gap-3">
                         <Heading className="font-roboto font-semibold text-2xl">
