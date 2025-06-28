@@ -12,6 +12,7 @@ import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/re
 import { Spinner } from "@/components/ui/spinner";
 import { getUser, getUserFromId } from "@/server/auth/getUser";
 import { User } from "@/types";
+import { useAwesomeToast } from "@/hooks/toasts";
 
 
 export default function Otp() {
@@ -19,18 +20,18 @@ export default function Otp() {
     const [otpValue, setOtpValue] = useState("");
     const router = useRouter();
 
+    const {showErrorToast} = useAwesomeToast();
+
     function handleOtpChange(otp: string) {
         setOtpValue(otp);
     };
 
-    // const {data, error, isPending} = useQuery({
-    //     queryKey: ["user"],
-    //     queryFn: async () => getUser()
-    // })
 
     const mutation = useMutation({
         mutationFn: async () => handleOtpVerification("dannehenrik2@gmail.com", otpValue),
-        onError: (error) => { console.error("Something went wrong when sending OTP: ", error.message) },
+        onError: (error) => { 
+            console.error("OTP not correct: ", error.message) 
+        },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['user']})
             if (data?.onboarding_completed) {

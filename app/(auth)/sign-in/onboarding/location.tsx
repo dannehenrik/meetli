@@ -7,6 +7,7 @@ import { Heading } from "@/components/ui/heading";
 import { ChevronRightIcon, Icon } from "@/components/ui/icon";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Text } from "@/components/ui/text";
+import { useAwesomeToast } from "@/hooks/toasts";
 import { getUserId } from "@/server/auth/getUser";
 import { LocationType } from "@/types";
 import { getCoordinates } from "@/utils/getLocation";
@@ -23,6 +24,7 @@ type LocationStatus = "granted" | "denied" | "undetermined";
 
 export default function LocationScreen() {
     const colorTheme = useColorScheme();
+    const {showErrorToast} = useAwesomeToast();
     const queryClient = useQueryClient();
     const router = useRouter();
     const insets = useSafeAreaInsets();
@@ -49,6 +51,7 @@ export default function LocationScreen() {
     const mutation = useMutation({
         mutationFn: async () => updateUserLocation(),
         onError: (error) => {
+            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.locationError"));
             console.error(error.message)
         },
     })
@@ -164,7 +167,9 @@ export default function LocationScreen() {
                 size="lg"
                 onPress={() => {
                     router.push("/sign-in/onboarding/pictures");
-                    mutation.mutate();
+                    if (locationStatus === "granted") {
+                        mutation.mutate();
+                    }
                 }}
                 className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
                 style={{ marginBottom: -1 * insets.bottom }}

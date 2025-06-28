@@ -19,11 +19,13 @@ import {
     FormControlHelper,
     FormControlHelperText
 } from "@/components/ui/form-control";
+import { useAwesomeToast } from "@/hooks/toasts";
+import { Spinner } from "@/components/ui/spinner";
 
 
 export default function Email() {
     // const { successToast, errorToast, warningToast, infoToast, updateToast } = useCustomToast();
-    const { showToast: showError } = useErrorToast();
+    const { showErrorToast, showSuccessToast } = useAwesomeToast();
 
     const router = useRouter();
     const [error, setError] = useState(false);
@@ -36,10 +38,11 @@ export default function Email() {
         mutationFn: async (email: string) => sendOtp(email),
         onError: (error) => {
             console.error("Something went wrong when sending OTP: ", error.message)
-            router.back();
+            showErrorToast(i18n.t("messages.error.emailError"))
         },
-        onSuccess: (data) => {
-            console.log("Success: ", data)
+        onSuccess: () => {
+            showSuccessToast(i18n.t("messages.success.emailSent"))
+            router.push("/sign-in/onboarding/otp");
         }
     })
 
@@ -52,7 +55,6 @@ export default function Email() {
     function handleSubmit(value: string) {
         const validation = handleValidation(value);
         if (!validation) return
-        router.push("/sign-in/onboarding/otp");
         mutation.mutate(email);
     }
 
@@ -92,8 +94,12 @@ export default function Email() {
                 style={{ marginBottom: -1 * insets.bottom }}
                 isDisabled={email.length === 0}
                 onPress={() => { handleSubmit(email) }}
-            >
-                <FabIcon as={ChevronRightIcon} />
+            >   
+                {mutation.isPending ? (
+                        <Spinner/>
+                    ) : (
+                        <FabIcon as={ChevronRightIcon} />
+                    )}
             </Fab>
         </Box>
     );

@@ -27,11 +27,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { getUser } from "@/server/auth/getUser";
 import { Gender } from "@/types";
+import { useAwesomeToast } from "@/hooks/toasts";
 
 export default function interest() {
-
-      const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
     const router = useRouter();
+
+    const {showErrorToast} = useAwesomeToast();
 
     const {data: user, error, isPending} = useQuery({
         queryKey: ['user'],
@@ -43,6 +45,7 @@ export default function interest() {
         mutationFn: async () => updateUser(user?.id ?? "", genders as Gender[]),
         onError: (error) => {
             console.error(error.message)
+            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {

@@ -3,7 +3,20 @@
 
 const swedishLanguage = {
     cancel: "Avbryt",
+    accept: "Acceptera",
     confirm: "Bekräfta",
+    messages: {
+        error: {
+            somethingWentWrong: "Något gick fel!",
+            updateProfileError: "Vi kunde inte uppdatera din profil",
+            locationError: "Vi kunde inte hämta din plats",
+            emailError: "Något gick fel när e-postmeddelandet skulle skickas"
+        },
+        success: {
+            emailSent: "E-post skickad!",
+            emailValidationInstructions: "Ange den 6-siffriga koden du just fick",
+        }
+    },
     onboarding: {
         or: "eller",
         changeInformationLaterInfo: "Du kan ändra dessa uppgifter även efter onboarding!",
@@ -13,26 +26,26 @@ const swedishLanguage = {
             continueWithGoogle: "Fortsätt med Google",
             continueWithApple: "Fortsätt med Apple",
             continueWithEmail: "Fortsätt med e-post",
-            agreeToTermsAndPolicy: "Genom att fortsätta godkänner du våra användarvillkor och vår integritetspolicy.",
+            agreeToTermsAndPolicy: "Genom att fortsätta godkänner du våra villkor och vår integritetspolicy.",
             or: "eller",
         },
         email: {
             loginInstruction: "Ange din e-postadress",
             loginSubInstruction: "Vi skickar en verifieringskod för att bekräfta din e-postadress",
             enterPhoneNumber: "Ange telefonnummer",
-            enterPhoneNumberError: "Vänligen ange ett giltigt 10-siffrigt telefonnummer",
+            enterPhoneNumberError: "Ange ett giltigt telefonnummer med 10 siffror",
             enterEmail: "Ange e-post",
             emailExample: "exempel@gmail.com",
             enterEmailError: "Måste vara en giltig e-postadress",
         },
         otp: {
-            otpInstruction: "Ange verifieringskoden",
+            otpInstruction: "Ange verifieringskod",
             otpSubInstruction: "Vi har skickat en verifieringskod till ditt mobilnummer",
         },
         verified: {
             accountVerifiedText: "Yay! Ditt konto är verifierat!",
-            accountVerifiedSubText: "Din e-post har verifierats. Nu sätter vi upp din profil så att du kan börja dejta 🕺🏻",
-            enterDetails: "Fyll i dina uppgifter",
+            accountVerifiedSubText: "Din e-post har verifierats. Nu sätter vi upp din profil för att komma igång 🕺🏻",
+            enterDetails: "Ange uppgifter",
         },
         name: {
             firstName: "Förnamn",
@@ -40,7 +53,7 @@ const swedishLanguage = {
             whatIsYourName: "Vad heter du?",
         },
         dob: {
-            whatIsYourDOB: "Vad är ditt födelsedatum?",
+            whatIsYourDOB: "När är du född?",
             dob: "Födelsedatum"
         },
         age: {
@@ -56,37 +69,42 @@ const swedishLanguage = {
         },
         lookingFor: {
             lookingForInstruction: "Vad letar du efter på Meetli?",
-            lookingForClarification: "Detta hjälper oss att matcha dig med personer som passar dina önskemål",
+            lookingForClarification: "Detta hjälper oss att matcha dig med personer som delar dina intentioner",
         },
         location: {
-            title: "Vi behöver tillgång till din plats.",
+            title: "Vi behöver tillgång till din plats!",
             granted: "Platsåtkomst beviljad. Tack!",
-            denied: "Platsåtkomst nekad",
-            undetermined: "Platsåtkomst krävs för att hitta personer nära dig.",
+            denied: "Platsåtkomst inte beviljad",
+            undetermined: "Platsåtkomst krävs för att hitta personer i närheten.",
             accessRequired:
-                "Platsåtkomst krävs för att appen ska fungera. Utan den kan du inte hitta matchningar eller synas för andra. Du kan aktivera platsåtkomst senare i inställningarna, eller följa instruktionerna nedan.",
-            iosInstructionsTitle: "Så här aktiverar du platsåtkomst på iOS:",
+                "Platsåtkomst krävs för att appen ska fungera fullt ut. Utan det kan du inte hitta matcher eller synas för andra. Du kan aktivera platsåtkomst senare i inställningarna, eller följa instruktionerna nedan.",
+            iosInstructionsTitle: "Så aktiverar du platsåtkomst på iOS:",
             iosInstructions: [
                 "Öppna Inställningar",
-                "Bläddra ner och välj den här appen",
+                "Bläddra ner och välj denna app",
                 "Tryck på 'Plats'",
                 "Välj 'När appen används' eller 'Alltid'",
             ],
-            androidInstructionsTitle: "Så här aktiverar du platsåtkomst på Android:",
+            androidInstructionsTitle: "Så aktiverar du platsåtkomst på Android:",
             androidInstructions: [
                 "Öppna Inställningar",
                 "Gå till 'Appar och aviseringar'",
-                "Välj den här appen",
+                "Välj denna app",
                 "Tryck på 'Behörigheter'",
                 "Aktivera 'Plats'",
             ],
             allowButton: "Tillåt platsåtkomst",
             grantedButton: "Platsåtkomst beviljad",
             openSettingsButton: "Öppna inställningar",
-            info: "Vi delar aldrig din plats och använder den endast för att visa matchningar i närheten.",
+            info: "Vi delar aldrig din plats och använder den endast för att visa personer i närheten.",
+        },
+        pictures: {
+            title: "Lägg till dina bilder",
+            instructions: "Välj foton där ditt ansikte syns tydligt, undvik suddiga eller lågkvalitativa bilder för din profil!",
+            dndInstructions: "Håll och dra foto/video för att ändra ordning",
         }
     }
-};
+}
 
 
 
@@ -94,6 +112,18 @@ const englishLanguage = {
     cancel: "Cancel",
     accept: "Accept",
     confirm: "Confirm",
+    messages: {
+        error: {
+            somethingWentWrong: "Something went wrong!",
+            updateProfileError: "We could not update your profile",
+            locationError: "We could not fetch your location",
+            emailError: "Something went wrong when sending the email"
+        },
+        success: {
+            emailSent: "Email sent!",
+            emailValidationInstructions: "Enter the 6 digit code you just received",
+        }
+    },
     onboarding: {
         or: "or",
         changeInformationLaterInfo: "You can change these details after onboarding as well!",

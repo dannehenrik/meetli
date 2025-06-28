@@ -5,6 +5,7 @@ import { Heading } from "@/components/ui/heading";
 import { ChevronRightIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
+
 import { VStack } from "@/components/ui/vstack";
 import { ONBOARDING_PAGES } from "@/constants/constants";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
@@ -14,9 +15,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  useToast,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+} from "@/components/ui/toast"
+import { useAwesomeToast } from "@/hooks/toasts";
+
 
 
 export default function name() {
+    const {showSuccessToast, showErrorToast, showInfoToast, showWarningToast} = useAwesomeToast();
 
 
     const queryClient = useQueryClient();
@@ -32,13 +42,17 @@ export default function name() {
         mutationFn: async () => updateUser(user?.id ?? "", firstName, lastName),
         onError: (error) => {
             console.error(error.message)
+            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['user']})
         }
     })
+
+
     
+
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');

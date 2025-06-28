@@ -25,8 +25,11 @@ import { Calendar, ChevronLeft, View } from "lucide-react-native";
 import { Button, ButtonText } from "@/components/ui/button";
 import { getLocales } from 'expo-localization';
 import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
+import { useToast } from "@/components/ui/toast";
+import { useAwesomeToast } from "@/hooks/toasts";
 
-export default function dateOfBirth() {    
+export default function dateOfBirth() {
+    const {showErrorToast} = useAwesomeToast();
 
     const queryClient = useQueryClient();
     const router = useRouter();
@@ -45,6 +48,7 @@ export default function dateOfBirth() {
         mutationFn: async () => updateUser(user?.id ?? "", date),
         onError: (error) => {
             console.error(error.message)
+            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {

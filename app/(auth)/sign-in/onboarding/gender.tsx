@@ -28,8 +28,10 @@ import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { Gender } from "@/types";
+import { useAwesomeToast } from "@/hooks/toasts";
 
 export default function gender() {
+    const {showErrorToast} = useAwesomeToast();
     const queryClient = useQueryClient();
     const router = useRouter();
 
@@ -43,6 +45,7 @@ export default function gender() {
         mutationFn: async () => updateUser(user?.id ?? "", gender as Gender),
         onError: (error) => {
             console.error(error.message)
+            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {
