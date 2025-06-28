@@ -3,12 +3,13 @@ import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Icon, MailIcon } from "@/components/ui/icon"; // Assume you have these icons or similar
-import { Apple, AppleIcon, Mail } from "lucide-react-native";
+import { Apple, Mail } from "lucide-react-native";
 import { i18n } from "@/app/_layout";
 import { useRouter } from "expo-router";
 import { useColorScheme } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "@/server/auth/getUser";
+import { AppleIcon, GoogleIcon } from "@/assets/icons/icons";
 
 
 export default function LoginMain() {
@@ -34,15 +35,15 @@ export default function LoginMain() {
             {/* Auth Buttons */}
             <Box className="w-full gap-4">
                 <Button className="w-full flex-row gap-3 items-center justify-center text-white">
-                    {/* <GoogleLogo className="w-5 h-5" /> */}
-                    <ButtonText className="text-base font-medium text-white">
+                    <GoogleIcon/>
+                    <ButtonText className="text-base font-medium text-background-900">
                         {i18n.t("onboarding.signIn.continueWithGoogle")}
                     </ButtonText>
                 </Button>
 
                 <Button className="w-full flex-row gap-3 items-center justify-center text-white">
-                    {/* <Icon as={Apple}></Icon> */}
-                    <ButtonText className="text-base font-medium text-white">
+                    <AppleIcon/>
+                    <ButtonText className="text-base font-medium text-background-900">
                         {i18n.t("onboarding.signIn.continueWithApple")}
                     </ButtonText>
                 </Button>
