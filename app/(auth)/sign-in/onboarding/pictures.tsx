@@ -39,6 +39,8 @@ import { generateUniqueUrl } from "@/utils/generateUniqueUrl";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { InfoOnboarding } from "@/components/shared/info-onboarding";
+import { Spinner } from "@/components/ui/spinner";
 
 
 
@@ -106,6 +108,7 @@ export default function Pictures() {
         queryClient.setQueryData(["user"], (oldData: User) => ({
             ...oldData, images: newImages
         }));
+        setSelectedImage(newImage) //Setting the new image as selected for the loading state to work correctly
         replaceImageMutation.mutate({newImageData: newImageData, newImages: newImages, filePath: filePath, imageToReplace: imageToReplace} )
     }
 
@@ -163,7 +166,6 @@ export default function Pictures() {
     const insets = useSafeAreaInsets();
     return (
     <>
-
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-full">
    
@@ -179,8 +181,12 @@ export default function Pictures() {
 
                     <Box className="flex-row flex-wrap justify-between gap-y-2.5">
                         {[...Array(MAX_PROFILE_IMAGES_AMOUNT)].map((_, index) => {
-                        // const image = images[index];
                         const image = user.images?.[index];
+    
+                        const newImageLoading = newImageMutation.isPending && (index === (user.images ?? []).length - 1);
+                        const replaceImageLoading = replaceImageMutation.isPending && (selectedImage?.filePath === image?.filePath)
+                        const isLoading = newImageLoading || replaceImageLoading
+            
                         return (
                             <Box className="w-[31%] aspect-square relative" key={index}>
                             {image ? (
@@ -188,6 +194,7 @@ export default function Pictures() {
                                 <Image
                                     source={image.url}
                                     cachePolicy="memory-disk"
+                                    blurRadius={isLoading ? 50 : 0}
                                     style={{
                                         width: '100%',
                                         height: '100%',
@@ -196,27 +203,37 @@ export default function Pictures() {
                                     }}
                                     alt="uploaded"
                                 />
+                                {isLoading && (
+                                    <Box className="absolute inset-0 items-center justify-center z-10 bg-black/30 rounded-lg">
+                                        <Spinner className="z-11"/>
+                                    </Box>
+                                )}
+                                {!isLoading && (
                                 <Pressable 
                                     className="absolute top-1 right-1 bg-background-950 p-1 rounded-full z-10"
                                     onPress={() => {
                                         setSelectedImage(image);
                                         setShowActionsheet(true);
                                     }}
-                                
                                 >
                                     <Icon
                                     as={RemoveIcon}
                                     className="text-typography-50 h-3 w-3"
                                     />
                                 </Pressable>
-                                {index === 0 ? (
-                                    <Badge className="absolute bottom-2 left-2 rounded-full" action="success">
-                                        <BadgeText>Main</BadgeText>
-                                    </Badge>
-                                ) : (
-                                    <Badge className="absolute bottom-2 left-2 rounded-full">
-                                        <BadgeText>{index + 1}</BadgeText>
-                                    </Badge>
+                                )}
+                                {!isLoading && (
+                                <>
+                                    {index === 0 ? (
+                                        <Badge className="absolute bottom-2 left-2 rounded-full" size="sm" action="success">
+                                            <BadgeText>Main</BadgeText>
+                                        </Badge>
+                                    ) : (
+                                        <Badge className="absolute bottom-2 left-2 rounded-full" size="sm">
+                                            <BadgeText>{index + 1}</BadgeText>
+                                        </Badge>
+                                    )}
+                                </>
                                 )}
                                 </>
                             ) : (
@@ -236,7 +253,7 @@ export default function Pictures() {
                         })}
                     </Box>
 
-                    {/* <InfoOnboarding info={i18n.t("onboarding.pictures.dndInstructions")} /> */}
+                    <InfoOnboarding info={i18n.t("onboarding.pictures.dndInstructions")} />
                 </VStack>
             </Box>
 
@@ -318,7 +335,6 @@ export default function Pictures() {
 }
 
 async function updateUser(userId: string, images: ImageType[]) {
-    console.log("3");
     const {error} = await supabase.from('users').update({images: images}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
@@ -343,7 +359,6 @@ async function uploadImage(userId: string, base64FileData: string, filePath: str
 }
 
 async function deleteImage(userId: string, image: ImageType) {
-    console.log("4");
     const { error } = await supabase
     .storage
     .from('images')

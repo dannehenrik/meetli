@@ -42,7 +42,7 @@ export default function lookingFor() {
     const [lookingFor, setLookingfor] = useState('');
 
 
-    const {data: user, error, isPending} = useQuery({
+    const {data: user} = useQuery({
         queryKey: ['user'],
         queryFn: async () => await getUser(),
         staleTime: USER_STALE_TIME,

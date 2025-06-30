@@ -58,7 +58,7 @@ export default function LocationScreen() {
 
     async function checkLocationPermissions(): Promise<LocationStatus> {
         const { status } = await Location.getForegroundPermissionsAsync();
-        console.log("Status: ", status);
+
         return status;
     }
 
