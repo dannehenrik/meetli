@@ -123,27 +123,23 @@ export default function dateOfBirth() {
                                         )}
                                     />
                                 </Box>
-                                
-                            
                             )}
+
                             {showDatePicker && Platform.OS === "ios" && (
-                                <HStack className="gap-3 mt-4 w-full">
-                                    <Button 
-                                        variant="outline"
-                                        size="sm" 
-                                        className="flex-1"
-                                        onPress={toggleDatePicker}
-                                    >
-                                        <ButtonText>{i18n.t("cancel")}</ButtonText>
-                                    </Button>
-                                    <Button 
-                                        size="sm"
-                                        className="flex-1"
+                                <VStack className="gap-2 mt-4 w-full">
+                                    <Pressable 
+                                        className="w-full py-4 rounded-lg bg-primary-500 active:bg-primary-600 items-center justify-center"
                                         onPress={confirmIosDate}
                                     >
-                                        <ButtonText>{i18n.t("confirm")}</ButtonText>
-                                    </Button>
-                                </HStack>
+                                        <Text className="text-white font-medium">{i18n.t("confirm")}</Text>
+                                    </Pressable>
+                                    <Pressable 
+                                        className="w-full py-4 rounded-lg bg-transparent active:bg-background-100 items-center justify-center"
+                                        onPress={toggleDatePicker}
+                                    >
+                                        <Text className="text-background-900">{i18n.t("cancel")}</Text>
+                                    </Pressable>
+                                </VStack>
                             )}
 
 

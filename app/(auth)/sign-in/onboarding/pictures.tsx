@@ -250,42 +250,48 @@ export default function Pictures() {
                 <FabIcon as={ChevronRightIcon} />
             </Fab>
         </Box>
-
-        <Actionsheet isOpen={showActionsheet} onClose={() => setShowActionsheet(false)}>
+        <Actionsheet 
+            isOpen={showActionsheet} 
+            onClose={() => setShowActionsheet(false)}
+        >
             <ActionsheetBackdrop />
             <ActionsheetContent>
                 <ActionsheetDragIndicatorWrapper>
-                    <ActionsheetDragIndicator/>
+                <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
-                <ButtonGroup className="w-full mt-3">
-                    <Button 
-                        action="negative" 
-                        className="w-full rounded-xl"
-                        onPress={() => {
-                            if (selectedImage !== null) {
-                                handleDelete(selectedImage)
-                            }
-                            setShowActionsheet(false);
-                        }}
-                    >
-                        <ButtonText>Delete image</ButtonText>
-                    </Button>
-                    <Button 
-                        className="w-full rounded-xl"
-                        onPress={async () => {
-                            setShowActionsheet(false);
-                            if (selectedImage !== null) {
-                                const image = await pickImage()
-                                if (image) handleReplace(image, selectedImage)
-                            }
-                        }}
-                    >
-                        <ButtonText>Replace image</ButtonText>
-                    </Button>
-                    <Button className="w-full mt-3 rounded-xl" variant="outline" onPress={() => setShowActionsheet(false)}>
-                        <ButtonText>Cancel</ButtonText>
-                    </Button>
-                </ButtonGroup>
+                
+                {/* Action Buttons */}
+                <VStack space="md" className="w-full p-4">
+                <Button
+                    action="negative"
+                    size="md"
+                    className="w-full"
+                    onPress={() => {
+                    if (selectedImage !== null) {
+                        handleDelete(selectedImage);
+                    }
+                    setShowActionsheet(false);
+                    }}
+                >
+                    <ButtonText>Delete Image</ButtonText>
+                </Button>
+                
+                <Button
+                    size="md"
+                    variant="outline"
+                    className="w-full"
+                    onPress={async () => {
+                    setShowActionsheet(false);
+                    if (selectedImage !== null) {
+                        const image = await pickImage();
+                        if (image) handleReplace(image, selectedImage);
+                    }
+                    }}
+                >
+                    <ButtonText>Replace Image</ButtonText>
+                </Button>
+                
+                </VStack>
             </ActionsheetContent>
         </Actionsheet>
     </>
