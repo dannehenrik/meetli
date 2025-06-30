@@ -106,12 +106,12 @@ export default function Pictures() {
         queryClient.setQueryData(["user"], (oldData: User) => ({
             ...oldData, images: newImages
         }));
-        replaceImageMutation.mutate({newImageData: newImageData, newImages: newImages, filePath: filePath} )
+        replaceImageMutation.mutate({newImageData: newImageData, newImages: newImages, filePath: filePath, imageToReplace: imageToReplace} )
     }
 
     const replaceImageMutation = useMutation({
         scope: {id: "image"},
-        mutationFn: async ({newImageData, newImages, filePath} : {newImageData: ImagePicker.ImagePickerAsset, newImages: ImageType[], filePath: string}) => {
+        mutationFn: async ({newImageData, newImages, filePath, imageToReplace} : {newImageData: ImagePicker.ImagePickerAsset, newImages: ImageType[], filePath: string, imageToReplace: ImageType}) => {
             await queryClient.cancelQueries({queryKey: ['user']});
 
             const publicUrl = await uploadImage(user.id, newImageData.base64 ?? "", filePath) //Upload image and return public url
@@ -124,7 +124,7 @@ export default function Pictures() {
                     return image
                 }
             })); //Update the database with new data
-            await deleteImage(user.id, newImage);
+            await deleteImage(user.id, imageToReplace);
         },
         onError: (error) => {
             console.error(error.message)
