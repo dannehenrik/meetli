@@ -20,7 +20,7 @@ import { useAwesomeToast } from "@/hooks/toasts";
 
 
 export default function name() {
-    const {showErrorToast} = useAwesomeToast();
+    const {showErrorToast, showSuccessToast} = useAwesomeToast();
 
     const queryClient = useQueryClient();
     const router = useRouter();
