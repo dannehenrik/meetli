@@ -49,10 +49,24 @@ import { Spinner } from "@/components/ui/spinner";
 export default function Pictures() {
     const queryClient = useQueryClient();
     const { showErrorToast } = useAwesomeToast();
-    // const [images, setImages] = useState<ImageType[]>([]);
-
+    
     const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
     const [showActionsheet, setShowActionsheet] = useState(false);
+
+    const [imagesLoading, setImagesLoading] = useState<string[]>([])
+
+    function startImageLoading(imagePath: string) {
+        setImagesLoading((oldData) => [...oldData, imagePath])
+    }
+
+    function stopImageLoading(imagePath: string) {
+        setImagesLoading((oldData) => oldData.filter((image) => imagePath !== image))
+    }
+
+    function isImageLoading(imagePath: string) {
+        const isLoading = imagesLoading.some((image) => image === imagePath);
+        return isLoading
+    }
     
     const {data: user} = useQuery({
         queryKey: ['user'],
@@ -69,6 +83,7 @@ export default function Pictures() {
         const imagesCopy = [...user.images ?? []];
 
         const filePath = generateUniqueUrl();
+        startImageLoading(filePath);
         const newImage = {fileName: newImageData.fileName ?? "", filePath: filePath, url: newImageData.uri}
         queryClient.setQueryData(["user"], (oldData: User) => ({
             ...oldData, images: [...oldData.images ?? [], newImage]
@@ -76,12 +91,11 @@ export default function Pictures() {
 
         newImageMutation.mutate({newImageData: newImageData, filePath: filePath, images: imagesCopy})
     }
-
+    
     const newImageMutation = useMutation({
         scope: {id: "image"},
         mutationFn: async ({newImageData, filePath, images} : {newImageData: ImagePicker.ImagePickerAsset, filePath: string, images: ImageType[]}) => {
             await queryClient.cancelQueries({queryKey: ['user']});
-
             const publicUrl = await uploadImage(user.id, newImageData.base64 ?? "", filePath) //Upload image and return public url
             const newImage = {fileName: newImageData.fileName ?? "", filePath: filePath, url: publicUrl}
             await updateUser(user.id, [...images, newImage ]); //Update the database with new data
@@ -90,13 +104,17 @@ export default function Pictures() {
             console.error(error.message)
             showErrorToast("Could not upload image");
         },
-        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
+        onSettled: (data, error, variables) => { 
+            stopImageLoading(variables.filePath)
+            queryClient.invalidateQueries({ queryKey: ['user']}) 
+        }
     })
 
     function handleReplace(newImageData: ImagePicker.ImagePickerAsset, imageToReplace: ImageType) {
         const user = queryClient.getQueryData<User>(['user']);
 
         const filePath = generateUniqueUrl();
+        startImageLoading(filePath);
         const newImage = {fileName: newImageData.fileName ?? "", filePath: filePath, url: newImageData.uri}
         const newImages = (user?.images ?? []).map((image) => {
             if (imageToReplace.filePath === image.filePath) {
@@ -108,7 +126,6 @@ export default function Pictures() {
         queryClient.setQueryData(["user"], (oldData: User) => ({
             ...oldData, images: newImages
         }));
-        setSelectedImage(newImage) //Setting the new image as selected for the loading state to work correctly
         replaceImageMutation.mutate({newImageData: newImageData, newImages: newImages, filePath: filePath, imageToReplace: imageToReplace} )
     }
 
@@ -133,7 +150,8 @@ export default function Pictures() {
             console.error(error.message)
             showErrorToast("Error", "Something went wrong when replacing image")
         },
-        onSettled: () => { 
+        onSettled: (data, error, variables) => { 
+            stopImageLoading(variables.filePath)
             queryClient.invalidateQueries({ queryKey: ['user']})
         }
     })
@@ -183,9 +201,7 @@ export default function Pictures() {
                         {[...Array(MAX_PROFILE_IMAGES_AMOUNT)].map((_, index) => {
                         const image = user.images?.[index];
     
-                        const newImageLoading = newImageMutation.isPending && (index === (user.images ?? []).length - 1);
-                        const replaceImageLoading = replaceImageMutation.isPending && (selectedImage?.filePath === image?.filePath)
-                        const isLoading = newImageLoading || replaceImageLoading
+                        const isLoading = isImageLoading(image?.filePath);
             
                         return (
                             <Box className="w-[31%] aspect-square relative" key={index}>
