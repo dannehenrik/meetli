@@ -1,5 +1,4 @@
 import { i18n } from "@/app/_layout";
-import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
 import { Fab, FabIcon } from "@/components/ui/fab";
@@ -10,61 +9,60 @@ import {
     Icon,
     RemoveIcon,
 } from "@/components/ui/icon";
-import { Image } from "@/components/ui/image";
+import { Image } from 'expo-image';
+// import { Image } from "@/components/ui/image";
 import { Pressable } from "@/components/ui/pressable";
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { MAX_PROFILE_IMAGES_AMOUNT, ONBOARDING_PAGES } from "@/constants/constants";
+import { MAX_PROFILE_IMAGES_AMOUNT } from "@/constants/constants";
+import { decode } from 'base64-arraybuffer';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Alert } from "react-native"; // Add this at the top
-import { decode } from 'base64-arraybuffer'
 
 
 
 import {
-  Actionsheet,
-  ActionsheetBackdrop,
-  ActionsheetContent,
-  ActionsheetItem,
-  ActionsheetDragIndicator,
-  ActionsheetDragIndicatorWrapper,
-  ActionsheetItemText,
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper
 } from "@/components/ui/actionsheet";
 
-import { ButtonText, Button, ButtonGroup } from "@/components/ui/button";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/utils/supabase";
-import { Gender, ImageType, User } from "@/types";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { Button, ButtonGroup, ButtonText } from "@/components/ui/button";
+import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
+import { ImageType, User } from "@/types";
 import { generateUniqueUrl } from "@/utils/generateUniqueUrl";
-import { Spinner } from "@/components/ui/spinner";
+import { supabase } from "@/utils/supabase";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 
 
 
 
 export default function Pictures() {
     const queryClient = useQueryClient();
+    const { showErrorToast } = useAwesomeToast();
     const [images, setImages] = useState<ImageType[]>([]);
 
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
     const [showActionsheet, setShowActionsheet] = useState(false);
-
-    const {data: user, error, isPending} = useQuery({
+    
+    const {data: user} = useQuery({
         queryKey: ['user'],
         queryFn: async () => await getUser(),
         staleTime: Infinity,
     })
 
-    const insets = useSafeAreaInsets();
-
     const newImageMutation = useMutation({
         mutationFn: async ({fileData} : {fileData: ImagePicker.ImagePickerAsset}) => {
-            const filePath = generateUniqueUrl(fileData.fileName ?? "");
+            await queryClient.cancelQueries({queryKey: ['user']});
+            const user = queryClient.getQueryData<User>(['user']);
+
+            const filePath = generateUniqueUrl();
             const newImage = {fileName: fileData.fileName ?? "", filePath: filePath, url: fileData.uri}
             const copyImages = [...(user?.images ?? [])];
 
@@ -74,19 +72,27 @@ export default function Pictures() {
             const publicUrl = await uploadImage(user?.id ?? "", fileData.base64 ?? "", filePath) //Upload image and return public url
             await updateUser(user?.id ?? "", [...copyImages, {...newImage, url: publicUrl} ]); //Update the database with new data
         },
+        scope: {
+            id: "image"
+        },
         onError: (error) => {
             console.error(error.message)
         },
         onSuccess: (data) => {
             // setImages((oldImages) => [...oldImages, data])
         },
-        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
+        onSettled: () => {  
+            queryClient.invalidateQueries({ queryKey: ['user']})
+        }
     })
 
 
     const replaceImageMutation = useMutation({
         mutationFn: async ({fileData, index} : {fileData: ImagePicker.ImagePickerAsset, index: number}) => {
-            const filePath = generateUniqueUrl(fileData.fileName ?? "");
+            await queryClient.cancelQueries({queryKey: ['user']});
+            const user = queryClient.getQueryData<User>(['user']);
+
+            const filePath = generateUniqueUrl();
             const newImage = {fileName: fileData.fileName ?? "", filePath: filePath, url: fileData.uri}
             const copyImages = [...(user?.images ?? [])];
             copyImages[index] = newImage
@@ -96,7 +102,10 @@ export default function Pictures() {
             const publicUrl = await uploadImage(user?.id ?? "", fileData.base64 ?? "", filePath) //Upload image and return public url
             copyImages[index] = {...newImage, url: publicUrl}
             await updateUser(user?.id ?? "", copyImages); //Update the database with new data
-            await deleteImage(newImage);
+            await deleteImage(user?.id ?? "", newImage);
+        },
+        scope: {
+            id: "image"
         },
         onError: (error) => {
             console.error(error.message)
@@ -104,51 +113,44 @@ export default function Pictures() {
         onSuccess: (data) => {
             // setImages((oldImages) => [...oldImages, data])
         },
-        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
+        onSettled: () => { 
+            queryClient.invalidateQueries({ queryKey: ['user']})
+        }
     })
 
     const deleteImageMutation = useMutation({
+        scope: { id: "image" },
         mutationFn: async ({index} : {index: number}) => {
-            if (user?.images) {
-                const imageToDelete = user.images[index];
-                const newImages = user.images.filter((_, i) => i !== index )
-                queryClient.setQueryData(["user"], (oldData: User) => ({
-                    ...oldData, images: newImages
-                }));
-                await updateUser(user?.id ?? "", newImages); //Update the database with new data
-                await deleteImage(imageToDelete);
+            await queryClient.cancelQueries({queryKey: ['user']});
+            const userData = queryClient.getQueryData<User>(['user']);
+            console.log("1");
+            if (userData?.images) {
+                console.log("2");
+                const imageToDelete = userData.images[index];
+                const newImages = userData.images.filter((_, i) => i !== index )
+                queryClient.setQueryData(["user"], {...userData, images: newImages})
+                await updateUser(userData?.id ?? "", newImages); //Update the database with new data
+                await deleteImage(userData?.id ?? "", imageToDelete);
             }
         },
-        onError: (error) => {
-            console.error(error.message)
+        onMutate: () => {
+            
         },
-        onSuccess: (data) => {
-            // setImages((oldImages) => [...oldImages, data])
+        onError: (error) => {
+            console.error(error.message);
+            showErrorToast("Could not delete image")
+
         },
         onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
     })
 
-    async function pickImage() {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ['images'],
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-            base64: true,
-        });
-
-        if (!result.canceled && result.assets?.length > 0) {
-            const fileData = result.assets[0];
-            return fileData
-        }
-
-        return null
-    }
 
     if (!user) return null
 
+    const insets = useSafeAreaInsets();
     return (
     <>
+
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-full">
    
@@ -172,7 +174,13 @@ export default function Pictures() {
                                 <>
                                 <Image
                                     source={image.url}
-                                    className="w-full h-full object-cover rounded-lg"
+                                    cachePolicy="memory-disk"
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        resizeMode: 'cover', // equivalent to object-cover
+                                        borderRadius: 12,    // adjust for how rounded you want it
+                                    }}
                                     alt="uploaded"
                                 />
                                 <Pressable 
@@ -272,7 +280,27 @@ export default function Pictures() {
     );
 }
 
+
+
+ async function pickImage() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+        base64: true,
+    });
+
+    if (!result.canceled && result.assets?.length > 0) {
+        const fileData = result.assets[0];
+        return fileData
+    }
+
+    return null
+}
+
 async function updateUser(userId: string, images: ImageType[]) {
+    console.log("3");
     const {error} = await supabase.from('users').update({images: images}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
@@ -283,7 +311,7 @@ async function uploadImage(userId: string, base64FileData: string, filePath: str
     const { data: uploadData, error: uploadError } = await supabase
     .storage
     .from('images')
-    .upload(`${userId}/${filePath}`, decode(base64FileData))
+    .upload(`${userId}/${filePath}`, decode(base64FileData), {contentType: 'image/png'})
 
     if (uploadError || !uploadData) throw new Error("Something went wrong when uploading the file" + uploadError?.message)
 
@@ -296,11 +324,12 @@ async function uploadImage(userId: string, base64FileData: string, filePath: str
     return publicUrl
 }
 
-async function deleteImage(image: ImageType) {
+async function deleteImage(userId: string, image: ImageType) {
+    console.log("4");
     const { error } = await supabase
     .storage
     .from('images')
-    .remove([image.filePath])
+    .remove([`${userId}/${image.filePath}`])
 
     if (error) throw new Error("Something went wrong when deleting the image: " + error.message)
 }
