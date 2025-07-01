@@ -40,7 +40,7 @@ const swedishLanguage = {
         },
         otp: {
             otpInstruction: "Ange verifieringskod",
-            otpSubInstruction: "Vi har skickat en verifieringskod till ditt mobilnummer",
+            otpSubInstruction: "Vi har skickat en verifieringskod till din email",
         },
         verified: {
             accountVerifiedText: "Yay! Ditt konto är verifierat!",
