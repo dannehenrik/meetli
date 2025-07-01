@@ -45,7 +45,7 @@ export default function dateOfBirth() {
     })
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", date),
+        mutationFn: async () => updateUser(user?.id ?? "", new Date(dateOfBirth)),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
@@ -59,14 +59,11 @@ export default function dateOfBirth() {
     // Set initial values when user data is loaded
     useEffect(() => {
         if (user && user.dob) {
-            setDate(new Date(user.dob)); // adjust to match your user schema
+            const newDate = new Date(user.dob)
+            setDate(newDate); // adjust to match your user schema
+            setDateOfBirth(newDate.toLocaleDateString())
         }
     }, [user]);
-
-    useEffect(() => {
-        setDateOfBirth(date.toLocaleDateString())
-    }, [date])
-
 
     function toggleDatePicker() {
         setShowDatePicker((oldValue) => !oldValue)
@@ -91,6 +88,9 @@ export default function dateOfBirth() {
         }
     }
 
+    console.log("dateofbirth: ", dateOfBirth);
+    console.log("Date: ", date);
+
     const insets = useSafeAreaInsets();
 
     if (!user) return null
@@ -113,7 +113,7 @@ export default function dateOfBirth() {
                                     <DateTimePicker
                                         mode="date"
                                         display="spinner"
-                                        value={new Date(date)}
+                                        value={date}
                                         onChange={handleChange}
                                         locale={getDeviceLangugage()}
                                         maximumDate={new Date(
