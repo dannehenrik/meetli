@@ -28,24 +28,27 @@ import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
 import { useToast } from "@/components/ui/toast";
 import { useAwesomeToast } from "@/hooks/toasts";
 
-export default function dateOfBirth() {
+export default function Dateofbirth() {
     const {showErrorToast} = useAwesomeToast();
 
     const queryClient = useQueryClient();
     const router = useRouter();
-
-    const [date, setDate] = useState(new Date());
-    const [dateOfBirth, setDateOfBirth] = useState("");
-    const [showDatePicker, setShowDatePicker] = useState(false);
 
     const {data: user, error, isPending} = useQuery({
         queryKey: ['user'],
         queryFn: async () => await getUser(),
         staleTime: USER_STALE_TIME,
     })
+    if (!user) return null
+
+    // const [date, setDate] = useState(new Date());
+    const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
+    const [tempDate, setTempDate] = useState<Date>(new Date())
+    const [showDatePicker, setShowDatePicker] = useState(false);
+
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", new Date(dateOfBirth)),
+        mutationFn: async () => updateUser(user?.id ?? "", dateOfBirth ?? new Date()),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
@@ -59,41 +62,37 @@ export default function dateOfBirth() {
     // Set initial values when user data is loaded
     useEffect(() => {
         if (user && user.dob) {
-            const newDate = new Date(user.dob)
-            setDate(newDate); // adjust to match your user schema
-            setDateOfBirth(newDate.toLocaleDateString())
+            setDateOfBirth(user.dob)
+            setTempDate(user.dob)
         }
     }, [user]);
 
     function toggleDatePicker() {
+        // tempDate()
         setShowDatePicker((oldValue) => !oldValue)
     }
 
     function confirmIosDate() {
-        setDateOfBirth(date.toLocaleDateString())
+        setDateOfBirth(tempDate)
         toggleDatePicker();
     }
 
     function handleChange(event: DateTimePickerEvent, date?: Date) {
         if (event.type === "set") {
             const currentDate = date ?? new Date();
-            setDate(currentDate)
+            // setDateOfBirth(currentDate)
+            setTempDate(currentDate);
 
             if (Platform.OS === "android") {
                 toggleDatePicker();
-                setDateOfBirth(currentDate.toLocaleDateString())
+                setDateOfBirth(currentDate)
             }
         } else {
             toggleDatePicker();
         }
     }
 
-    console.log("dateofbirth: ", dateOfBirth);
-    console.log("Date: ", date);
-
     const insets = useSafeAreaInsets();
-
-    if (!user) return null
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
@@ -113,7 +112,7 @@ export default function dateOfBirth() {
                                     <DateTimePicker
                                         mode="date"
                                         display="spinner"
-                                        value={date}
+                                        value={new Date(tempDate)}
                                         onChange={handleChange}
                                         locale={getDeviceLangugage()}
                                         maximumDate={new Date(
@@ -152,7 +151,8 @@ export default function dateOfBirth() {
                                     <InputField 
                                         onPressIn={toggleDatePicker} 
                                         placeholder={i18n.t('onboarding.dob.dob')} 
-                                        value={dateOfBirth}/>
+                                        value={new Date(dateOfBirth).toLocaleDateString()}/>
+                                        {/* value={""}/> */}
                                 </Input>
                             )}
 
@@ -165,7 +165,7 @@ export default function dateOfBirth() {
                 size="lg"
                 onPress={() => {
                     router.push("/sign-in/onboarding/gender");
-                    if (date !== user.dob) { 
+                    if (dateOfBirth !== user.dob) { 
                         mutation.mutate();
                     }
                 }}

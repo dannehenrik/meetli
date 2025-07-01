@@ -11,7 +11,7 @@ export async function getUser() : Promise<User | null>{
     const {data, error} = await supabase.from('users').select('*').eq('id', user.id).single();
 
     if (error || !data) { throw new Error("Something went wrong when fetching the user: " + error?.message) }
-
+    console.log("user: ", data);
     return data
 }
 
