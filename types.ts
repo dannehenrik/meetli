@@ -17,9 +17,9 @@ export interface User {
 }
 
 export interface ImageType {
-    fileName: string,
     filePath: string,
-    url: string
+    url: string | null
+    tempUrl: string | null,
 }
 
 export interface LocationType {

@@ -39,12 +39,13 @@ export default function Dateofbirth() {
         queryFn: async () => await getUser(),
         staleTime: USER_STALE_TIME,
     })
-    if (!user) return null
 
     // const [date, setDate] = useState(new Date());
     const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
     const [tempDate, setTempDate] = useState<Date>(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false);
+
+    if (!user) return null
 
 
     const mutation = useMutation({
