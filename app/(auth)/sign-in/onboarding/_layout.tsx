@@ -6,7 +6,7 @@ import { ProgressBar } from "@/components/shared/progress-bar";
 const layout = () => {
   return (
     <>
-        <ProgressBar/>
+        {/* <ProgressBar/> */}
         <Stack
         screenOptions={{ headerShown: false }}
         screenLayout={({ children }) => (

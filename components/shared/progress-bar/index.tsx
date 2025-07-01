@@ -12,33 +12,33 @@ import { ChevronLeftIcon } from "@/components/ui/icon";
 
 
 const onboardingRoutes = [
-    {progres: null, route: "/sign-in/onboarding/verified"},
-    {progres: 0, route: "/sign-in/onboarding/name"},
-    {progres: 1, route: "/sign-in/onboarding/date-of-birth"},
-    {progres: 2, route: "/sign-in/onboarding/gender"},
-    {progres: 3, route: "/sign-in/onboarding/interest"},
-    {progres: 4, route: "/sign-in/onboarding/looking-for"},
-    {progres: 5, route: "/sign-in/onboarding/location"},
-    {progres: 6, route: "/sign-in/onboarding/pictures"},
-    {progres: null, route: "/sign-in/onboarding/profile-base-completed"},
+    {progress: null, route: "/sign-in/onboarding/verified"},
+    {progress: 0, route: "/sign-in/onboarding/name"},
+    {progress: 1, route: "/sign-in/onboarding/date-of-birth"},
+    {progress: 2, route: "/sign-in/onboarding/gender"},
+    {progress: 3, route: "/sign-in/onboarding/interest"},
+    {progress: 4, route: "/sign-in/onboarding/looking-for"},
+    {progress: 5, route: "/sign-in/onboarding/location"},
+    {progress: 6, route: "/sign-in/onboarding/pictures"},
+    {progress: null, route: "/sign-in/onboarding/profile-base-completed"},
 ]
 
 
 
-export function ProgressBar() {
-    const pathname = usePathname();
-    const isBaseOnboarding = !pathname.startsWith("/sign-in/onboarding/more-about-you")
+export function ProgressBar({pathName} : {pathName: string}) {
+    const isBaseOnboarding = !pathName.startsWith("/sign-in/onboarding/more-about-you")
 
-  // Use index to compute progress smoothly
-    const currentRoute = onboardingRoutes.find(r => r.route === pathname);
-    if (!currentRoute || currentRoute.progres === null) return null
+    // Use index to compute progress smoothly
+    const currentRoute = onboardingRoutes.find(r => r.route === pathName);
+    const isVisible = currentRoute?.progress !== null
+
     
-    const progress = (currentRoute.progres) / (isBaseOnboarding ? ONBOARDING_BASE_PAGES : ONBOARDING_PAGES) * 100
+    const progress = (currentRoute?.progress ?? 0) / (isBaseOnboarding ? ONBOARDING_BASE_PAGES : ONBOARDING_PAGES) * 100
 
     return(
     <>
         {/* {isVisible && ( */}
-        <Box className="py-6">
+        <Box className={`py-6 ${isVisible ? "opacity-100" : "opacity-0"}`}>
             <Progress
             value={progress}
             className="w-1/2 mx-auto rounded-full h-1 bg-background-600"

@@ -4,18 +4,23 @@ import { Text } from "@/components/ui/text";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { router, usePathname } from "expo-router";
 import { ChevronLeftIcon } from "@/components/ui/icon";
+import { VStack } from "@/components/ui/vstack";
+import { ProgressBar } from "../progress-bar";
 
 export const OnboardingHeader = () => {
   const pathname = usePathname();
   const isRootRoute = pathname === "/";
   const isOtpRoute = pathname === "/sign-in/onboarding/otp";
-  const isVerifiedRoute = pathname === "/sign-in/onboarding/verified";
+  const isVerifiedRoute = pathname === "/sign-in/onboarding/verified" || pathname === "/sign-in/onboarding/done" || pathname === "/sign-in/onboarding/profile-base-completed";
   const isLastPath = pathname === "/sign-in/onboarding/done";
   const isOnboardingRoute = pathname.startsWith("/sign-in/onboarding");
 
+  const isBaseOnboarding = !pathname.startsWith("/sign-in/onboarding/more-about-you")
+
   const enabledBackButton = (isOtpRoute || isOnboardingRoute) && !isVerifiedRoute;
-  const enabledSkipButton = isRootRoute || enabledBackButton;
+  const enabledSkipButton = !isBaseOnboarding;
   return (
+    <VStack>
     <HStack className="justify-between items-center w-full px-4 py-2">
       <Button
         className={`bg-transparent data-[active=true]:bg-transparent ${
@@ -63,5 +68,7 @@ export const OnboardingHeader = () => {
         </ButtonText>
       </Button>
     </HStack>
+    <ProgressBar pathName={pathname}/>
+    </VStack>
   );
 };
