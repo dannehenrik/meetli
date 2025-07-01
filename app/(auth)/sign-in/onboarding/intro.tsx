@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { router } from "expo-router";
-import { ProgressFilledTrack } from "@/components/ui/progress";
+import { Box } from "@/components/ui/box";
+import { Fab, FabIcon } from "@/components/ui/fab";
 import {
   FormControl,
   FormControlHelper,
   FormControlHelperText,
 } from "@/components/ui/form-control";
-import { Progress } from "@/components/ui/progress";
-import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { ChevronRightIcon } from "@/components/ui/icon";
-import { Fab, FabIcon } from "@/components/ui/fab";
+import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import React, { useEffect, useState } from "react";
 
 export default function intro() {
   const [textValue, setTextValue] = useState("");
   const [wordCount, setWordCount] = useState(0);
-  const insets = useSafeAreaInsets();
+  
 
   useEffect(() => {
     const words = textValue.trim() ? textValue.trim().split(/\s+/) : [];

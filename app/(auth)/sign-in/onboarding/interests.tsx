@@ -1,18 +1,15 @@
-import React, { useState } from "react";
-import { router } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ProgressFilledTrack } from "@/components/ui/progress";
-import { Progress } from "@/components/ui/progress";
 import { Box } from "@/components/ui/box";
-import { Heading } from "@/components/ui/heading";
-import { ChevronRightIcon, SearchIcon } from "@/components/ui/icon";
-import { VStack } from "@/components/ui/vstack";
-import { HStack } from "@/components/ui/hstack";
-import { Text } from "@/components/ui/text";
-import { Fab, FabIcon } from "@/components/ui/fab";
-import { Input, InputSlot, InputIcon, InputField } from "@/components/ui/input";
 import { Button, ButtonText } from "@/components/ui/button";
+import { Fab, FabIcon } from "@/components/ui/fab";
+import { Heading } from "@/components/ui/heading";
+import { HStack } from "@/components/ui/hstack";
+import { ChevronRightIcon, SearchIcon } from "@/components/ui/icon";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { router } from "expo-router";
+import React, { useState } from "react";
 
 export default function interests() {
     const interestsList = [
@@ -45,7 +42,7 @@ export default function interests() {
     const filteredInterests = interestsList.filter((interest) =>
         interest.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    const insets = useSafeAreaInsets();
+    
 
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
@@ -105,8 +102,7 @@ export default function interests() {
                 onPress={() => {
                 router.push("/sign-in/onboarding/profile-answers");
                 }}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
             >
                 <FabIcon as={ChevronRightIcon} />
             </Fab>

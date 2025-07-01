@@ -1,20 +1,19 @@
-import React from "react";
-import { Link, router } from "expo-router";
 import { Box } from "@/components/ui/box";
-import { VStack } from "@/components/ui/vstack";
-import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
-import { Image } from "@/components/ui/image";
-import { ChevronRightIcon } from "@/components/ui/icon";
 import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Heading } from "@/components/ui/heading";
+import { ChevronRightIcon } from "@/components/ui/icon";
+import { Image } from "@/components/ui/image";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { router } from "expo-router";
+import React from "react";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 
 const AnimatedVstack = Animated.createAnimatedComponent(VStack);
 
 function done() {
-    const insets = useSafeAreaInsets();
+    
     return (
         <Box className="flex-1 justify-center items-center gap-11 px-5 w-[100%] pb-28">
             <AnimatedVstack
@@ -43,8 +42,7 @@ function done() {
                 onPress={() => {
                     router.push("/home");
                 }}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
             >
                 <FabLabel>Start Swiping</FabLabel>
                 <FabIcon as={ChevronRightIcon} />

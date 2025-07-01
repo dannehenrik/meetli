@@ -5,7 +5,6 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
 import { ChevronRightIcon, Icon } from "@/components/ui/icon";
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Text } from "@/components/ui/text";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { getUserId } from "@/server/auth/getUser";
@@ -16,9 +15,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { AlertCircle, Check, LocateFixed } from "lucide-react-native";
-import { useEffect } from "react";
 import { Linking, Platform, useColorScheme } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 type LocationStatus = "granted" | "denied" | "undetermined";
@@ -28,7 +25,7 @@ export default function LocationScreen() {
     const {showErrorToast} = useAwesomeToast();
     const queryClient = useQueryClient();
     const router = useRouter();
-    const insets = useSafeAreaInsets();
+    
 
     function openSettings() {
         if (Platform.OS === 'ios') {
@@ -173,8 +170,7 @@ export default function LocationScreen() {
                         mutation.mutate();
                     }
                 }}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
             >
                 <FabIcon as={ChevronRightIcon} />
             </Fab>

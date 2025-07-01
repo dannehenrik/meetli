@@ -1,33 +1,31 @@
-import React from "react";
-import { router } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ProgressFilledTrack } from "@/components/ui/progress";
-import { Progress } from "@/components/ui/progress";
+import { InfoOnboarding } from "@/components/shared/info-onboarding";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionContentText,
+  AccordionHeader,
+  AccordionIcon,
+  AccordionItem,
+  AccordionTitleText,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Box } from "@/components/ui/box";
+import { Fab, FabIcon } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
 import {
   ChevronDownIcon,
   ChevronRightIcon,
   ChevronUpIcon,
 } from "@/components/ui/icon";
-import { VStack } from "@/components/ui/vstack";
-import { Text } from "@/components/ui/text";
-import { Fab, FabIcon } from "@/components/ui/fab";
-import {
-  Accordion,
-  AccordionIcon,
-  AccordionContent,
-  AccordionItem,
-  AccordionHeader,
-  AccordionTrigger,
-  AccordionTitleText,
-  AccordionContentText,
-} from "@/components/ui/accordion";
+import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { ScrollView } from "@/components/ui/scroll-view";
-import { InfoOnboarding } from "@/components/shared/info-onboarding";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { router } from "expo-router";
+import React from "react";
 
 const profileAnswers = () => {
-  const insets = useSafeAreaInsets();
+  
   const prompts = [
     {
       id: "1",

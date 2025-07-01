@@ -5,7 +5,6 @@ import { Fab, FabIcon } from "@/components/ui/fab";
 import { FormControl } from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading";
 import { ChevronRightIcon, CircleIcon } from "@/components/ui/icon";
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import {
     Radio,
     RadioGroup,
@@ -20,7 +19,6 @@ import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const lookingForOptions = [
     {value: "serious", label: "Serious"},
@@ -67,7 +65,7 @@ export default function lookingFor() {
         }
     }, [user]);
 
-    const insets = useSafeAreaInsets();
+    
 
     if (!user) return null
     return (
@@ -112,8 +110,7 @@ export default function lookingFor() {
                         mutation.mutate()
                     }
                 }}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
             >
                 <FabIcon as={ChevronRightIcon} />
             </Fab>

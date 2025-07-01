@@ -4,18 +4,15 @@ import { Fab, FabIcon } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
 import { ChevronRightIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 
 import { VStack } from "@/components/ui/vstack";
-import { ONBOARDING_PAGES } from "@/constants/constants";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import React, { useContext, useEffect, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useAwesomeToast } from "@/hooks/toasts";
+import React, { useEffect, useState } from "react";
 
 
 
@@ -60,7 +57,8 @@ export default function name() {
 
     if (!user) return null
 
-    const insets = useSafeAreaInsets();
+    
+
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
@@ -91,8 +89,8 @@ export default function name() {
                         mutation.mutate();
                     }
                 }}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                // className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
             >
                 <FabIcon as={ChevronRightIcon} />
             </Fab>

@@ -1,18 +1,16 @@
-import { useState } from "react";
-import { useRouter } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Box } from "@/components/ui/box";
-import { Text } from "@/components/ui/text";
-import { OTPComponent } from "@/components/shared/otp-input";
-import { ChevronRightIcon } from "@/components/ui/icon";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import { i18n } from "@/app/_layout";
-import { supabase } from "@/utils/supabase";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { OTPComponent } from "@/components/shared/otp-input";
+import { Box } from "@/components/ui/box";
+import { Fab, FabIcon } from "@/components/ui/fab";
+import { ChevronRightIcon } from "@/components/ui/icon";
 import { Spinner } from "@/components/ui/spinner";
-import { getUser, getUserFromId } from "@/server/auth/getUser";
-import { User } from "@/types";
+import { Text } from "@/components/ui/text";
 import { useAwesomeToast } from "@/hooks/toasts";
+import { getUserFromId } from "@/server/auth/getUser";
+import { supabase } from "@/utils/supabase";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 
 
 export default function Otp() {
@@ -41,7 +39,7 @@ export default function Otp() {
             }
         }
     })
-    const insets = useSafeAreaInsets();
+    
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             {/* <OnboardingHeader /> */}
@@ -58,10 +56,9 @@ export default function Otp() {
             </Box>
             <Fab
                 size="lg"
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
                 isDisabled={otpValue.length !== 6}
                 onPress={() => mutation.mutate()}
-                style={{ marginBottom: -1 * insets.bottom }}
             >
                 {mutation.isPending ? (
                     <Spinner/>

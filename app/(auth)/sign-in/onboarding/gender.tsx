@@ -1,34 +1,30 @@
-import React, { useContext } from "react";
-import { router, useRouter } from "expo-router";
-import { ProgressFilledTrack } from "@/components/ui/progress";
-import { FormControl } from "@/components/ui/form-control";
-import { Progress } from "@/components/ui/progress";
+import { i18n } from "@/app/_layout";
+import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Box } from "@/components/ui/box";
+import { Fab, FabIcon } from "@/components/ui/fab";
+import { FormControl } from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading";
 import { ChevronRightIcon, CircleIcon } from "@/components/ui/icon";
-import { VStack } from "@/components/ui/vstack";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import {
-  Radio,
-  RadioIndicator,
-  RadioLabel,
-  RadioIcon,
-  RadioGroup,
+    Radio,
+    RadioGroup,
+    RadioIcon,
+    RadioIndicator,
+    RadioLabel,
 } from "@/components/ui/radio";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { InfoOnboarding } from "@/components/shared/info-onboarding";
-import { ONBOARDING_PAGES } from "@/constants/constants";
-import { i18n } from "@/app/_layout";
+import { VStack } from "@/components/ui/vstack";
+import { useRouter } from "expo-router";
+import React from "react";
 
 import { useEffect, useState } from "react";
 
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
-import { getUser } from "@/server/auth/getUser";
-import { supabase } from "@/utils/supabase";
-import { Gender } from "@/types";
 import { useAwesomeToast } from "@/hooks/toasts";
+import { getUser } from "@/server/auth/getUser";
+import { Gender } from "@/types";
+import { supabase } from "@/utils/supabase";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function gender() {
     const {showErrorToast} = useAwesomeToast();
@@ -62,7 +58,7 @@ export default function gender() {
         }
     }, [user]);
 
-    const insets = useSafeAreaInsets();
+    
 
     if (!user) return null
     return (
@@ -134,8 +130,7 @@ export default function gender() {
                         mutation.mutate()
                     }
                 }}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
             >
                 <FabIcon as={ChevronRightIcon} />
             </Fab>

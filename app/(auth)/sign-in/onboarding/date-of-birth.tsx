@@ -1,32 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
-import { router, useRouter } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ProgressFilledTrack } from "@/components/ui/progress";
-import { FormControl } from "@/components/ui/form-control";
-import { Progress } from "@/components/ui/progress";
-import { Box } from "@/components/ui/box";
-import { Heading } from "@/components/ui/heading";
-import { ChevronRightIcon, Icon } from "@/components/ui/icon";
-import { VStack } from "@/components/ui/vstack";
-import { InfoIcon } from "@/components/ui/icon";
-import { HStack } from "@/components/ui/hstack";
-import { Text } from "@/components/ui/text";
-import { Fab, FabIcon } from "@/components/ui/fab";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { i18n } from "@/app/_layout";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Box } from "@/components/ui/box";
+import { Fab, FabIcon } from "@/components/ui/fab";
+import { FormControl } from "@/components/ui/form-control";
+import { Heading } from "@/components/ui/heading";
+import { ChevronRightIcon } from "@/components/ui/icon";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
+import { Pressable } from "@/components/ui/pressable";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
+import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
 import { supabase } from "@/utils/supabase";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { Pressable } from "@/components/ui/pressable";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
+import { Calendar } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
 import { Platform } from "react-native";
-import { Calendar, ChevronLeft, View } from "lucide-react-native";
-import { Button, ButtonText } from "@/components/ui/button";
-import { getLocales } from 'expo-localization';
-import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
-import { useToast } from "@/components/ui/toast";
-import { useAwesomeToast } from "@/hooks/toasts";
 
 export default function Dateofbirth() {
     const {showErrorToast} = useAwesomeToast();
@@ -93,7 +85,7 @@ export default function Dateofbirth() {
         }
     }
 
-    const insets = useSafeAreaInsets();
+    
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
@@ -170,8 +162,7 @@ export default function Dateofbirth() {
                         mutation.mutate();
                     }
                 }}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
             >
                 <FabIcon as={ChevronRightIcon} />
             </Fab>

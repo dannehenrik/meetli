@@ -6,11 +6,9 @@ import { supabase } from "@/utils/supabase";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { i18n } from "../../../_layout";
 // import useCustomToast, { toastTest } from "@/utils/toast";
 import { Input, InputField } from "@/components/ui/input";
-import { useErrorToast } from "@/utils/toast";
 
 import {
     FormControl,
@@ -19,8 +17,8 @@ import {
     FormControlHelper,
     FormControlHelperText
 } from "@/components/ui/form-control";
-import { useAwesomeToast } from "@/hooks/toasts";
 import { Spinner } from "@/components/ui/spinner";
+import { useAwesomeToast } from "@/hooks/toasts";
 
 
 export default function Email() {
@@ -32,7 +30,7 @@ export default function Email() {
     const [email, setEmail] = useState("");
 
 
-    const insets = useSafeAreaInsets();
+    
 
     const mutation = useMutation({
         mutationFn: async (email: string) => sendOtp(email),
@@ -90,8 +88,7 @@ export default function Email() {
             </Box>
             <Fab
                 size="lg"
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
                 isDisabled={email.length === 0}
                 onPress={() => { handleSubmit(email) }}
             >   

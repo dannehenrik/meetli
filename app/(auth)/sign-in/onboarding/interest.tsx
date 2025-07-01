@@ -1,33 +1,29 @@
-import React, { useState, useEffect} from "react";
-import { ProgressFilledTrack } from "@/components/ui/progress";
-import { FormControl } from "@/components/ui/form-control";
-import { Progress } from "@/components/ui/progress";
+import { i18n } from "@/app/_layout";
+import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Box } from "@/components/ui/box";
+import {
+    Checkbox,
+    CheckboxGroup,
+    CheckboxIcon,
+    CheckboxIndicator,
+    CheckboxLabel,
+} from "@/components/ui/checkbox";
+import { Fab, FabIcon } from "@/components/ui/fab";
+import { FormControl } from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading";
 import { CheckIcon, ChevronRightIcon } from "@/components/ui/icon";
 import { VStack } from "@/components/ui/vstack";
-import { Fab, FabIcon } from "@/components/ui/fab";
-import {
-  Checkbox,
-  CheckboxGroup,
-  CheckboxIcon,
-  CheckboxLabel,
-  CheckboxIndicator,
-} from "@/components/ui/checkbox";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { InfoOnboarding } from "@/components/shared/info-onboarding";
-import { ONBOARDING_PAGES } from "@/constants/constants";
-import { i18n } from "@/app/_layout";
 import { supabase } from "@/utils/supabase";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 
 
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { Gender } from "@/types";
-import { useAwesomeToast } from "@/hooks/toasts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function interest() {
     const queryClient = useQueryClient();
@@ -62,7 +58,7 @@ export default function interest() {
         }
     }, [user]);
 
-    const insets = useSafeAreaInsets();
+    
 
     if (!user) return null
     return (
@@ -137,8 +133,7 @@ export default function interest() {
                         mutation.mutate()
                     }
                 }}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
             >
                 <FabIcon as={ChevronRightIcon} />
             </Fab>

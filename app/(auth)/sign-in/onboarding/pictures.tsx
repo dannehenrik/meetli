@@ -19,7 +19,6 @@ import { decode } from 'base64-arraybuffer';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 
@@ -46,10 +45,9 @@ import type { SortableGridRenderItem } from 'react-native-sortables';
 import Sortable from 'react-native-sortables';
 
 
-
-
 export default function Pictures() {
-    const insets = useSafeAreaInsets();
+
+    
     const queryClient = useQueryClient();
     const { showErrorToast } = useAwesomeToast();
 
@@ -344,8 +342,7 @@ export default function Pictures() {
                 size="lg"
                 disabled={user.images?.length === 0}
                 onPress={() => router.push("/sign-in/onboarding/profile-base-completed")}
-                className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                style={{ marginBottom: -1 * insets.bottom }}
+                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
             >
                 <FabIcon as={ChevronRightIcon} />
             </Fab>
@@ -354,45 +351,45 @@ export default function Pictures() {
             isOpen={showActionsheet} 
             onClose={() => setShowActionsheet(false)}
         >
-            <ActionsheetBackdrop />
-            <ActionsheetContent>
+            <ActionsheetBackdrop/>
+            <ActionsheetContent >
                 <ActionsheetDragIndicatorWrapper>
-                <ActionsheetDragIndicator />
+                    <ActionsheetDragIndicator />
                 </ActionsheetDragIndicatorWrapper>
                 
                 {/* Action Buttons */}
-                <VStack space="md" className="w-full p-4">
-                <Button
-                    action="negative"
-                    size="md"
-                    className="w-full"
-                    onPress={() => {
-                    if (selectedImage !== null) {
-                        deleteImageMutation.mutate({imageToDelete: selectedImage})
-                    }
-                    setShowActionsheet(false);
-                    }}
-                >
-                    <ButtonText>Delete Image</ButtonText>
-                </Button>
-                
-                <Button
-                    size="md"
-                    variant="outline"
-                    className="w-full"
-                    onPress={async () => {
-                    setShowActionsheet(false);
-                    if (selectedImage !== null) {
-                        const image = await pickImage();
-                        if (image) {
-                            const filePath = generateUniqueUrl();
-                            replaceImageMutation.mutate({newImageData: image, imageToReplace: selectedImage, filePath: filePath})
+                <VStack space="md" className={`w-full p-4 pb-8`}>
+                    <Button
+                        action="negative"
+                        size="md"
+                        className="w-full"
+                        onPress={() => {
+                        if (selectedImage !== null) {
+                            deleteImageMutation.mutate({imageToDelete: selectedImage})
                         }
-                    }
-                    }}
-                >
-                    <ButtonText>Replace Image</ButtonText>
-                </Button>
+                        setShowActionsheet(false);
+                        }}
+                    >
+                        <ButtonText>Delete Image</ButtonText>
+                    </Button>
+                    
+                    <Button
+                        size="md"
+                        variant="outline"
+                        className="w-full"
+                        onPress={async () => {
+                        setShowActionsheet(false);
+                        if (selectedImage !== null) {
+                            const image = await pickImage();
+                            if (image) {
+                                const filePath = generateUniqueUrl();
+                                replaceImageMutation.mutate({newImageData: image, imageToReplace: selectedImage, filePath: filePath})
+                            }
+                        }
+                        }}
+                    >
+                        <ButtonText>Replace Image</ButtonText>
+                    </Button>
                 
                 </VStack>
             </ActionsheetContent>
