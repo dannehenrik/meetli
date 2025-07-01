@@ -18,7 +18,7 @@ import { MAX_PROFILE_IMAGES_AMOUNT } from "@/constants/constants";
 import { decode } from 'base64-arraybuffer';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
@@ -31,17 +31,19 @@ import {
     ActionsheetDragIndicatorWrapper
 } from "@/components/ui/actionsheet";
 
-import { Button, ButtonGroup, ButtonText } from "@/components/ui/button";
+import { InfoOnboarding } from "@/components/shared/info-onboarding";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { ImageType, User } from "@/types";
 import { generateUniqueUrl } from "@/utils/generateUniqueUrl";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
-import { InfoOnboarding } from "@/components/shared/info-onboarding";
-import { Spinner } from "@/components/ui/spinner";
-
+import { View } from "react-native";
+import type { SortableGridRenderItem } from 'react-native-sortables';
+import Sortable from 'react-native-sortables';
 
 
 
@@ -49,6 +51,7 @@ import { Spinner } from "@/components/ui/spinner";
 export default function Pictures() {
     const queryClient = useQueryClient();
     const { showErrorToast } = useAwesomeToast();
+
     
     const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
     const [showActionsheet, setShowActionsheet] = useState(false);
@@ -83,11 +86,11 @@ export default function Pictures() {
         const imagesCopy = [...user.images ?? []];
 
         const filePath = generateUniqueUrl();
-        startImageLoading(filePath);
         const newImage = {fileName: newImageData.fileName ?? "", filePath: filePath, url: newImageData.uri}
         queryClient.setQueryData(["user"], (oldData: User) => ({
             ...oldData, images: [...oldData.images ?? [], newImage]
         }));
+        startImageLoading(filePath);
 
         newImageMutation.mutate({newImageData: newImageData, filePath: filePath, images: imagesCopy})
     }
@@ -170,7 +173,6 @@ export default function Pictures() {
         scope: { id: "image" },
         mutationFn: async ({imageToDelete, newImages} : {imageToDelete: ImageType, newImages: ImageType[]}) => {
             await queryClient.cancelQueries({queryKey: ['user']});      
-            
             await updateUser(user.id, newImages); //Update the database with new data
             await deleteImage(user.id, imageToDelete);
         },
@@ -181,7 +183,112 @@ export default function Pictures() {
         onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
     })
 
+    const sortMutation = useMutation({
+        scope: { id: "image" },
+        mutationFn: async ({newImages} : {newImages: ImageType[]}) => {
+            await queryClient.cancelQueries({queryKey: ['user']});
+            await updateUser(user.id, newImages.filter((image) => image.filePath !== "placeholder"))
+        },
+        onError: (error) => {
+            console.error(error.message);
+            showErrorToast("Could not reorder images");
+        },
+        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
+    })
+
     const insets = useSafeAreaInsets();
+
+    const renderItem = useCallback<SortableGridRenderItem<ImageType>>(({ item, index }) => {
+        const isPlaceholder = item.filePath === "placeholder"
+        const isLoading = isImageLoading(item?.filePath ?? "");
+
+        return (
+            <Sortable.Handle mode={isPlaceholder ? 'fixed' : 'draggable'}>
+                <Box className="aspect-square relative">
+                    {!isPlaceholder ? (
+                    <>
+                        <Image
+                        source={item.url}
+                        cachePolicy="memory-disk"
+                        blurRadius={isLoading ? 50 : 0}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            resizeMode: 'cover', // equivalent to object-cover
+                            borderRadius: 12,    // adjust for how rounded you want it
+                        }}
+                        alt="uploaded"
+                        />
+                        {isLoading && (
+                            <Box className="absolute inset-0 items-center justify-center z-10 bg-black/30 rounded-lg">
+                                <Spinner className="z-11"/>
+                            </Box>
+                        )}
+
+                        {/* Remove button */}
+                        {!isLoading && (
+                            <Pressable 
+                            className="absolute top-1 right-1 bg-background-950 p-1 rounded-full z-10"
+                            onPress={() => {
+                                setSelectedImage(item);
+                                setShowActionsheet(true);
+                            }}
+                            >
+                                <Icon
+                                as={RemoveIcon}
+                                className="text-typography-50 h-3 w-3"
+                                />
+                            </Pressable>
+                        )}
+
+                        {/* Badge */}
+                        {!isLoading && (
+                        <>
+                            {index === 0 ? (
+                                <Badge className="absolute bottom-2 left-2 rounded-full" size="sm" action="success">
+                                    <BadgeText>Main</BadgeText>
+                                </Badge>
+                            ) : (
+                                <Badge className="absolute bottom-2 left-2 rounded-full" size="sm">
+                                    <BadgeText>{index + 1}</BadgeText>
+                                </Badge>
+                            )}
+                        </>
+                        )}
+                    </>
+
+                    ) : (
+                    
+                    // Placeholder
+                    <Pressable 
+                    onPress= { async () => {
+                        const fileData = await pickImage();
+                        if (fileData) { handleNewImage(fileData) }
+                    }}
+                    >
+                        <Box className="w-full h-full rounded-lg items-center justify-center border border-background-100">
+                            <Icon as={AddIcon} size="lg" />
+                        </Box>
+                    </Pressable>
+                    
+                )}
+                </Box>
+            </Sortable.Handle>
+        );
+    }, [imagesLoading]);
+
+
+    const images = useMemo(() => {
+        const currentImages = user.images ?? [];
+        const needsPlaceholder = currentImages.length < MAX_PROFILE_IMAGES_AMOUNT;
+
+        return [
+            ...currentImages,
+            ...(needsPlaceholder ? [{ fileName: "", filePath: "placeholder", url: "" }] : []),
+        ];
+    }, [user?.images]);
+
+
     return (
     <>
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
@@ -189,86 +296,34 @@ export default function Pictures() {
    
                 <VStack className="gap-6 w-full">
                     <VStack className="gap-3">
-                        <Heading className="font-roboto font-semibold text-2xl">
-                        {i18n.t("onboarding.pictures.title")}
-                        </Heading>
+                        <Box className="flex-row items-center gap-2">
+                            <Heading className="font-roboto font-semibold text-2xl">
+                                {i18n.t("onboarding.pictures.title")}
+                            </Heading>
+                            <Badge size="sm">
+                                <BadgeText>
+                                    {user.images?.length || 0}/{MAX_PROFILE_IMAGES_AMOUNT}
+                                </BadgeText>
+                            </Badge>
+                        </Box>
                         <Text className="font-normal font-roboto text-typography-400">
                         {i18n.t("onboarding.pictures.instructions")}
                         </Text>
                     </VStack>
-
-                    <Box className="flex-row flex-wrap justify-between gap-y-2.5">
-                        {[...Array(MAX_PROFILE_IMAGES_AMOUNT)].map((_, index) => {
-                        const image = user.images?.[index];
-    
-                        const isLoading = isImageLoading(image?.filePath);
-            
-                        return (
-                            <Box className="w-[31%] aspect-square relative" key={index}>
-                            {image ? (
-                                <>
-                                <Image
-                                    source={image.url}
-                                    cachePolicy="memory-disk"
-                                    blurRadius={isLoading ? 50 : 0}
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        resizeMode: 'cover', // equivalent to object-cover
-                                        borderRadius: 12,    // adjust for how rounded you want it
-                                    }}
-                                    alt="uploaded"
-                                />
-                                {isLoading && (
-                                    <Box className="absolute inset-0 items-center justify-center z-10 bg-black/30 rounded-lg">
-                                        <Spinner className="z-11"/>
-                                    </Box>
-                                )}
-                                {!isLoading && (
-                                <Pressable 
-                                    className="absolute top-1 right-1 bg-background-950 p-1 rounded-full z-10"
-                                    onPress={() => {
-                                        setSelectedImage(image);
-                                        setShowActionsheet(true);
-                                    }}
-                                >
-                                    <Icon
-                                    as={RemoveIcon}
-                                    className="text-typography-50 h-3 w-3"
-                                    />
-                                </Pressable>
-                                )}
-                                {!isLoading && (
-                                <>
-                                    {index === 0 ? (
-                                        <Badge className="absolute bottom-2 left-2 rounded-full" size="sm" action="success">
-                                            <BadgeText>Main</BadgeText>
-                                        </Badge>
-                                    ) : (
-                                        <Badge className="absolute bottom-2 left-2 rounded-full" size="sm">
-                                            <BadgeText>{index + 1}</BadgeText>
-                                        </Badge>
-                                    )}
-                                </>
-                                )}
-                                </>
-                            ) : (
-                                (user.images ?? []).length !== MAX_PROFILE_IMAGES_AMOUNT && (
-                                <Pressable onPress={async () => {
-                                    const fileData = await pickImage();
-                                    if (fileData) { handleNewImage(fileData) }
-                                }}>
-                                    <Box className="w-full h-full rounded-lg items-center justify-center border border-background-100">
-                                        <Icon as={AddIcon} size="lg" />
-                                    </Box>
-                                </Pressable>
-                                )
-                            )}
-                            </Box>
-                        );
-                        })}
-                    </Box>
-
+                
+                    <View>
+                        <Sortable.Grid
+                            columnGap={10}
+                            customHandle
+                            columns={3}
+                            data={images}
+                            renderItem={renderItem}
+                            rowGap={10}
+                            keyExtractor={(item) => item?.filePath}
+                            onDragEnd={(images) => sortMutation.mutate({newImages: images.data})}
+                        />
+                    </View>
+                        
                     <InfoOnboarding info={i18n.t("onboarding.pictures.dndInstructions")} />
                 </VStack>
             </Box>

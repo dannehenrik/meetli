@@ -100,7 +100,7 @@ const swedishLanguage = {
         },
         pictures: {
             title: "Lägg till dina bilder",
-            instructions: "Välj foton där ditt ansikte syns tydligt, undvik suddiga eller lågkvalitativa bilder för din profil!",
+            instructions: "Hjälp andra att lära känna dig genom dina bilder! Välj 3–6 foton som visar vem du är – en tydlig närbild, några helkroppsbilder och bilder på dig när du gör saker du tycker om. Naturliga leenden och bra belysning fungerar bäst! Undvik gärna suddiga eller mörka bilder.",
             dndInstructions: "Håll och dra foto/video för att ändra ordning",
         }
     }
@@ -207,7 +207,7 @@ const englishLanguage = {
         },
         pictures: {
             title: "Add your pictures",
-            instructions: "Choose photos where your face is clearly visible, also try to avoid blurred and poor quality images for your profile!",
+            instructions: "Help others get to know you through your photos! Choose 3-6 pictures that show who you are - a clear close-up, some full-body shots, and photos of you doing things you enjoy. Natural smiles and good lighting work best! Please avoid blurry or dark images.",
             dndInstructions: "Hold and draw photo/video to reorder",
         }
     }
