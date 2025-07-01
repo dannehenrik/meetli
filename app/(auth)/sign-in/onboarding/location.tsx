@@ -16,6 +16,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { AlertCircle, Check, LocateFixed } from "lucide-react-native";
+import { useEffect } from "react";
 import { Linking, Platform, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -43,10 +44,11 @@ export default function LocationScreen() {
         queryClient.invalidateQueries({ queryKey: ['locationPermission'] });
     }
 
-    const { data: locationStatus, isPending } = useQuery({
+    const { data: locationStatus } = useQuery({
         queryKey: ["locationPermission"],
         queryFn: async () => await checkLocationPermissions(),
     });
+
 
     const mutation = useMutation({
         mutationFn: async () => updateUserLocation(),
@@ -85,7 +87,7 @@ export default function LocationScreen() {
             const androidSteps = i18n.t("onboarding.location.androidInstructions", { returnObjects: true }) as string[];
 
             return (
-                <Box className="mt-4 p-4 bg-background-50 rounded-lg">
+                <Box className="w-full mt-4 p-4 bg-background-50 rounded-lg">
                     <Text className="font-medium mb-2">{i18n.t("onboarding.location.androidInstructionsTitle")}</Text>
                     {androidSteps.map((step, index) => (
                         <Text key={index}>{index + 1}. {step}</Text>
