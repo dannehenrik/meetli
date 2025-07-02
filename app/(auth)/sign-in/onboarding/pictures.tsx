@@ -19,6 +19,7 @@ import { decode } from 'base64-arraybuffer';
 import * as ImagePicker from 'expo-image-picker';
 import { router, usePathname } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import * as Haptics from 'expo-haptics';
 
 
 
@@ -242,6 +243,7 @@ export default function Pictures() {
                             <Pressable 
                             className="absolute top-1 right-1 bg-background-950 p-1 rounded-full z-10"
                             onPress={() => {
+                                Haptics.selectionAsync()
                                 setSelectedImage(item);
                                 setShowActionsheet(true);
                             }}
@@ -275,6 +277,7 @@ export default function Pictures() {
                     <Pressable 
                     className="active:bg-background-50 rounded-lg"
                     onPress= { async () => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
                         const fileData = await pickImage();
                         if (fileData) { 
                             const filePath = generateUniqueUrl();
@@ -356,6 +359,7 @@ export default function Pictures() {
                             data={images}
                             renderItem={renderItem}
                             rowGap={10}
+                            onDragStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
                             keyExtractor={(item) => item?.filePath}
                             onDragEnd={(images) => sortMutation.mutate({newImages: images.data})}
                         />
@@ -382,12 +386,14 @@ export default function Pictures() {
                         size="md"
                         className="w-full"
                         onPress={() => {
-                        if (selectedImage !== null) {
-                            deleteImageMutation.mutate({imageToDelete: selectedImage})
-                        }
-                        setShowActionsheet(false);
+                            if (selectedImage !== null) {
+                                deleteImageMutation.mutate({imageToDelete: selectedImage})
+                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+                            }
+                            setShowActionsheet(false);
                         }}
                     >
+                        
                         <ButtonText>Delete Image</ButtonText>
                     </Button>
                     
@@ -398,6 +404,7 @@ export default function Pictures() {
                         onPress={async () => {
                         setShowActionsheet(false);
                         if (selectedImage !== null) {
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
                             const image = await pickImage();
                             if (image) {
                                 const filePath = generateUniqueUrl();
