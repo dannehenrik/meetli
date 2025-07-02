@@ -1,13 +1,9 @@
 import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
-import { usePathname } from "expo-router";
-import { useRouter } from "expo-router";
+import { useRouter, usePathname } from "expo-router";
 import { ChevronRight } from "lucide-react-native";
-import { useEffect } from "react";
 import { useFab } from "./FabContext";
 import { Spinner } from "@/components/ui/spinner";
 import { i18n } from "@/app/_layout";
-
-
 
 export default function FloatingFab() {
     const router = useRouter();

@@ -38,16 +38,6 @@ export default function ProfileBaseComplete() {
                     </Text>
                 </AnimatedVstack>
             </AnimatedVstack>
-
-            <Fab
-                onPress={() => {
-                    // router.push("/onboarding/lifestyle");
-                }}
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-            >
-                <FabLabel>Fortsätt</FabLabel>
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
         </Box>
     );
 }
