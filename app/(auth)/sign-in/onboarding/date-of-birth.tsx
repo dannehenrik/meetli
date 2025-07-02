@@ -16,7 +16,7 @@ import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
 import { supabase } from "@/utils/supabase";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usePathname, useRouter } from "expo-router";
+import { usePathname, router } from "expo-router";
 import { Calendar } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { Platform } from "react-native";
@@ -25,9 +25,8 @@ export default function Dateofbirth() {
     const {showErrorToast} = useAwesomeToast();
 
     const queryClient = useQueryClient();
-    const router = useRouter();
 
-    const {data: user, error, isPending} = useQuery({
+    const {data: user} = useQuery({
         queryKey: ['user'],
         queryFn: async () => await getUser(),
         staleTime: USER_STALE_TIME,
@@ -64,14 +63,20 @@ export default function Dateofbirth() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            onPress:() => {
-                router.push("/sign-in/onboarding/gender");
-                if (dateOfBirth !== user?.dob) { 
-                    mutation.mutate();
+        if (pathName === "/sign-in/onboarding/date-of-birth") {
+            setFabState({
+                onPress:() => {
+                    router.push("/sign-in/onboarding/gender");
+                    if (dateOfBirth !== user?.dob) { 
+                        mutation.mutate();
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            setFabState({
+                onPress: undefined
+            })
+        }
     }, [dateOfBirth, user, pathName])
 
     function toggleDatePicker() {

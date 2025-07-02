@@ -4,7 +4,7 @@ import { ChevronRightIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { supabase } from "@/utils/supabase";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { i18n } from "../../../_layout";
 // import useCustomToast, { toastTest } from "@/utils/toast";
@@ -43,14 +43,23 @@ export default function Email() {
     })
 
     // Sets the fab
+    const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            isDisabled: email.length === 0,
-            isLoading: mutation.isPending,
-            onPress: () => handleSubmit(email)
-        })
-    }, [email, mutation.isPending])
+        if (pathName === "/sign-in/onboarding/email") {
+            setFabState({
+                isDisabled: email.length === 0,
+                isLoading: mutation.isPending,
+                onPress: () => handleSubmit(email)
+            })
+        } else {
+            setFabState({
+                isDisabled: false,
+                isLoading: false,
+                onPress: undefined,
+            })
+        }
+    }, [email, mutation.isPending, pathName])
 
 
 
@@ -96,18 +105,6 @@ export default function Email() {
                 </FormControl>
 
             </Box>
-            <Fab
-                size="lg"
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-                isDisabled={email.length === 0}
-                onPress={() => { handleSubmit(email) }}
-            >   
-                {mutation.isPending ? (
-                        <Spinner/>
-                    ) : (
-                        <FabIcon as={ChevronRightIcon} />
-                    )}
-            </Fab>
         </Box>
     );
 }

@@ -14,7 +14,7 @@ import { Heading } from "@/components/ui/heading";
 import { CheckIcon, ChevronRightIcon } from "@/components/ui/icon";
 import { VStack } from "@/components/ui/vstack";
 import { supabase } from "@/utils/supabase";
-import { usePathname, useRouter } from "expo-router";
+import { usePathname, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 
@@ -28,7 +28,6 @@ import { useFab } from "@/components/shared/floating-fab/FabContext";
 
 export default function interest() {
     const queryClient = useQueryClient();
-    const router = useRouter();
 
     const {showErrorToast} = useAwesomeToast();
 
@@ -63,16 +62,22 @@ export default function interest() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            isDisabled: genders.length === 0,
-            onPress: () => {
-                router.push("/sign-in/onboarding/looking-for");
-                if (genders !== user?.gender_preferences) {
-                    mutation.mutate()
+        if (pathName === "/sign-in/onboarding/interest") {
+            setFabState({
+                isDisabled: genders.length === 0,
+                onPress: () => {
+                    router.push("/sign-in/onboarding/looking-for");
+                    if (genders !== user?.gender_preferences) {
+                        mutation.mutate()
+                    }
                 }
-            }
-        
-        })
+            })
+        } else {
+            setFabState({
+                isDisabled: false,
+                onPress: undefined,
+            })
+        }
     }, [genders, user, pathName])
 
     

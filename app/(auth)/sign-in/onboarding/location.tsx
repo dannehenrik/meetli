@@ -14,7 +14,7 @@ import { getCoordinates } from "@/utils/getLocation";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Location from "expo-location";
-import { usePathname, useRouter } from "expo-router";
+import { usePathname, router } from "expo-router";
 import { AlertCircle, Check, LocateFixed } from "lucide-react-native";
 import { useEffect } from "react";
 import { Linking, Platform, useColorScheme } from "react-native";
@@ -26,7 +26,6 @@ export default function LocationScreen() {
     const colorTheme = useColorScheme();
     const {showErrorToast} = useAwesomeToast();
     const queryClient = useQueryClient();
-    const router = useRouter();
     
 
     function openSettings() {
@@ -62,16 +61,23 @@ export default function LocationScreen() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            isDisabled: locationStatus === "undetermined",
-            onPress: () => {
-                router.push("/sign-in/onboarding/pictures");
-                if (locationStatus === "granted") {
-                    mutation.mutate();
+
+        if (pathName === "/sign-in/onboarding/location") {
+            setFabState({
+                isDisabled: locationStatus === "undetermined",
+                onPress: () => {
+                    router.push("/sign-in/onboarding/pictures");
+                    if (locationStatus === "granted") {
+                        mutation.mutate();
+                    }
                 }
-            }
-        
-        })
+            })
+        } else {
+            setFabState({
+                isDisabled: false,
+                onPress: undefined
+            })
+        }
     }, [locationStatus, pathName])
 
     async function checkLocationPermissions(): Promise<LocationStatus> {

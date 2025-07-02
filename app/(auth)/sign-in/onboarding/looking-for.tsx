@@ -18,23 +18,23 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usePathname, useRouter } from "expo-router";
+import { usePathname, useRouter, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 const lookingForOptions = [
-    {value: "serious", label: "Serious"},
-    {value: "serious-casual", label: "Serious, but open to casual"},
-    {value: "casual-serious", label: "Casual, but open to a serious relationship"},
-    {value: "casual", label: "Casual"},
-    {value: "not-sure", label: "Not sure"},
-    {value: "friends", label: "Friends"},
-]
+  { value: "serious", label: i18n.t("onboarding.lookingFor.options.serious") },
+  { value: "serious-casual", label: i18n.t("onboarding.lookingFor.options.seriousCasual") },
+  { value: "casual-serious", label: i18n.t("onboarding.lookingFor.options.casualSerious") },
+  { value: "casual", label: i18n.t("onboarding.lookingFor.options.casual") },
+  { value: "not-sure", label: i18n.t("onboarding.lookingFor.options.notSure") },
+  { value: "friends", label: i18n.t("onboarding.lookingFor.options.friends") },
+];
+
 
 export type LookingFor = "serious" | "serious-casual" | "casual-serious" | "casual" | "not-sure" | "friends"
 
 export default function lookingFor() {
     const queryClient = useQueryClient();
-    const router = useRouter();
 
     const {showErrorToast} = useAwesomeToast();
 
@@ -70,16 +70,22 @@ export default function lookingFor() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            isDisabled: lookingFor.length === 0,
-            onPress: () => {
-                router.push("/sign-in/onboarding/location");
-                if (lookingFor !== user?.looking_for) {
-                    mutation.mutate()
+        if (pathName === "/sign-in/onboarding/looking-for") {
+            setFabState({
+                isDisabled: lookingFor.length === 0,
+                onPress: () => {
+                    router.push("/sign-in/onboarding/location");
+                    if (lookingFor !== user?.looking_for) {
+                        mutation.mutate()
+                    }
                 }
-            }
-        
-        })
+            })
+        } else {
+            setFabState({
+                isDisabled: false,
+                onPress: undefined,
+            })
+        }
     }, [lookingFor, user, pathName])
 
     

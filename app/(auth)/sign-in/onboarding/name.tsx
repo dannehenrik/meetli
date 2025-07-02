@@ -12,7 +12,7 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usePathname, useRouter } from "expo-router";
+import { usePathname, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 
@@ -21,7 +21,6 @@ export default function name() {
     const {showErrorToast} = useAwesomeToast();
 
     const queryClient = useQueryClient();
-    const router = useRouter();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -48,15 +47,22 @@ export default function name() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            isDisabled: firstName.length === 0 || lastName.length === 0 ,
-            onPress: () => {
-                router.push("/sign-in/onboarding/date-of-birth");
-                if (firstName !== user?.first_name || lastName !== user?.last_name) {
-                    mutation.mutate();
+        if (pathName === "/sign-in/onboarding/name") {
+            setFabState({
+                isDisabled: firstName.length === 0 || lastName.length === 0 ,
+                onPress: () => {
+                    router.push("/sign-in/onboarding/date-of-birth");
+                    if (firstName !== user?.first_name || lastName !== user?.last_name) {
+                        mutation.mutate();
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            setFabState({
+                isDisabled: false,
+                onPress: undefined,
+            })
+        }
     }, [firstName, lastName, user, pathName])
 
     // Set initial values when user data is loaded

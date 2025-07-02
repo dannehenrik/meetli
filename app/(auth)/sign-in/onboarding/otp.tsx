@@ -19,8 +19,6 @@ export default function Otp() {
     const [otpValue, setOtpValue] = useState("");
     const router = useRouter();
 
-    const {showErrorToast} = useAwesomeToast();
-
     function handleOtpChange(otp: string) {
         setOtpValue(otp);
     };
@@ -45,11 +43,19 @@ export default function Otp() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            isDisabled: otpValue.length !== 6,
-            onPress: () => mutation.mutate(),
-            isLoading: mutation.isPending
-        })
+        if (pathName === "/sign-in/onboarding/otp") {
+            setFabState({
+                isDisabled: otpValue.length !== 6,
+                onPress: () => mutation.mutate(),
+                isLoading: mutation.isPending
+            })
+        } else {
+            setFabState({
+                isDisabled: false,
+                onPress: undefined,
+                isLoading: false,
+            })
+        }
     }, [otpValue, pathName, mutation.isPending])
     
     return (

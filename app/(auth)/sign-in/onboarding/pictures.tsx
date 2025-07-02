@@ -308,11 +308,20 @@ export default function Pictures() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            isDisabled: user?.images?.length === 0,
-            onPress: () => router.push("/sign-in/onboarding/profile-base-completed")
-        })
-    }, [user, pathName])
+        if (pathName === "/sign-in/onboarding/pictures") {
+            setFabState({
+                isDisabled: user?.images?.length === 0,
+                onPress: () => {
+                    router.push("/sign-in/onboarding/profile-base-completed")
+                }
+            })
+        } else {
+            setFabState({
+                isDisabled: false,
+                onPress: undefined,
+            })
+        }
+    }, [user, pathName, router])
 
     
     if (!user) return null

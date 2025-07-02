@@ -20,6 +20,13 @@ const swedishLanguage = {
     onboarding: {
         or: "eller",
         changeInformationLaterInfo: "Du kan ändra dessa uppgifter även efter onboarding!",
+
+        fab: {
+            sendCode: "Skicka kod",
+            verify: "Verifiera",
+            enterDetails: "Ange uppgifter",
+            continue: "Fortsätt"
+        },
     
         signIn: {
             welcomeBack: "Välkommen tillbaka",
@@ -71,6 +78,14 @@ const swedishLanguage = {
         lookingFor: {
             lookingForInstruction: "Vad letar du efter på Meetli?",
             lookingForClarification: "Detta hjälper oss att matcha dig med personer som delar dina intentioner",
+            options: {
+                serious: "Seriöst",
+                seriousCasual: "Seriöst, men öppen för avslappnat",
+                casualSerious: "Avslappnat, men öppen för seriöst förhållande",
+                casual: "Avslappnat",
+                notSure: "Osäker",
+                friends: "Vänner"
+            }
         },
         location: {
             title: "Vi behöver tillgång till din plats!",
@@ -133,7 +148,6 @@ const englishLanguage = {
             verify: "Verify",
             enterDetails: "Enter details",
             continue: "Continue"
-
         },
         signIn: {
             welcomeBack: "Welcome Back",
@@ -185,6 +199,14 @@ const englishLanguage = {
         lookingFor: {
             lookingForInstruction: "What are you looking for on Meetli?",
             lookingForClarification: "This will help us match you to people who align to what you are looking for",
+            options: {
+                serious: "Serious",
+                seriousCasual: "Serious, but open to casual",
+                casualSerious: "Casual, but open to a serious relationship",
+                casual: "Casual",
+                notSure: "Not sure",
+                friends: "Friends"
+            }
         },
         location: {
             title: "We need access to your location!",

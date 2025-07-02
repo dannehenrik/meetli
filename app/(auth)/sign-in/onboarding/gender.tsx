@@ -63,15 +63,22 @@ export default function gender() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            isDisabled: gender.length === 0,
-            onPress: () => {
-                router.push("/sign-in/onboarding/interest");
-                if (gender !== user?.gender) {
-                    mutation.mutate()
+        if (pathName === "/sign-in/onboarding/gender") {
+            setFabState({
+                isDisabled: gender.length === 0,
+                onPress: () => {
+                    router.push("/sign-in/onboarding/interest");
+                    if (gender !== user?.gender) {
+                        mutation.mutate()
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            setFabState({
+                isDisabled: false,
+                onPress: undefined,
+            })
+        }
     }, [gender, user, pathName])
 
     if (!user) return null
