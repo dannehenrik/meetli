@@ -1,51 +1,81 @@
-import { Box } from "@/components/ui/box";
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
-import { ONBOARDING_BASE_PAGES, ONBOARDING_PAGES } from "@/constants/constants";
-import { useNavigationState } from "@react-navigation/native";
-
-import { HStack } from "@/components/ui/hstack";
-import { Image } from "@/components/ui/image";
-import { Text } from "@/components/ui/text";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { router, usePathname } from "expo-router";
-import { ChevronLeftIcon } from "@/components/ui/icon";
+import React, { useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
+import { ONBOARDING_BASE_PAGES, ONBOARDING_PAGES } from '@/constants/constants';
 
 
-const onboardingRoutes = [
-    {progress: null, route: "/sign-in/onboarding/verified"},
-    {progress: 0, route: "/sign-in/onboarding/name"},
-    {progress: 1, route: "/sign-in/onboarding/date-of-birth"},
-    {progress: 2, route: "/sign-in/onboarding/gender"},
-    {progress: 3, route: "/sign-in/onboarding/interest"},
-    {progress: 4, route: "/sign-in/onboarding/looking-for"},
-    {progress: 5, route: "/sign-in/onboarding/location"},
-    {progress: 6, route: "/sign-in/onboarding/pictures"},
-    {progress: null, route: "/sign-in/onboarding/profile-base-completed"},
-]
+const BAR_WIDTH = 200; // Adjust as needed
 
+export function ProgressBar({ pathName }: { pathName: string }) {
 
+    const onboardingRoutes = [
+        { progress: null, route: "/sign-in/onboarding/verified" },
+        { progress: 0, route: "/sign-in/onboarding/name" },
+        { progress: 1, route: "/sign-in/onboarding/date-of-birth" },
+        { progress: 2, route: "/sign-in/onboarding/gender" },
+        { progress: 3, route: "/sign-in/onboarding/interest" },
+        { progress: 4, route: "/sign-in/onboarding/looking-for" },
+        { progress: 5, route: "/sign-in/onboarding/location" },
+        { progress: 6, route: "/sign-in/onboarding/pictures" },
+        { progress: null, route: "/sign-in/onboarding/profile-base-completed" },
+    ];
 
-export function ProgressBar({pathName} : {pathName: string}) {
-    const isBaseOnboarding = !pathName.startsWith("/sign-in/onboarding/more-about-you")
-
-    // Use index to compute progress smoothly
     const currentRoute = onboardingRoutes.find(r => r.route === pathName);
-    const isVisible = currentRoute?.progress !== null
+    const isVisible = currentRoute?.progress !== null;
 
-    
-    const progress = (currentRoute?.progress ?? 0) / (isBaseOnboarding ? ONBOARDING_BASE_PAGES : ONBOARDING_PAGES) * 100
+    const isBaseOnboarding = !pathName.startsWith("/sign-in/onboarding/more-about-you");
+    const maxSteps = isBaseOnboarding ? ONBOARDING_BASE_PAGES : ONBOARDING_PAGES;
 
-    return(
-    <>
-        {/* {isVisible && ( */}
-        <Box className={`py-6 ${isVisible ? "opacity-100" : "opacity-0"}`}>
-            <Progress
-            value={progress}
-            className="w-1/2 mx-auto rounded-full h-1 bg-background-600"
-            >
-                <ProgressFilledTrack />
-            </Progress>
-        </Box>
-    </>
-    )
+    const progressPercent = ((currentRoute?.progress ?? 0) / maxSteps) * 100;
+
+    // Reanimated shared value
+    const progress = useSharedValue(0);
+
+    // Animate to new progress when pathName changes
+    useEffect(() => {
+        if (isVisible) {
+            progress.value = withTiming(progressPercent, {
+                duration: 600,
+                easing: Easing.out(Easing.cubic),
+            });
+        }
+    }, [progressPercent, isVisible]);
+
+    // Animated style for bar width
+    const progressStyle = useAnimatedStyle(() => {
+        return {width: `${progress.value}%`};
+    });
+
+    if (!isVisible) return null;
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.backgroundBar}>
+                <Animated.View style={[styles.filledBar, progressStyle, {backgroundColor: "#ec4899"}]} />
+            </View>
+        </View>
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        paddingVertical: 16,
+        alignItems: 'center',
+    },
+    backgroundBar: {
+        width: BAR_WIDTH,
+        height: 6,
+        backgroundColor: '#e5e7eb', // Tailwind gray-200
+        borderRadius: 999,
+        overflow: 'hidden',
+    },
+    filledBar: {
+        height: '100%',
+        borderRadius: 999,
+    },
+});
