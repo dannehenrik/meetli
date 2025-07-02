@@ -5,7 +5,7 @@ import { Text } from "@/components/ui/text";
 import { supabase } from "@/utils/supabase";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { i18n } from "../../../_layout";
 // import useCustomToast, { toastTest } from "@/utils/toast";
 import { Input, InputField } from "@/components/ui/input";
@@ -19,17 +19,15 @@ import {
 } from "@/components/ui/form-control";
 import { Spinner } from "@/components/ui/spinner";
 import { useAwesomeToast } from "@/hooks/toasts";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 
 
 export default function Email() {
-    // const { successToast, errorToast, warningToast, infoToast, updateToast } = useCustomToast();
     const { showErrorToast, showSuccessToast } = useAwesomeToast();
 
     const router = useRouter();
     const [error, setError] = useState(false);
     const [email, setEmail] = useState("");
-
-
     
 
     const mutation = useMutation({
@@ -43,6 +41,18 @@ export default function Email() {
             router.push("/sign-in/onboarding/otp");
         }
     })
+
+    // Sets the fab
+    const { setFabState } = useFab();
+    useEffect(() => {
+        setFabState({
+            isDisabled: email.length === 0,
+            isLoading: mutation.isPending,
+            onPress: () => handleSubmit(email)
+        })
+    }, [email, mutation.isPending])
+
+
 
     function handleValidation(value: string) {
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.toLowerCase());

@@ -1,4 +1,5 @@
 import { i18n } from "@/app/_layout";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { Box } from "@/components/ui/box";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { FormControl } from "@/components/ui/form-control";
@@ -15,7 +16,7 @@ import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
 import { supabase } from "@/utils/supabase";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { Calendar } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { Platform } from "react-native";
@@ -37,8 +38,6 @@ export default function Dateofbirth() {
     const [tempDate, setTempDate] = useState<Date>(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    if (!user) return null
-
 
     const mutation = useMutation({
         mutationFn: async () => updateUser(user?.id ?? "", dateOfBirth ?? new Date()),
@@ -59,6 +58,21 @@ export default function Dateofbirth() {
             setTempDate(user.dob)
         }
     }, [user]);
+
+
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        setFabState({
+            onPress:() => {
+                router.push("/sign-in/onboarding/gender");
+                if (dateOfBirth !== user?.dob) { 
+                    mutation.mutate();
+                }
+            }
+        })
+    }, [dateOfBirth, user, pathName])
 
     function toggleDatePicker() {
         // tempDate()
@@ -84,6 +98,8 @@ export default function Dateofbirth() {
             toggleDatePicker();
         }
     }
+
+    if (!user) return null
 
     
     return (
@@ -154,18 +170,6 @@ export default function Dateofbirth() {
                     </VStack>
                 </FormControl>
             </Box>
-            <Fab
-                size="lg"
-                onPress={() => {
-                    router.push("/sign-in/onboarding/gender");
-                    if (dateOfBirth !== user.dob) { 
-                        mutation.mutate();
-                    }
-                }}
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-            >
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
         </Box>
     );
 };

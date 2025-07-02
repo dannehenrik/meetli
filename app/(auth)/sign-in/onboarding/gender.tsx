@@ -13,7 +13,7 @@ import {
     RadioLabel,
 } from "@/components/ui/radio";
 import { VStack } from "@/components/ui/vstack";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import React from "react";
 
 import { useEffect, useState } from "react";
@@ -25,6 +25,7 @@ import { getUser } from "@/server/auth/getUser";
 import { Gender } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 
 export default function gender() {
     const {showErrorToast} = useAwesomeToast();
@@ -58,9 +59,23 @@ export default function gender() {
         }
     }, [user]);
 
-    
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        setFabState({
+            isDisabled: gender.length === 0,
+            onPress: () => {
+                router.push("/sign-in/onboarding/interest");
+                if (gender !== user?.gender) {
+                    mutation.mutate()
+                }
+            }
+        })
+    }, [gender, user, pathName])
 
     if (!user) return null
+    
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
@@ -121,19 +136,6 @@ export default function gender() {
                     </VStack>
                 </FormControl>
             </Box>
-            <Fab
-                size="lg"
-                disabled={gender.length === 0}
-                onPress={() => {
-                    router.push("/sign-in/onboarding/interest");
-                    if (gender !== user.gender) {
-                        mutation.mutate()
-                    }
-                }}
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-            >
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
         </Box>
     );
 };

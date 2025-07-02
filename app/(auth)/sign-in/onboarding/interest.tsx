@@ -14,7 +14,7 @@ import { Heading } from "@/components/ui/heading";
 import { CheckIcon, ChevronRightIcon } from "@/components/ui/icon";
 import { VStack } from "@/components/ui/vstack";
 import { supabase } from "@/utils/supabase";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 
@@ -24,6 +24,7 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { Gender } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 
 export default function interest() {
     const queryClient = useQueryClient();
@@ -58,9 +59,26 @@ export default function interest() {
         }
     }, [user]);
 
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        setFabState({
+            isDisabled: genders.length === 0,
+            onPress: () => {
+                router.push("/sign-in/onboarding/looking-for");
+                if (genders !== user?.gender_preferences) {
+                    mutation.mutate()
+                }
+            }
+        
+        })
+    }, [genders, user, pathName])
+
     
 
     if (!user) return null
+
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
@@ -125,18 +143,6 @@ export default function interest() {
                     </VStack>
                 </FormControl>
             </Box>
-            <Fab
-                size="lg"
-                onPress={() => {
-                    router.push("/sign-in/onboarding/looking-for");
-                    if (genders !== user.gender_preferences) {
-                        mutation.mutate()
-                    }
-                }}
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-            >
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
         </Box>
     );
 };

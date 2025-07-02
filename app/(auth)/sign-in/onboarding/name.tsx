@@ -1,4 +1,5 @@
 import { i18n } from "@/app/_layout";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { Box } from "@/components/ui/box";
 import { Fab, FabIcon } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
@@ -11,7 +12,7 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 
@@ -22,7 +23,10 @@ export default function name() {
     const queryClient = useQueryClient();
     const router = useRouter();
 
-    const {data: user, error, isPending} = useQuery({
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+
+    const {data: user} = useQuery({
         queryKey: ['user'],
         queryFn: async () => await getUser(),
         staleTime: USER_STALE_TIME,
@@ -40,12 +44,20 @@ export default function name() {
         }
     })
 
-
-    
-
-
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        setFabState({
+            isDisabled: firstName.length === 0 || lastName.length === 0 ,
+            onPress: () => {
+                router.push("/sign-in/onboarding/date-of-birth");
+                if (firstName !== user?.first_name || lastName !== user?.last_name) {
+                    mutation.mutate();
+                }
+            }
+        })
+    }, [firstName, lastName, user, pathName])
 
     // Set initial values when user data is loaded
     useEffect(() => {
@@ -56,8 +68,6 @@ export default function name() {
     }, [user]);
 
     if (!user) return null
-
-    
 
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
@@ -80,20 +90,6 @@ export default function name() {
                     {/* <InfoOnboarding info="This will be used to match you to people" /> */}
                 </VStack>
             </Box>
-            <Fab
-                size="lg"
-                disabled={firstName.length === 0 || lastName.length === 0 }
-                onPress={() => {
-                    router.push("/sign-in/onboarding/date-of-birth");
-                    if (firstName !== user.first_name || lastName !== user.last_name) {
-                        mutation.mutate();
-                    }
-                }}
-                // className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-            >
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
         </Box>
     );
 };

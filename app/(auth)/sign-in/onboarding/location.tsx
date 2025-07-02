@@ -1,4 +1,5 @@
 import { i18n } from "@/app/_layout";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -13,8 +14,9 @@ import { getCoordinates } from "@/utils/getLocation";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Location from "expo-location";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { AlertCircle, Check, LocateFixed } from "lucide-react-native";
+import { useEffect } from "react";
 import { Linking, Platform, useColorScheme } from "react-native";
 
 
@@ -54,6 +56,23 @@ export default function LocationScreen() {
             console.error(error.message)
         },
     })
+
+
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        setFabState({
+            isDisabled: locationStatus === "undetermined",
+            onPress: () => {
+                router.push("/sign-in/onboarding/pictures");
+                if (locationStatus === "granted") {
+                    mutation.mutate();
+                }
+            }
+        
+        })
+    }, [locationStatus, pathName])
 
     async function checkLocationPermissions(): Promise<LocationStatus> {
         const { status } = await Location.getForegroundPermissionsAsync();
@@ -161,19 +180,6 @@ export default function LocationScreen() {
                     classNameIcon="mt-1"
                 />
             </Box>
-
-            <Fab
-                size="lg"
-                onPress={() => {
-                    router.push("/sign-in/onboarding/pictures");
-                    if (locationStatus === "granted") {
-                        mutation.mutate();
-                    }
-                }}
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-            >
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
         </Box>
     );
 }

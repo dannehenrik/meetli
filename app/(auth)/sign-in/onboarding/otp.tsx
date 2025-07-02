@@ -1,4 +1,5 @@
 import { i18n } from "@/app/_layout";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { OTPComponent } from "@/components/shared/otp-input";
 import { Box } from "@/components/ui/box";
 import { Fab, FabIcon } from "@/components/ui/fab";
@@ -9,8 +10,8 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { getUserFromId } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import { usePathname, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 
 
 export default function Otp() {
@@ -39,6 +40,17 @@ export default function Otp() {
             }
         }
     })
+
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        setFabState({
+            isDisabled: otpValue.length !== 6,
+            onPress: () => mutation.mutate(),
+            isLoading: mutation.isPending
+        })
+    }, [otpValue, pathName, mutation.isPending])
     
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
@@ -54,19 +66,6 @@ export default function Otp() {
                 </Box>
                 <OTPComponent onComplete={handleOtpChange} />
             </Box>
-            <Fab
-                size="lg"
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-                isDisabled={otpValue.length !== 6}
-                onPress={() => mutation.mutate()}
-            >
-                {mutation.isPending ? (
-                    <Spinner/>
-                ) : (
-                    <FabIcon as={ChevronRightIcon} />
-                )}
-
-            </Fab>
         </Box>
     );
 }

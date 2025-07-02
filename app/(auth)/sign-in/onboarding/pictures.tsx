@@ -17,8 +17,8 @@ import { VStack } from "@/components/ui/vstack";
 import { MAX_PROFILE_IMAGES_AMOUNT } from "@/constants/constants";
 import { decode } from 'base64-arraybuffer';
 import * as ImagePicker from 'expo-image-picker';
-import { router } from "expo-router";
-import React, { useCallback, useMemo, useState } from "react";
+import { router, usePathname } from "expo-router";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 
 
@@ -43,6 +43,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { View } from "react-native";
 import type { SortableGridRenderItem } from 'react-native-sortables';
 import Sortable from 'react-native-sortables';
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 
 
 export default function Pictures() {
@@ -97,6 +98,12 @@ export default function Pictures() {
 
         return userData.images ?? []
     }
+    function getUserId() {
+        const userData = queryClient.getQueryData<User>(['user']);
+        if (!userData?.images) throw new Error("User data not found");
+
+        return userData.id
+    }
 
     // A function that replaces an item in a given array
     function replaceImage(newImage: ImageType, imageToReplacePath: string, images: ImageType[]) {
@@ -110,17 +117,15 @@ export default function Pictures() {
         queryFn: async () => await getUser(),
         staleTime: USER_STALE_TIME,
     })
-    if (!user) return null
-
 
     const newImageMutation = useMutation({
         mutationFn: async ({newImageData, filePath} : {newImageData: ImagePicker.ImagePickerAsset, filePath: string}) => {
-            const newImage = await uploadImage(user.id, newImageData.base64 ?? "", filePath) //Upload image and return public url
+            const newImage = await uploadImage(getUserId(), newImageData.base64 ?? "", filePath) //Upload image and return public url
 
             const images = getImages();
 
             const newImages = replaceImage(newImage, filePath, images)
-            await updateUser(user.id, newImages); //Update the database with new data
+            await updateUser(getUserId(), newImages); //Update the database with new data
 
             return newImages
         },
@@ -144,13 +149,13 @@ export default function Pictures() {
 
     const replaceImageMutation = useMutation({
         mutationFn: async ({newImageData, imageToReplace, filePath} : {newImageData: ImagePicker.ImagePickerAsset, imageToReplace: ImageType, filePath: string}) => {
-            const newImage = await uploadImage(user.id, newImageData.base64 ?? "", filePath) //Upload image and return public url
+            const newImage = await uploadImage(getUserId(), newImageData.base64 ?? "", filePath) //Upload image and return public url
 
             const images = getImages()
             const newImages = replaceImage(newImage, filePath, images);
 
-            await updateUser(user.id, newImages)
-            await deleteImage(user.id, imageToReplace);
+            await updateUser(getUserId(), newImages)
+            await deleteImage(getUserId(), imageToReplace);
             return newImages
         },
         onMutate: async (variables) => {
@@ -173,8 +178,8 @@ export default function Pictures() {
     const deleteImageMutation = useMutation({
         mutationFn: async ({imageToDelete} : {imageToDelete: ImageType}) => {
             const images = getImages();
-            await updateUser(user.id, images);
-            await deleteImage(user.id, imageToDelete);
+            await updateUser(getUserId(), images);
+            await deleteImage(getUserId(), imageToDelete);
         },
         onMutate: async (variables) => {
             await queryClient.cancelQueries({queryKey: ['user']});
@@ -191,7 +196,7 @@ export default function Pictures() {
 
     const sortMutation = useMutation({
         mutationFn: async ({newImages} : {newImages: ImageType[]}) => {
-            await updateUser(user.id, newImages.filter((image) => image.filePath !== "placeholder"))
+            await updateUser(getUserId(), newImages.filter((image) => image.filePath !== "placeholder"))
         },
         onMutate: async (variables) => {
             const images = variables.newImages.filter((image) => image.filePath !== "placeholder")
@@ -290,7 +295,7 @@ export default function Pictures() {
 
 
     const images = useMemo(() => {
-        const currentImages = user.images ?? [];
+        const currentImages = user?.images ?? [];
         const needsPlaceholder = currentImages.length < MAX_PROFILE_IMAGES_AMOUNT;
 
         return [
@@ -299,6 +304,18 @@ export default function Pictures() {
         ];
     }, [user?.images]);
 
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        setFabState({
+            isDisabled: user?.images?.length === 0,
+            onPress: () => router.push("/sign-in/onboarding/profile-base-completed")
+        })
+    }, [user, pathName])
+
+    
+    if (!user) return null
 
     return (
     <>
@@ -338,15 +355,6 @@ export default function Pictures() {
                     <InfoOnboarding info={i18n.t("onboarding.pictures.dndInstructions")} />
                 </VStack>
             </Box>
-
-            <Fab
-                size="lg"
-                disabled={user.images?.length === 0}
-                onPress={() => router.push("/sign-in/onboarding/profile-base-completed")}
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-            >
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
         </Box>
         <Actionsheet 
             isOpen={showActionsheet} 

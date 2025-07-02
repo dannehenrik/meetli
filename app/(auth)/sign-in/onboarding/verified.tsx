@@ -4,20 +4,30 @@ import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
 import { HStack } from "@/components/ui/hstack";
 import { ChevronRightIcon, Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
-import { router } from "expo-router";
-import React from "react";
+import { router, usePathname, useRouter } from "expo-router";
+import React, { useEffect } from "react";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 const AnimatedHstack = Animated.createAnimatedComponent(HStack);
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
 import { i18n } from "@/app/_layout";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 
 
 export default function Verified() {
 
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        setFabState({
+            onPress: () => {
+                router.push("/sign-in/onboarding/name");
+            }
+        })
+    }, [pathName])
     
-
     return (
         <Box className="px-5 gap-4 flex-1 items-center justify-center">
             <AnimatedHstack
@@ -35,15 +45,6 @@ export default function Verified() {
             >
                 {i18n.t("onboarding.verified.accountVerifiedSubText")}
             </AnimatedText>
-            <Fab
-                className="bg-background-950 rounded-lg w-auto h-[48px] data-[active=true]:bg-background-900"
-                onPress={() => router.push("./name")}
-            >
-                <FabLabel className="text-typography-50 font-roboto font-medium">
-                    {i18n.t("onboarding.verified.enterDetails")}
-                </FabLabel>
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
         </Box>
     );
 };

@@ -20,6 +20,7 @@ const swedishLanguage = {
     onboarding: {
         or: "eller",
         changeInformationLaterInfo: "Du kan ändra dessa uppgifter även efter onboarding!",
+    
         signIn: {
             welcomeBack: "Välkommen tillbaka",
             signInToContinue: "Logga in för att fortsätta",
@@ -127,6 +128,13 @@ const englishLanguage = {
     onboarding: {
         or: "or",
         changeInformationLaterInfo: "You can change these details after onboarding as well!",
+        fab: {
+            sendCode: "Send code",
+            verify: "Verify",
+            enterDetails: "Enter details",
+            continue: "Continue"
+
+        },
         signIn: {
             welcomeBack: "Welcome Back",
             signInToContinue: "Sign in to continue",
