@@ -133,7 +133,11 @@ const englishLanguage = {
             somethingWentWrong: "Something went wrong!",
             updateProfileError: "We could not update your profile",
             locationError: "We could not fetch your location",
-            emailError: "Something went wrong when sending the email"
+            emailError: "Something went wrong when sending the email",
+            removeImageError: "Could not remove image",
+            sortImageError: "Could not reorder images",
+            replaceImageError: "Could not replace image",
+            uploadImageError: "Could not upload the image" 
         },
         success: {
             emailSent: "Email sent!",
@@ -239,6 +243,13 @@ const englishLanguage = {
             title: "Add your pictures",
             instructions: "Help others get to know you through your photos! Choose 3-6 pictures that show who you are - a clear close-up, some full-body shots, and photos of you doing things you enjoy. Natural smiles and good lighting work best! Please avoid blurry or dark images.",
             dndInstructions: "Hold and draw photo/video to reorder",
+            main: "Main",
+            deleteImage: "Delete image",
+            replaceImage: "Replace image",
+        },
+        profileBaseCompleted: {
+            title: "Your profile is ready!",
+            description: "Now we’ll continue with a few more questions to get to know you even better and to make your profile shine 🤩"
         }
     }
 }

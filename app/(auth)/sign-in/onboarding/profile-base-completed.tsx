@@ -1,3 +1,4 @@
+import { i18n } from "@/app/_layout";
 import { Box } from "@/components/ui/box";
 import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
@@ -30,11 +31,11 @@ export default function ProfileBaseComplete() {
                     className="gap-2"
                 >
                     <Heading className="text-typography-950 text-4xl font-roboto font-semibold text-center">
-                        Din profilbas är klar!
+                        {i18n.t("onboarding.profileBaseCompleted.title")}
                     </Heading>
 
                     <Text className="text-typography-500 text-xl font-roboto font-medium text-center">
-                        Nu fortsätter vi med några snabba frågor om din livsstil.
+                        {i18n.t("onboarding.profileBaseCompleted.description")}
                     </Text>
                 </AnimatedVstack>
             </AnimatedVstack>

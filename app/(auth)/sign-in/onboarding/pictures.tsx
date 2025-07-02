@@ -137,7 +137,7 @@ export default function Pictures() {
         },
         onError: (error) => {
             console.error(error.message)
-            showErrorToast("Could not upload image");
+            showErrorToast(i18n.t("messages.error.sortImageError"));
         },
         onSuccess: (newImages) => {
             updateCache(newImages);
@@ -154,7 +154,7 @@ export default function Pictures() {
 
             const images = getImages()
             const newImages = replaceImage(newImage, filePath, images);
-
+    
             await updateUser(getUserId(), newImages)
             await deleteImage(getUserId(), imageToReplace);
             return newImages
@@ -166,7 +166,7 @@ export default function Pictures() {
         },
         onError: (error) => {
             console.error(error.message)
-            showErrorToast("Error", "Could not replace image")
+            showErrorToast(i18n.t("messages.error.replaceImageError"));
         },
         onSuccess: (newImages) => {
             updateCache(newImages)
@@ -188,7 +188,7 @@ export default function Pictures() {
         },
         onError: (error) => {
             console.error(error.message);
-            showErrorToast("Could not delete image");
+            showErrorToast(i18n.t("messages.error.removeImageError"));
         },
         onSettled: () => { 
             queryClient.invalidateQueries({ queryKey: ['user']}) 
@@ -206,7 +206,7 @@ export default function Pictures() {
         },
         onError: (error) => {
             console.error(error.message);
-            showErrorToast("Could not reorder images");
+            showErrorToast(i18n.t("messages.error.sortImageError"));
         },
         onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
     })
@@ -260,7 +260,7 @@ export default function Pictures() {
                         <>
                             {index === 0 ? (
                                 <Badge className="absolute bottom-2 left-2 rounded-full" size="sm" action="success">
-                                    <BadgeText>Main</BadgeText>
+                                    <BadgeText>{i18n.t("onboarding.pictures.main")}</BadgeText>
                                 </Badge>
                             ) : (
                                 <Badge className="absolute bottom-2 left-2 rounded-full" size="sm">
@@ -394,7 +394,7 @@ export default function Pictures() {
                         }}
                     >
                         
-                        <ButtonText>Delete Image</ButtonText>
+                        <ButtonText>{i18n.t("onboarding.pictures.deleteImage")}</ButtonText>
                     </Button>
                     
                     <Button
@@ -413,7 +413,7 @@ export default function Pictures() {
                         }
                         }}
                     >
-                        <ButtonText>Replace Image</ButtonText>
+                        <ButtonText>{i18n.t("onboarding.pictures.replaceImage")}</ButtonText>
                     </Button>
                 
                 </VStack>
