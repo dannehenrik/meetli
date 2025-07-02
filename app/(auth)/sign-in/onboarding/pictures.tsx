@@ -268,6 +268,7 @@ export default function Pictures() {
                     
                     // Placeholder
                     <Pressable 
+                    className="active:bg-background-50 rounded-lg"
                     onPress= { async () => {
                         const fileData = await pickImage();
                         if (fileData) { 
