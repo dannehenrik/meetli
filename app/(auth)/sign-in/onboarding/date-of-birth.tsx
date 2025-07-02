@@ -141,7 +141,7 @@ export default function Dateofbirth() {
                             {showDatePicker && Platform.OS === "ios" && (
                                 <VStack className="gap-2 mt-4 w-full">
                                     <Pressable 
-                                        className="w-full py-4 rounded-lg bg-primary-500 active:bg-primary-600 items-center justify-center"
+                                        className="w-full py-4 rounded-lg bg-primary-700 active:bg-primary-800 items-center justify-center"
                                         onPress={confirmIosDate}
                                     >
                                         <Text className="text-white font-medium">{i18n.t("confirm")}</Text>

@@ -51,12 +51,10 @@ export function ProgressBar({ pathName }: { pathName: string }) {
         return {width: `${progress.value}%`};
     });
 
-    if (!isVisible) return null;
-
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {opacity: isVisible ? 100 : 0}]}>
             <View style={styles.backgroundBar}>
-                <Animated.View style={[styles.filledBar, progressStyle, {backgroundColor: "#ec4899"}]} />
+                <Animated.View style={[styles.filledBar, progressStyle, {backgroundColor: "#be185d"}]} />
             </View>
         </View>
     );
