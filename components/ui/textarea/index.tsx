@@ -11,8 +11,8 @@ import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 
 const SCOPE = 'TEXTAREA';
 const UITextarea = createTextarea({
-  Root: withStyleContext(View, SCOPE),
-  Input: TextInput,
+    Root: withStyleContext(View, SCOPE),
+    Input: TextInput,
 });
 
 const textareaStyle = tva({
@@ -33,7 +33,7 @@ const textareaStyle = tva({
 });
 
 const textareaInputStyle = tva({
-  base: 'p-2 web:outline-0 web:outline-none flex-1 color-typography-900 align-text-top placeholder:text-typography-500 web:cursor-text web:data-[disabled=true]:cursor-not-allowed',
+  base: 'p-2 web:outline-0 web:outline-none flex-1 text-typography-900 dark:text-typography-900 align-text-top placeholder:text-typography-500 web:cursor-text web:data-[disabled=true]:cursor-not-allowed',
   parentVariants: {
     size: {
       sm: 'text-sm',

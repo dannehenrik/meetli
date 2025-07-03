@@ -111,10 +111,10 @@ export default function intro() {
                         {i18n.t("onboarding.moreAboutYou.intro.title")}
                     </AnimatedHeading>
                     <AnimatedBox entering={FadeInDown.delay(400).duration(400).springify()}>
-                        <Textarea className={`bg-background-50 h-[150px] text-${theme === "dark" ? "white" : "black"}`} size="lg">
+                        <Textarea className={`bg-background-50 h-[150px]`} size="lg">
                             <TextareaInput
                                 placeholder={i18n.t("onboarding.moreAboutYou.intro.placeholder")}
-                                className={`p-4 items-start text-${theme === "dark" ? "white" : "black"}`}
+                                className={`p-4 items-start`}
                                 multiline
                                 style={{ textAlignVertical: "top" }}
                                 onChangeText={(text) => {
@@ -140,7 +140,7 @@ export default function intro() {
 
 
 async function updateUser(userId: string, text: string) {
-    const {error} = await supabase.from('user_additional_info').update({intro: text}).eq('id', userId)
+    const {error} = await supabase.from('user_additional_info').upsert({intro: text}).eq('id', userId)
     if (error) throw new Error("Something went wrong when updating the user: " + error.message);
 }
 
