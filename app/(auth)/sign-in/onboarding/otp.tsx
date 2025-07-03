@@ -12,7 +12,11 @@ import { supabase } from "@/utils/supabase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-
+import Animated, {
+    FadeInDown,
+    FadeInUp
+} from 'react-native-reanimated';
+const AnimatedBox = Animated.createAnimatedComponent(Box)
 
 export default function Otp() {
     const queryClient = useQueryClient();
@@ -56,15 +60,21 @@ export default function Otp() {
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             {/* <OnboardingHeader /> */}
             <Box className="flex-1 justify-start items-center gap-12 px-5 top-20">
-                <Box className="flex justify-start gap-3">
+
+                <AnimatedBox 
+                className="flex justify-start gap-3"
+                entering={FadeInDown.duration(400).springify()}
+                >
                     <Text className="font-roboto text-2xl font-semibold leading-7">
                         {i18n.t("onboarding.otp.otpInstruction")}
                     </Text>
                     <Text className="font-roboto text-typography-500 leading-6">
                         {i18n.t("onboarding.otp.otpSubInstruction")}
                     </Text>
-                </Box>
-                <OTPComponent onComplete={handleOtpChange} />
+                </AnimatedBox>
+                <AnimatedBox entering={FadeInDown.delay(400).duration(400).springify()}>
+                    <OTPComponent onComplete={handleOtpChange} />
+                </AnimatedBox>
             </Box>
         </Box>
     );

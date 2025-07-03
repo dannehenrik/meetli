@@ -319,7 +319,6 @@ export default function Pictures() {
         if (pathName === "/sign-in/onboarding/pictures") {
             const images = user?.images ?? [];
             setFabState( {
-                label: "Pictures",
                 isDisabled: images.length === 0,
                 onPress: () => {
                     router.push("/sign-in/onboarding/profile-base-completed")

@@ -22,12 +22,33 @@ import Animated, {
     FadeInDown,
     FadeInUp
 } from 'react-native-reanimated';
+
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedInput = Animated.createAnimatedComponent(Input);
 
+// Helper functions to handle date conversion
+function dateToString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function stringToDate(dateString: string): Date {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day);
+}
+
+function formatDateForDisplay(date: Date): string {
+    return date.toLocaleDateString(getDeviceLangugage(), {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
 export default function Dateofbirth() {
     const {showErrorToast} = useAwesomeToast();
-
     const queryClient = useQueryClient();
 
     const {data: user} = useQuery({
@@ -36,14 +57,15 @@ export default function Dateofbirth() {
         staleTime: USER_STALE_TIME,
     })
 
-    // const [date, setDate] = useState(new Date());
     const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
     const [tempDate, setTempDate] = useState<Date>(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", dateOfBirth ?? new Date()),
+        mutationFn: async () => {
+            const dobString = dateToString(dateOfBirth);
+            return updateUser(user?.id ?? "", dobString);
+        },
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
@@ -57,11 +79,12 @@ export default function Dateofbirth() {
     // Set initial values when user data is loaded
     useEffect(() => {
         if (user && user.dob) {
-            setDateOfBirth(user.dob)
-            setTempDate(user.dob)
+            // If dob is stored as string, convert it to Date
+            const dobDate = typeof user.dob === 'string' ? stringToDate(user.dob) : new Date(user.dob);
+            setDateOfBirth(dobDate);
+            setTempDate(dobDate);
         }
     }, [user]);
-
 
     // Setting the fab
     const pathName = usePathname();
@@ -71,7 +94,11 @@ export default function Dateofbirth() {
             setFabState({
                 onPress:() => {
                     router.push("/sign-in/onboarding/gender");
-                    if (dateOfBirth !== user?.dob) { 
+                    // Compare date strings to avoid timezone issues
+                    const currentDobString = dateToString(dateOfBirth);
+                    const userDobString = user?.dob ? (typeof user.dob === 'string' ? user.dob : dateToString(new Date(user.dob))) : null;
+                    
+                    if (currentDobString !== userDobString) { 
                         mutation.mutate();
                     }
                 }
@@ -80,7 +107,6 @@ export default function Dateofbirth() {
     }, [dateOfBirth, user, pathName])
 
     function toggleDatePicker() {
-        // tempDate()
         setShowDatePicker((oldValue) => !oldValue)
     }
 
@@ -92,7 +118,6 @@ export default function Dateofbirth() {
     function handleChange(event: DateTimePickerEvent, date?: Date) {
         if (event.type === "set") {
             const currentDate = date ?? new Date();
-            // setDateOfBirth(currentDate)
             setTempDate(currentDate);
 
             if (Platform.OS === "android") {
@@ -106,11 +131,9 @@ export default function Dateofbirth() {
 
     if (!user) return null
 
-    
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
-
                 <FormControl className="w-full">
                     <VStack className="gap-6">
                         <AnimatedHeader 
@@ -121,15 +144,12 @@ export default function Dateofbirth() {
                         </AnimatedHeader>
 
                         <VStack className="gap-4">
-
                             {showDatePicker && (
-                
-
                                 <Box className="w-full items-center">
                                     <DateTimePicker
                                         mode="date"
                                         display="spinner"
-                                        value={new Date(tempDate)}
+                                        value={tempDate}
                                         onChange={handleChange}
                                         locale={getDeviceLangugage()}
                                         maximumDate={new Date(
@@ -158,7 +178,6 @@ export default function Dateofbirth() {
                                 </VStack>
                             )}
 
-
                             {!showDatePicker && (
                                 <AnimatedInput 
                                 className="rounded-lg" 
@@ -173,13 +192,11 @@ export default function Dateofbirth() {
                                     <InputField 
                                         onPressIn={toggleDatePicker} 
                                         placeholder={i18n.t('onboarding.dob.dob')} 
-                                        value={new Date(dateOfBirth).toLocaleDateString()}/>
-                                        {/* value={""}/> */}
+                                        value={formatDateForDisplay(dateOfBirth)}
+                                    />
                                 </AnimatedInput>
                             )}
-
                         </VStack>
-
                     </VStack>
                 </FormControl>
             </Box>
@@ -187,10 +204,8 @@ export default function Dateofbirth() {
     );
 };
 
-
-
-async function updateUser(userId: string, dob: Date) {
-    const {error} = await supabase.from('users').update({dob: dob}).eq('id', userId);
+async function updateUser(userId: string, dobString: string) {
+    const {error} = await supabase.from('users').update({dob: dobString}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

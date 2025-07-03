@@ -56,7 +56,7 @@ export default function Email() {
     useEffect(() => {
         if (pathName === "/sign-in/onboarding/email") {
             setFabState({
-                isDisabled: email.length === 0,
+                isDisabled: !email.length,
                 isLoading: mutation.isPending,
                 onPress: () => handleSubmit(email)
             })
