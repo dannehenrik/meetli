@@ -29,7 +29,7 @@ import {
     ActionsheetDragIndicatorWrapper
 } from "@/components/ui/actionsheet";
 
-import { useFab } from "@/components/shared/floating-fab/FabContext";
+import { FabState, useFab } from "@/components/shared/floating-fab/FabContext";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -320,7 +320,13 @@ export default function Pictures() {
             console.log("TJaaa");
             const images = user?.images ?? [];
             console.log("Isdisabled: ", images.length === 0)
-            
+            setFabState( {
+                label: "Pictures",
+                isDisabled: images.length === 0,
+                onPress: () => {
+                    router.push("/sign-in/onboarding/profile-base-completed")
+                }
+            })
         }
 
     }, [pathName, user])

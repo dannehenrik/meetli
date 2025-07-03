@@ -1,7 +1,7 @@
 // FabContext.tsx
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-type FabState = {
+export type FabState = {
     label?: string | null;
     isLoading?: boolean; 
     isDisabled?: boolean;
@@ -18,6 +18,10 @@ const FabContext = createContext<{
 
 export const FabProvider = ({ children }: { children: React.ReactNode }) => {
     const [fabState, setFabState] = useState<FabState>({ label: null });
+
+    useEffect(() => {
+        console.log("Fabstate: ", fabState);
+    }, [fabState])
 
     return (
         <FabContext.Provider value={{ fabState, setFabState }}>

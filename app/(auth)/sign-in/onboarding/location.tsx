@@ -66,6 +66,7 @@ export default function LocationScreen() {
         if (pathName === "/sign-in/onboarding/location") {
             setFabState({
                 isDisabled: locationStatus === "undetermined",
+                label: "Location",
                 onPress: () => {
                     router.push("/sign-in/onboarding/pictures");
                     if (locationStatus === "granted") {
