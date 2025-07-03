@@ -14,6 +14,9 @@ export interface User {
     looking_for: LookingFor,
     dob: Date, //Date of birth
     images: ImageType[],
+
+    // more about you
+    intro: string
 }
 
 export interface ImageType {
