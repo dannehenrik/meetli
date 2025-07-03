@@ -251,7 +251,7 @@ export default function Pictures() {
                             <Pressable 
                             className="absolute top-1 right-1 bg-background-950 p-1 rounded-full z-10"
                             onPress={() => {
-                                triggerHaptic("button")
+                                triggerHaptic("buttonLight")
                                 setSelectedImage(item);
                                 setShowActionsheet(true);
                             }}

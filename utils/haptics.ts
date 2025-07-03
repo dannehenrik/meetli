@@ -8,7 +8,8 @@ type HapticTypes =
   | "warning"
   | "error"
   | "buttonImportant"
-  | "dragStart";
+  | "dragStart"
+  | "buttonLight"
 
 export function triggerHaptic(type: HapticTypes) {
     switch (type) {
@@ -30,6 +31,9 @@ export function triggerHaptic(type: HapticTypes) {
         case "buttonImportant":
             buttonImportantHaptic();
             break;
+        case "buttonLight":
+            buttonLightHaptic();
+            break;
         case "dragStart":
             dragStartHaptic();
             break;
@@ -43,6 +47,14 @@ function buttonHaptic() {
         Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Context_Click);
     } else {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+}
+
+function buttonLightHaptic() {
+    if (Platform.OS === "android") {
+        Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Segment_Tick);
+    } else {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
     }
 }
 

@@ -6,6 +6,7 @@ import { router, usePathname } from "expo-router";
 import { ChevronLeftIcon } from "@/components/ui/icon";
 import { VStack } from "@/components/ui/vstack";
 import { ProgressBar } from "../progress-bar";
+import { triggerHaptic } from "@/utils/haptics";
 
 export const OnboardingHeader = () => {
   const pathname = usePathname();
@@ -27,7 +28,10 @@ export const OnboardingHeader = () => {
           enabledBackButton ? "opacity-100" : "opacity-0"
         }`}
         isDisabled={!enabledBackButton}
-        onPress={() => router.back()}
+        onPress={() => {
+          triggerHaptic("buttonLight")
+          router.back()
+        }}
       >
         <ButtonIcon
           as={ChevronLeftIcon}
