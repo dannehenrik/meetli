@@ -3,11 +3,9 @@ import { TouchableWithoutFeedback } from "react-native";
 import { KeyboardAvoidingView, Platform, Keyboard } from "react-native";
 import { OnboardingHeader } from "@/components/shared/onboarding-header";
 import { Box } from "@/components/ui/box";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/utils/supabase";
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
-import { ONBOARDING_PAGES } from "@/constants/constants";
-import { createContext } from "react";
+
+import FloatingFab from "@/components/shared/floating-fab";
+import { FabProvider } from "@/components/shared/floating-fab/FabContext";
 
 export default function RootLayout() {
 
@@ -18,27 +16,30 @@ export default function RootLayout() {
         }
     };
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            className="flex-1"
-            keyboardVerticalOffset={85}
-        >
-            <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
-                <Box className="flex-1 bg-background-0">
-                    <OnboardingHeader />
-                    
-                        <Stack
-                            screenLayout={({ children }) => (
-                                <Box className="flex-1 bg-background-0">{children}</Box>
-                            )}
-                            screenOptions={{
-                                headerShown: false,
-                            }}
-                        />
+        <FabProvider>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                className="flex-1"
+                keyboardVerticalOffset={85}
+            >
+                <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
+                    <Box className="flex-1 bg-background-0">
+                        <OnboardingHeader />
+                        
+                            <Stack
+                                screenLayout={({ children }) => (
+                                    <Box className="flex-1 bg-background-0">{children}</Box>
+                                )}
+                                screenOptions={{
+                                    headerShown: false,
+                                }}
+                            />
 
-                </Box>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+                    </Box>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+            <FloatingFab/>
+        </FabProvider>
     );
 }
 

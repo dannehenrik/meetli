@@ -8,8 +8,6 @@ import { FabProvider } from "@/components/shared/floating-fab/FabContext";
 const layout = () => {
   return (
     <>
-        <FabProvider>
-          {/* <ProgressBar/> */}
           <Stack
           screenOptions={{ headerShown: false }}
           screenLayout={({ children }) => (
@@ -28,8 +26,6 @@ const layout = () => {
               <Stack.Screen name="pictures" />
               <Stack.Screen name="verified" />
           </Stack>
-          <FloatingFab/>
-        </FabProvider>
     </>
   );
 };
