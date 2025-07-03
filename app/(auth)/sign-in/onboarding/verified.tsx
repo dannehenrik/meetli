@@ -29,7 +29,6 @@ export default function Verified() {
                 isDisabled: false,
             })
         } 
-        
     }, [pathName])
     
     return (

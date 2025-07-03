@@ -19,10 +19,6 @@ const FabContext = createContext<{
 export const FabProvider = ({ children }: { children: React.ReactNode }) => {
     const [fabState, setFabState] = useState<FabState>({ label: null });
 
-    useEffect(() => {
-        console.log("Fabstate: ", fabState);
-    }, [fabState])
-
     return (
         <FabContext.Provider value={{ fabState, setFabState }}>
             {children}

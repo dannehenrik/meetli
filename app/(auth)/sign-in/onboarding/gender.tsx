@@ -82,12 +82,7 @@ export default function gender() {
                 }
             })
         }
-        // return () => {
-        //     setFabState({
-        //         isDisabled: true,
-        //         onPress: undefined,
-        //     })
-        // }
+
     }, [gender, user, pathName])
 
     if (!user) return null

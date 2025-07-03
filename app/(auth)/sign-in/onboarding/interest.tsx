@@ -63,9 +63,7 @@ export default function interest() {
         }
     }, [user]);
 
-    useEffect(() => {
-        console.log("Genders: ", genders);
-    }, [genders])
+
     // Setting the fab
     const pathName = usePathname();
     const { setFabState } = useFab();

@@ -50,13 +50,6 @@ export default function Otp() {
                 isLoading: mutation.isPending
             })
         }
-        // return () => {
-        //     setFabState({
-        //         isDisabled: false,
-        //         onPress: undefined,
-        //         isLoading: false,
-        //     })
-        // }
     }, [otpValue, pathName, mutation.isPending])
     
     return (

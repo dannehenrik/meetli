@@ -77,12 +77,6 @@ export default function Dateofbirth() {
                 }
             })
         }
-        // return () => {
-        //     setFabState({
-        //         onPress: undefined,
-        //         isDisabled: true
-        //     })
-        // }
     }, [dateOfBirth, user, pathName])
 
     function toggleDatePicker() {

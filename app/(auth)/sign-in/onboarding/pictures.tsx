@@ -317,9 +317,7 @@ export default function Pictures() {
     const { setFabState } = useFab();
     useEffect(() => {
         if (pathName === "/sign-in/onboarding/pictures") {
-            console.log("TJaaa");
             const images = user?.images ?? [];
-            console.log("Isdisabled: ", images.length === 0)
             setFabState( {
                 label: "Pictures",
                 isDisabled: images.length === 0,

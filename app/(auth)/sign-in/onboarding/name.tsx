@@ -69,12 +69,7 @@ export default function name() {
                 }
             })
         }
-        // return () => {
-        //     setFabState({
-        //         isDisabled: true,
-        //         onPress: undefined,
-        //     })
-        // }
+
     }, [firstName, lastName, user, pathName])
 
     if (!user) return null

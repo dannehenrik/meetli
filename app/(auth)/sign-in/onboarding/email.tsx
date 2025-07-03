@@ -61,13 +61,6 @@ export default function Email() {
                 onPress: () => handleSubmit(email)
             })
         } 
-        // return () => {
-        //     setFabState({
-        //         isDisabled: true,
-        //         isLoading: false,
-        //         onPress: undefined,
-        //     })
-        // }
     }, [email, mutation.isPending, pathName])
 
 

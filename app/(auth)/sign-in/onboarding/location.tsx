@@ -75,12 +75,6 @@ export default function LocationScreen() {
                 }
             })
         }  
-        // return () => {
-        //     setFabState({
-        //         isDisabled: true,
-        //         onPress: undefined
-        //     })
-        // }
     }, [locationStatus, pathName])
 
     async function checkLocationPermissions(): Promise<LocationStatus> {

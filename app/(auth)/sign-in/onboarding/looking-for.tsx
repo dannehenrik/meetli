@@ -90,12 +90,6 @@ export default function lookingFor() {
                 }
             })
         }
-        // return () => {
-        //     setFabState({
-        //         isDisabled: true,
-        //         onPress: undefined,
-        //     })
-        // }
     }, [lookingFor, user, pathName])
 
     
