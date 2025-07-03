@@ -7,6 +7,7 @@ import {
     useToast,
 } from "@/components/ui/toast";
 import { VStack } from '@/components/ui/vstack';
+import { triggerHaptic } from '@/utils/haptics';
 import { AlertTriangle, CheckCircle2, Info, XCircle } from 'lucide-react-native';
 
 export const useAwesomeToast = () => {
@@ -16,7 +17,7 @@ export const useAwesomeToast = () => {
 
     function showSuccessToast(title: string, message?: string) {
         const toastId = Math.random().toString();
-
+        triggerHaptic("success")
         toast.show({
             id: toastId,
             placement: placement,
@@ -51,7 +52,7 @@ export const useAwesomeToast = () => {
 
     function showErrorToast(title: string, message?: string) {
         const toastId = Math.random().toString();
-        
+        triggerHaptic("error")
         toast.show({
             id: toastId,
             placement: placement,
@@ -87,7 +88,7 @@ export const useAwesomeToast = () => {
 
     function showWarningToast(title: string, message?: string) {
         const toastId = Math.random().toString();
-        
+        triggerHaptic("warning")
         toast.show({
             id: toastId,
             placement: placement,

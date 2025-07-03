@@ -10,6 +10,7 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { getUserId } from "@/server/auth/getUser";
 import { LocationType } from "@/types";
 import { getCoordinates } from "@/utils/getLocation";
+import { triggerHaptic } from "@/utils/haptics";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Location from "expo-location";
@@ -53,7 +54,7 @@ export default function LocationScreen() {
     const mutation = useMutation({
         mutationFn: async () => updateUserLocation(),
         onError: (error) => {
-            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.locationError"));
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.locationError"));
             console.error(error.message)
         },
     })
@@ -144,7 +145,10 @@ export default function LocationScreen() {
                 {locationStatus === "undetermined" && (
                     <Button 
                         className="w-full" 
-                        onPress={requestLocation} 
+                        onPress={() => {
+                            triggerHaptic("button")
+                            requestLocation()
+                        }} 
                         size="lg" 
                     >
                         <Icon as={LocateFixed} className="text-white" size="lg"/>
@@ -157,7 +161,6 @@ export default function LocationScreen() {
                 {locationStatus === "granted" && (
                     <Button 
                         className="w-full" 
-                        onPress={requestLocation} 
                         size="lg" 
                         disabled={true}
                         action="positive"

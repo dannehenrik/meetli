@@ -19,6 +19,7 @@ import Animated, {
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 
 export default function Otp() {
+    const { showErrorToast } = useAwesomeToast();
     const queryClient = useQueryClient();
     const [otpValue, setOtpValue] = useState("");
     const router = useRouter();
@@ -31,7 +32,9 @@ export default function Otp() {
     const mutation = useMutation({
         mutationFn: async () => handleOtpVerification("dannehenrik2@gmail.com", otpValue),
         onError: (error) => { 
-            console.error("OTP not correct: ", error.message) 
+            console.error("OTP not correct: ", error.message)
+            showErrorToast(i18n.t("messages.error.otpError"));
+            
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['user']})

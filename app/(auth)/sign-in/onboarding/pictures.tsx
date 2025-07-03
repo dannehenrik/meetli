@@ -48,6 +48,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { SortableGridRenderItem } from 'react-native-sortables';
 import Sortable from 'react-native-sortables';
+import { triggerHaptic } from "@/utils/haptics";
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedText = Animated.createAnimatedComponent(Text)
 
@@ -143,6 +144,7 @@ export default function Pictures() {
             showErrorToast(i18n.t("messages.error.sortImageError"));
         },
         onSuccess: (newImages) => {
+            triggerHaptic("success")
             updateCache(newImages);
         },
         onSettled: () => { 
@@ -172,6 +174,7 @@ export default function Pictures() {
             showErrorToast(i18n.t("messages.error.replaceImageError"));
         },
         onSuccess: (newImages) => {
+            triggerHaptic("success")
             updateCache(newImages)
         },
         onSettled: () => { 
@@ -248,7 +251,7 @@ export default function Pictures() {
                             <Pressable 
                             className="absolute top-1 right-1 bg-background-950 p-1 rounded-full z-10"
                             onPress={() => {
-                                Haptics.selectionAsync()
+                                triggerHaptic("button")
                                 setSelectedImage(item);
                                 setShowActionsheet(true);
                             }}
@@ -282,7 +285,7 @@ export default function Pictures() {
                     <Pressable 
                     className="active:bg-background-50 rounded-lg"
                     onPress= { async () => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+                        triggerHaptic("button")
                         const fileData = await pickImage();
                         if (fileData) { 
                             const filePath = generateUniqueUrl();
@@ -364,7 +367,7 @@ export default function Pictures() {
                             data={images}
                             renderItem={renderItem}
                             rowGap={10}
-                            onDragStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+                            onDragStart={() => triggerHaptic("dragStart")}
                             keyExtractor={(item) => item?.filePath}
                             onDragEnd={(images) => sortMutation.mutate({newImages: images.data})}
                         />
@@ -391,11 +394,11 @@ export default function Pictures() {
                         size="md"
                         className="w-full"
                         onPress={() => {
+                            triggerHaptic("buttonImportant")
+                            setShowActionsheet(false);
                             if (selectedImage !== null) {
                                 deleteImageMutation.mutate({imageToDelete: selectedImage})
-                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
                             }
-                            setShowActionsheet(false);
                         }}
                     >
                         
@@ -407,15 +410,15 @@ export default function Pictures() {
                         variant="outline"
                         className="w-full"
                         onPress={async () => {
-                        setShowActionsheet(false);
-                        if (selectedImage !== null) {
-                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-                            const image = await pickImage();
-                            if (image) {
-                                const filePath = generateUniqueUrl();
-                                replaceImageMutation.mutate({newImageData: image, imageToReplace: selectedImage, filePath: filePath})
+                            triggerHaptic("button")
+                            setShowActionsheet(false);
+                            if (selectedImage !== null) {
+                                const image = await pickImage();
+                                if (image) {
+                                    const filePath = generateUniqueUrl();
+                                    replaceImageMutation.mutate({newImageData: image, imageToReplace: selectedImage, filePath: filePath})
+                                }
                             }
-                        }
                         }}
                     >
                         <ButtonText>{i18n.t("onboarding.pictures.replaceImage")}</ButtonText>

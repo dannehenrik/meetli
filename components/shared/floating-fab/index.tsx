@@ -103,6 +103,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { i18n } from '@/app/_layout';
 import { useTheme } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
@@ -235,10 +236,9 @@ export default function AnimatedFloatingFab() {
 
             onPress={() => {
                 if (isDisabled) return
-                Haptics.impactAsync(
-                    Haptics.ImpactFeedbackStyle.Light
-                );
-                (onPress ?? defaultOnPress)()
+                
+                triggerHaptic("buttonImportant");
+                (onPress ?? defaultOnPress)();
             }}
             disabled={isDisabled}
             activeOpacity={0.8}

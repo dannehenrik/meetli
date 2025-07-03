@@ -26,6 +26,7 @@ import Animated, {
     FadeInRight,
     FadeInUp
 } from 'react-native-reanimated';
+import { triggerHaptic } from "@/utils/haptics";
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedInput = Animated.createAnimatedComponent(Input)
 
@@ -67,7 +68,11 @@ export default function Email() {
 
     function handleValidation(value: string) {
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.toLowerCase());
-        setError(!isValidEmail);
+        if (!isValidEmail) {
+            setError(true);
+            triggerHaptic("error");
+
+        }
         return isValidEmail
     }
 

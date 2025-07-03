@@ -26,6 +26,7 @@ import Animated, {
     FadeInDown,
     FadeInUp
 } from 'react-native-reanimated';
+import { triggerHaptic } from "@/utils/haptics";
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedCheckboxGroup = Animated.createAnimatedComponent(CheckboxGroup)
 const AnimatedCheckboxLabel = Animated.createAnimatedComponent(CheckboxLabel)
@@ -46,7 +47,7 @@ export default function interest() {
         mutationFn: async () => updateUser(user?.id ?? "", genders as Gender[]),
         onError: (error) => {
             console.error(error.message)
-            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {
@@ -101,7 +102,10 @@ export default function interest() {
                         <VStack className="gap-4">
                             <AnimatedCheckboxGroup
                                 value={genders}
-                                onChange={(keys) => setGenders(keys)}
+                                onChange={(keys) => {
+                                    triggerHaptic("select")
+                                    setGenders(keys)
+                                }}
                                 className="gap-3"
                                 entering={FadeInUp.delay(400).duration(500).springify()}
                             >

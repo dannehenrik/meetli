@@ -15,6 +15,7 @@ import {
 import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
+import { triggerHaptic } from "@/utils/haptics";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, usePathname } from "expo-router";
@@ -60,7 +61,7 @@ export default function lookingFor() {
         mutationFn: async () => updateUser(user?.id ?? "", lookingFor as LookingFor),
         onError: (error) => {
             console.error(error.message)
-            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {
@@ -112,7 +113,10 @@ export default function lookingFor() {
                     className="gap-3" 
                     entering={FadeInUp.delay(400).duration(400).springify()}
                     value={lookingFor} 
-                    onChange={setLookingfor}
+                    onChange={(value) => {
+                        triggerHaptic("select")
+                        setLookingfor(value)
+                    }}
                     >
                         {lookingForOptions.map((option, index) => 
                             <Radio

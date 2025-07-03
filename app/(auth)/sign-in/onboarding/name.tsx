@@ -21,7 +21,7 @@ const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedInput = Animated.createAnimatedComponent(Input);
 
 export default function name() {
-    const {showErrorToast} = useAwesomeToast();
+    const {showErrorToast, showSuccessToast} = useAwesomeToast();
 
     const queryClient = useQueryClient();
 
@@ -38,7 +38,7 @@ export default function name() {
         mutationFn: async () => updateUser(user?.id ?? "", firstName, lastName),
         onError: (error) => {
             console.error(error.message)
-            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {
@@ -118,6 +118,5 @@ export default function name() {
 
 async function updateUser(userId: string, firstName: string, lastName: string) {
     const {error} = await supabase.from('users').update({first_name: firstName, last_name: lastName}).eq('id', userId);
-
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

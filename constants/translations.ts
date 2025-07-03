@@ -10,6 +10,7 @@ const englishLanguage = {
             updateProfileError: "We could not update your profile",
             locationError: "We could not fetch your location",
             emailError: "Something went wrong when sending the email",
+            otpError: "Wrong code",
             removeImageError: "Could not remove image",
             sortImageError: "Could not reorder images",
             replaceImageError: "Could not replace image",
@@ -131,139 +132,12 @@ const englishLanguage = {
 }
 
 
-const swedishLanguage = {
-    cancel: "Avbryt",
-    accept: "Acceptera",
-    confirm: "Bekräfta",
-    messages: {
-        error: {
-            somethingWentWrong: "Något gick fel!",
-            updateProfileError: "Vi kunde inte uppdatera din profil",
-            locationError: "Vi kunde inte hämta din plats",
-            emailError: "Något gick fel vid skickandet av e-post",
-            removeImageError: "Kunde inte ta bort bilden",
-            sortImageError: "Kunde inte sortera bilderna",
-            replaceImageError: "Kunde inte ersätta bilden",
-            uploadImageError: "Kunde inte ladda upp bilden"
-        },
-        success: {
-            emailSent: "E-post skickad!",
-            emailValidationInstructions: "Ange den 6-siffriga koden du just fick",
-        }
-    },
-    onboarding: {
-        or: "eller",
-        changeInformationLaterInfo: "Du kan ändra dessa uppgifter även efter introduktionen!",
-        fab: {
-            sendCode: "Skicka kod",
-            verify: "Verifiera",
-            enterDetails: "Fyll i uppgifter",
-            continue: "Fortsätt"
-        },
-        signIn: {
-            welcomeBack: "Välkommen tillbaka",
-            signInToContinue: "Logga in för att fortsätta",
-            continueWithGoogle: "Fortsätt med Google",
-            continueWithApple: "Fortsätt med Apple",
-            continueWithEmail: "Fortsätt med e-post",
-            agreeToTermsAndPolicy: "Genom att fortsätta godkänner du våra användarvillkor och integritetspolicy.",
-            or: "eller",
-        },
-        email: {
-            loginInstruction: "Vänligen ange din e-postadress",
-            loginSubInstruction: "Vi skickar en verifieringskod för att bekräfta din e-postadress",
-            enterPhoneNumber: "Ange telefonnummer",
-            enterPhoneNumberError: "Ange ett giltigt 10-siffrigt telefonnummer",
-            enterEmail: "Ange e-post",
-            emailExample: "exempel@gmail.com",
-            enterEmailError: "Måste vara en giltig e-postadress",
-        },
-        otp: {
-            otpInstruction: "Ange verifieringskoden",
-            otpSubInstruction: "Vi har skickat en verifieringskod till ditt mobilnummer",
-        },
-        verified: {
-            accountVerifiedText: "Yay! Ditt konto är verifierat!",
-            accountVerifiedSubText: "Din e-post har verifierats. Nu sätter vi upp din profil så du kan börja 🕺🏻",
-            enterDetails: "Fyll i uppgifter",
-        },
-        name: {
-            firstName: "Förnamn",
-            lastName: "Efternamn",
-            whatIsYourName: "👋 Vad heter du?",
-        },
-        dob: {
-            whatIsYourDOB: "🎂 När är du född?",
-            dob: "Födelsedatum"
-        },
-        age: {
-            whatIsYourAge: "Hur gammal är du?",
-            age: "Ålder",
-        },
-        gender: {
-            howDoYouIdentify: "🌈 Hur identifierar du dig?",
-            woman: "👩 Kvinna",
-            male: "👨 Man",
-            nonBinary: "⚧️ Icke-binär",
-            genderInterestInfo: "❤️ Jag vill träffa",
-        },
-        lookingFor: {
-            lookingForInstruction: "🎯 Vad letar du efter på Meetli?",
-            lookingForClarification: "Detta hjälper oss att matcha dig med personer som har samma intentioner",
-            options: {
-                serious: "💍 Seriöst",
-                seriousCasual: "🌹 Seriöst, men öppen för något avslappnat",
-                casualSerious: "🍹 Avslappnat, men öppen för något seriöst",
-                casual: "🔥 Avslappnat",
-                notSure: "🤷‍♂️ Inte säker",
-                friends: "🤝 Vänner"
-            }
-        },
-        location: {
-            title: "📍 Vi behöver åtkomst till din plats!",
-            granted: "✅ Platsåtkomst beviljad. Tack!",
-            denied: "❌ Platsåtkomst nekad",
-            undetermined: "Platsåtkomst krävs för att hitta personer i närheten 🌎.",
-            accessRequired:
-                "Platsåtkomst krävs för appens alla funktioner. Utan den kan du inte hitta matchningar eller synas i andras sökningar. Du kan aktivera platsåtkomst senare i inställningarna eller följa instruktionerna nedan.",
-            iosInstructionsTitle: "Så här aktiverar du plats på iOS:",
-            iosInstructions: [
-                "Öppna Inställningar",
-                "Scrolla ner och välj den här appen",
-                "Tryck på 'Plats'",
-                "Välj 'När appen används' eller 'Alltid'",
-            ],
-            androidInstructionsTitle: "Så här aktiverar du plats på Android:",
-            androidInstructions: [
-                "Öppna Inställningar",
-                "Gå till 'Appar och aviseringar'",
-                "Välj den här appen",
-                "Tryck på 'Behörigheter'",
-                "Aktivera 'Plats'",
-            ],
-            allowButton: "Tillåt platsåtkomst",
-            grantedButton: "Platsåtkomst beviljad",
-            openSettingsButton: "Öppna inställningar",
-            info: "Vi delar aldrig din plats och använder den endast för att visa matchningar i närheten.",
-        },
-        pictures: {
-            title: "📸 Lägg till dina bilder",
-            instructions: "Visa vem du är genom dina bilder! Välj 3–6 bilder som visar dig – en tydlig närbild, några helkroppsbilder och bilder där du gör något du gillar. Naturliga leenden och bra ljus funkar bäst! Undvik suddiga eller mörka bilder.",
-            dndInstructions: "Håll ned och dra för att ändra ordning",
-            main: "Huvudbild",
-            deleteImage: "Ta bort bild",
-            replaceImage: "Byt ut bild",
-        },
-        profileBaseCompleted: {
-            title: "Din profil är klar! 🤩",
-            description: "Nu fortsätter vi med några fler frågor för att lära känna dig bättre och göra din profil ännu bättre 🌟"
-        }
-    }
-}
+
+
+
+
 
 
 export const translations = {
     en: englishLanguage,
-    ja: { welcome: 'こんにちは' },
-    sv: swedishLanguage
 };

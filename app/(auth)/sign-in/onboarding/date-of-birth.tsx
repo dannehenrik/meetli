@@ -11,6 +11,7 @@ import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
+import { triggerHaptic } from "@/utils/haptics";
 import { supabase } from "@/utils/supabase";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -68,7 +69,7 @@ export default function Dateofbirth() {
         },
         onError: (error) => {
             console.error(error.message)
-            showErrorToast(i18n.t("messaged.error.somethingWentWrong"),i18n.t("messaged.error.updateProfileError"));
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {
@@ -165,7 +166,10 @@ export default function Dateofbirth() {
                                 <VStack className="gap-2 mt-4 w-full">
                                     <Pressable 
                                         className="w-full py-4 rounded-lg bg-primary-700 active:bg-primary-800 items-center justify-center"
-                                        onPress={confirmIosDate}
+                                        onPress={() => {
+                                            triggerHaptic("button")
+                                            confirmIosDate()
+                                        }}
                                     >
                                         <Text className="text-white font-medium">{i18n.t("confirm")}</Text>
                                     </Pressable>
