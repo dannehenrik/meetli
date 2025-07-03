@@ -53,7 +53,7 @@ const englishLanguage = {
             otpSubInstruction: "We have sent you a verification code to your mobile number",
         },
         verified: {
-            accountVerifiedText: "Yayy! Your account is verified!",
+            accountVerifiedText: "Yayy! Your profile is verified!",
             accountVerifiedSubText: "Your email has been successfully verified. Now, let's set up your profile details to get started 🕺🏻",
             enterDetails: "Enter Details",
         },

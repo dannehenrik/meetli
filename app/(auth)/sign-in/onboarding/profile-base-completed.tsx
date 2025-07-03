@@ -1,4 +1,5 @@
 import { i18n } from "@/app/_layout";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { Box } from "@/components/ui/box";
 import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
@@ -6,16 +7,54 @@ import { ChevronRightIcon } from "@/components/ui/icon";
 import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import React from "react";
+import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { useAwesomeToast } from "@/hooks/toasts";
+import { getUser } from "@/server/auth/getUser";
+import { supabase } from "@/utils/supabase";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { router, usePathname } from "expo-router";
+import React, { useEffect } from "react";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 const AnimatedVstack = Animated.createAnimatedComponent(VStack);
 const AnimatedHeading = Animated.createAnimatedComponent(Heading);
 const AnimatedText = Animated.createAnimatedComponent(Text);
-const AnimatedImage = Animated.createAnimatedComponent(Image);
+
 
 export default function ProfileBaseComplete() {
-    
+    const {showErrorToast} = useAwesomeToast();
+
+    const {data: user} = useQuery({
+        queryKey: ['user'],
+        queryFn: async () => await getUser(),
+        staleTime: USER_STALE_TIME,
+    })
+
+    const mutation = useMutation({
+        mutationFn: async () => setOnboardingCompleted(user?.id ?? ""),
+        onError: (error) => {
+            console.error(error.message)
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"));
+            router.back();
+        },
+    })
+
+
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        if (pathName === "/sign-in/onboarding/profile-base-completed") {
+            setFabState({
+                label: i18n.t("onboarding.fab.continue"),
+                isDisabled: false,
+                onPress: () => {
+                    router.push("/sign-in/onboarding/more-about-you/intro");
+                    mutation.mutate();
+                }
+            })
+        }
+    }, [pathName])
 
     return (
         <Box className="flex-1 justify-center items-center gap-11 px-5 w-full pb-28">
@@ -23,7 +62,7 @@ export default function ProfileBaseComplete() {
                 entering={FadeInDown.duration(400)}
                 className="gap-7 justify-center items-center"
             >
-                <AnimatedImage
+                <Image
                     source={require("@/assets/images/onboarding/onboarding-completed.png")}
                     alt="Profile complete"
                     className="w-[350px] h-[338px]"
@@ -47,4 +86,10 @@ export default function ProfileBaseComplete() {
             </AnimatedVstack>
         </Box>
     );
+}
+
+
+async function setOnboardingCompleted(userId: string) {
+    const {error} = await supabase.from('users').update({onboarding_completed: true}).eq('id', userId)
+    if (error) throw new Error("Something went wrong when setting the onboarding as complete: " + error.message);
 }

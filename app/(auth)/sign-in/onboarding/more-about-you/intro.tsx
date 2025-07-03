@@ -58,16 +58,6 @@ export default function intro() {
           </Box>
         </FormControl>
       </Box>
-      <Fab
-        size="lg"
-        onPress={() => {
-          router.push("/sign-in/onboarding/pictures");
-        }}
-        className="bg-background-950 rounded-lg absolute bottom-11 right-5 data-[active=true]:bg-background-900"
-        style={{ marginBottom: -1 * insets.bottom }}
-      >
-        <FabIcon as={ChevronRightIcon} />
-      </Fab>
     </Box>
   );
 };

@@ -26,6 +26,7 @@ export function ProgressBar({ pathName }: { pathName: string }) {
         { progress: 5, route: "/sign-in/onboarding/location" },
         { progress: 6, route: "/sign-in/onboarding/pictures" },
         { progress: null, route: "/sign-in/onboarding/profile-base-completed" },
+        { progress: 0, route: "/sign-in/onboarding/more-about-you/intro" },
     ];
 
     const currentRoute = onboardingRoutes.find(r => r.route === pathName);
