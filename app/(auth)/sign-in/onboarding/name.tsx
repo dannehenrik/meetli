@@ -5,11 +5,10 @@ import { Heading } from "@/components/ui/heading";
 import { Input, InputField } from "@/components/ui/input";
 
 import { VStack } from "@/components/ui/vstack";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
-import { getUser } from "@/server/auth/getUser";
+import { useCoreUser } from "@/hooks/user/useCoreUser";
 import { supabase } from "@/utils/supabase";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 import Animated, {
@@ -28,11 +27,7 @@ export default function name() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
-    const {data: user} = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => await getUser(),
-        staleTime: USER_STALE_TIME,
-    })
+    const {data: user} = useCoreUser()
 
     const mutation = useMutation({
         mutationFn: async () => updateUser(user?.id ?? "", firstName, lastName),
@@ -42,7 +37,7 @@ export default function name() {
             router.back();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['user']})
+            queryClient.invalidateQueries({ queryKey: ['user', 'core']})
         }
     })
 

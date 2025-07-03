@@ -14,10 +14,8 @@ export interface User {
     looking_for: LookingFor,
     dob: Date, //Date of birth
     images: ImageType[],
-
-    // more about you
-    intro: string
 }
+
 
 export interface ImageType {
     filePath: string,
@@ -32,3 +30,9 @@ export interface LocationType {
 
 export type Gender = "male" | "woman" | "non-binary"
 export type LookingFor = "serious" | "serious-casual" | "casual-serious" | "casual" | "not-sure" | "friends"
+
+
+export interface ExtendedUser {
+    id: string, 
+    intro: string,
+}

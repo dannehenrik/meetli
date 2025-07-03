@@ -2,14 +2,13 @@ import { getUser } from "@/server/auth/getUser";
 import { useQuery } from "@tanstack/react-query";
 import { Redirect } from "expo-router";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
+import { useUserStatus } from "@/hooks/user/useUserStatus";
 
 export default function Main() {
 
-    const {data, error, isPending} = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => await getUser(),
-        staleTime: USER_STALE_TIME,
-    })
+    const {data, error, isPending} = useUserStatus()
+
+    if (error) return null //I don't know yet what should happen if there is an error
 
     if (isPending || data === undefined) return null
 

@@ -9,9 +9,10 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
+import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, usePathname } from "expo-router";
 import React, { useEffect } from "react";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -22,13 +23,10 @@ const AnimatedText = Animated.createAnimatedComponent(Text);
 
 
 export default function ProfileBaseComplete() {
+    const queryClient = useQueryClient();
     const {showErrorToast} = useAwesomeToast();
 
-    const {data: user} = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => await getUser(),
-        staleTime: USER_STALE_TIME,
-    })
+    const {data: user} = useExtendedUser() //Prefetching
 
     const mutation = useMutation({
         mutationFn: async () => setOnboardingCompleted(user?.id ?? ""),
@@ -37,6 +35,10 @@ export default function ProfileBaseComplete() {
             showErrorToast(i18n.t("messages.error.somethingWentWrong"));
             router.back();
         },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ['user', 'status']})
+        }
+
     })
 
 

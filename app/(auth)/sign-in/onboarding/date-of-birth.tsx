@@ -7,14 +7,13 @@ import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
-import { getUser } from "@/server/auth/getUser";
+import { useCoreUser } from "@/hooks/user/useCoreUser";
 import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
 import { triggerHaptic } from "@/utils/haptics";
 import { supabase } from "@/utils/supabase";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router, usePathname } from "expo-router";
 import { Calendar } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
@@ -52,11 +51,7 @@ export default function Dateofbirth() {
     const {showErrorToast} = useAwesomeToast();
     const queryClient = useQueryClient();
 
-    const {data: user} = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => await getUser(),
-        staleTime: USER_STALE_TIME,
-    })
+    const {data: user} = useCoreUser()
 
     const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
     const [tempDate, setTempDate] = useState<Date>(new Date())
@@ -73,7 +68,7 @@ export default function Dateofbirth() {
             router.back();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['user']})
+            queryClient.invalidateQueries({ queryKey: ['user', 'core']})
         }
     })
 

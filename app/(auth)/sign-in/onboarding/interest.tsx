@@ -17,16 +17,15 @@ import { router, usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 import { useFab } from "@/components/shared/floating-fab/FabContext";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
-import { getUser } from "@/server/auth/getUser";
+import { useCoreUser } from "@/hooks/user/useCoreUser";
 import { Gender } from "@/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { triggerHaptic } from "@/utils/haptics";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Animated, {
     FadeInDown,
     FadeInUp
 } from 'react-native-reanimated';
-import { triggerHaptic } from "@/utils/haptics";
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedCheckboxGroup = Animated.createAnimatedComponent(CheckboxGroup)
 const AnimatedCheckboxLabel = Animated.createAnimatedComponent(CheckboxLabel)
@@ -37,11 +36,7 @@ export default function interest() {
 
     const {showErrorToast} = useAwesomeToast();
 
-    const {data: user} = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => await getUser(),
-        staleTime: USER_STALE_TIME,
-    })
+    const {data: user} = useCoreUser()
 
     const mutation = useMutation({
         mutationFn: async () => updateUser(user?.id ?? "", genders as Gender[]),
@@ -51,7 +46,7 @@ export default function interest() {
             router.back();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['user']})
+            queryClient.invalidateQueries({ queryKey: ['user', 'core']})
         }
     })
 

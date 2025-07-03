@@ -12,12 +12,11 @@ import {
     RadioIndicator,
     RadioLabel,
 } from "@/components/ui/radio";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
-import { getUser } from "@/server/auth/getUser";
+import { useCoreUser } from "@/hooks/user/useCoreUser";
 import { triggerHaptic } from "@/utils/haptics";
 import { supabase } from "@/utils/supabase";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router, usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 import Animated, {
@@ -51,11 +50,7 @@ export default function lookingFor() {
     const [lookingFor, setLookingfor] = useState('');
 
 
-    const {data: user} = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => await getUser(),
-        staleTime: USER_STALE_TIME,
-    })
+    const {data: user} = useCoreUser()
 
     const mutation = useMutation({
         mutationFn: async () => updateUser(user?.id ?? "", lookingFor as LookingFor),
@@ -65,7 +60,7 @@ export default function lookingFor() {
             router.back();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['user']})
+            queryClient.invalidateQueries({ queryKey: ['user', 'core']})
         }
     })
 

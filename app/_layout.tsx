@@ -33,6 +33,7 @@ import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { translations } from '@/constants/translations'
 import { getUser } from "@/server/auth/getUser";
+import { fetchUserStatus } from "@/server/auth/fetchUserStatus";
 export const i18n = new I18n(translations);
 
 // Set the locale once at the beginning of your app.
@@ -77,10 +78,10 @@ export default function RootLayout() {
                 await SplashScreenExpo.hideAsync();
 
                 // 🔑 Fetch user manually
-                const user = await getUser();
+                const user = await fetchUserStatus();
 
                 // ✅ Pre-populate user data into TanStack cache
-                queryClient.setQueryData(['user'], user);
+                queryClient.setQueryData(['user', 'status'], user);
 
                 // Optional: Simulate some delay
                 await new Promise(res => setTimeout(res, 1500));

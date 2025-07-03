@@ -32,3 +32,7 @@ export async function getUserFromId(userId: string) : Promise<User | null>{
     return data
 }
 
+export async function getUserStatus() {
+    
+}
+

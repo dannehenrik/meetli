@@ -7,6 +7,8 @@ import { Heading } from "@/components/ui/heading";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { useAwesomeToast } from "@/hooks/toasts";
+import { useCoreUser } from "@/hooks/user/useCoreUser";
+import { fetchUserId } from "@/server/auth/fetchUserId";
 import { getUserId } from "@/server/auth/getUser";
 import { LocationType } from "@/types";
 import { getCoordinates } from "@/utils/getLocation";
@@ -30,6 +32,7 @@ export default function LocationScreen() {
     const {showErrorToast} = useAwesomeToast();
     const queryClient = useQueryClient();
     
+    const {data: user} = useCoreUser();
 
     function openSettings() {
         if (Platform.OS === 'ios') {
@@ -52,7 +55,7 @@ export default function LocationScreen() {
 
 
     const mutation = useMutation({
-        mutationFn: async () => updateUserLocation(),
+        mutationFn: async () => updateUserLocation(user?.id ?? ""),
         onError: (error) => {
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.locationError"));
             console.error(error.message)
@@ -195,8 +198,7 @@ export default function LocationScreen() {
     );
 }
 
-async function updateUserLocation() {
-    const userId = await getUserId()
+async function updateUserLocation(userId: string) {
     const coordinates = await getCoordinates();
     await updateUser(userId, coordinates)
 }

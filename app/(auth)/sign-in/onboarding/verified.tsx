@@ -13,9 +13,12 @@ const AnimatedText = Animated.createAnimatedComponent(Text);
 
 import { i18n } from "@/app/_layout";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
+import { useCoreUser } from "@/hooks/user/useCoreUser";
 
 
 export default function Verified() {
+
+    const {data} = useCoreUser() //Prefetching
 
     // Setting the fab
     const pathName = usePathname();

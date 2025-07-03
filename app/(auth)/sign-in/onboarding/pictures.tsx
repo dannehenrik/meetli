@@ -14,7 +14,6 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { MAX_PROFILE_IMAGES_AMOUNT } from "@/constants/constants";
 import { decode } from 'base64-arraybuffer';
-import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
 import { router, usePathname } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -29,17 +28,17 @@ import {
     ActionsheetDragIndicatorWrapper
 } from "@/components/ui/actionsheet";
 
-import { FabState, useFab } from "@/components/shared/floating-fab/FabContext";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
-import { getUser } from "@/server/auth/getUser";
+import { useCoreUser } from "@/hooks/user/useCoreUser";
 import { ImageType, User } from "@/types";
 import { generateUniqueUrl } from "@/utils/generateUniqueUrl";
+import { triggerHaptic } from "@/utils/haptics";
 import { supabase } from "@/utils/supabase";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { View } from "react-native";
 import Animated, {
     FadeInDown,
@@ -48,7 +47,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import type { SortableGridRenderItem } from 'react-native-sortables';
 import Sortable from 'react-native-sortables';
-import { triggerHaptic } from "@/utils/haptics";
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedText = Animated.createAnimatedComponent(Text)
 
@@ -60,11 +58,13 @@ export default function Pictures() {
     const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
     const [showActionsheet, setShowActionsheet] = useState(false);
 
+    const {data: user} = useCoreUser()
+
     // Helper functions
 
     // Updates the cache with new images
     function updateCache(images: ImageType[]) {
-        const user = queryClient.getQueryData<User>(['user']);
+        const user = queryClient.getQueryData<User>(['user', 'core']);
         if ( !user ) return
 
         queryClient.setQueryData(["user"], {
@@ -82,7 +82,7 @@ export default function Pictures() {
     function replaceImageFromCache(newImage: ImageType, imageToReplace: ImageType) {
         const images = getImages()
 
-        queryClient.setQueryData(['user'], {
+        queryClient.setQueryData(['user', 'core'], {
             ...user,
             images: replaceImage(newImage, imageToReplace.filePath, images),
         });
@@ -98,13 +98,13 @@ export default function Pictures() {
 
     // Get the images from the cache
     function getImages() {
-        const userData = queryClient.getQueryData<User>(['user']);
+        const userData = queryClient.getQueryData<User>(['user', 'core']);
         if (!userData) throw new Error("User data not found");
 
         return userData.images ?? []
     }
     function getUserId() {
-        const userData = queryClient.getQueryData<User>(['user']);
+        const userData = queryClient.getQueryData<User>(['user', 'core']);
         if (!userData) throw new Error("User data not found");
 
         return userData.id
@@ -116,12 +116,7 @@ export default function Pictures() {
             image.filePath === imageToReplacePath ? newImage : image
         ) ?? [];       
     }
-    
-    const {data: user} = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => await getUser(),
-        staleTime: USER_STALE_TIME,
-    })
+
 
     const newImageMutation = useMutation({
         mutationFn: async ({newImageData, filePath} : {newImageData: ImagePicker.ImagePickerAsset, filePath: string}) => {
@@ -135,7 +130,7 @@ export default function Pictures() {
             return newImages
         },
         onMutate: async (variables) => {
-            await queryClient.cancelQueries({queryKey: ['user']});
+            await queryClient.cancelQueries({queryKey: ['user', 'core']});
             const newImage = {fileName: variables.newImageData.fileName ?? "", filePath: variables.filePath, url: null, tempUrl: variables.newImageData.uri}
             addImageInCache(newImage);
         },
@@ -148,7 +143,7 @@ export default function Pictures() {
             updateCache(newImages);
         },
         onSettled: () => { 
-            queryClient.invalidateQueries({ queryKey: ['user']}) 
+            queryClient.invalidateQueries({ queryKey: ['user', 'core']}) 
         }
     })
 
@@ -165,7 +160,7 @@ export default function Pictures() {
             return newImages
         },
         onMutate: async (variables) => {
-            await queryClient.cancelQueries({queryKey: ['user']});
+            await queryClient.cancelQueries({queryKey: ['user', 'core']});
             const newImage = {filePath: variables.filePath, tempUrl: variables.newImageData.uri, url: null}
             replaceImageFromCache(newImage, variables.imageToReplace);
         },
@@ -178,7 +173,7 @@ export default function Pictures() {
             updateCache(newImages)
         },
         onSettled: () => { 
-            queryClient.invalidateQueries({ queryKey: ['user']})
+            queryClient.invalidateQueries({ queryKey: ['user', 'core']})
         }
     })
 
@@ -189,7 +184,7 @@ export default function Pictures() {
             await deleteImage(getUserId(), imageToDelete);
         },
         onMutate: async (variables) => {
-            await queryClient.cancelQueries({queryKey: ['user']});
+            await queryClient.cancelQueries({queryKey: ['user', 'core']});
             removeImageFromCache(variables.imageToDelete);
         },
         onError: (error) => {
@@ -197,7 +192,7 @@ export default function Pictures() {
             showErrorToast(i18n.t("messages.error.removeImageError"));
         },
         onSettled: () => { 
-            queryClient.invalidateQueries({ queryKey: ['user']}) 
+            queryClient.invalidateQueries({ queryKey: ['user', 'core']}) 
         }
     })
 
@@ -208,13 +203,13 @@ export default function Pictures() {
         onMutate: async (variables) => {
             const images = variables.newImages.filter((image) => image.filePath !== "placeholder")
             updateCache(images);
-            await queryClient.cancelQueries({queryKey: ['user']});
+            await queryClient.cancelQueries({queryKey: ['user', 'core']});
         },
         onError: (error) => {
             console.error(error.message);
             showErrorToast(i18n.t("messages.error.sortImageError"));
         },
-        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user']}) }
+        onSettled: () => { queryClient.invalidateQueries({ queryKey: ['user', 'core']}) }
     })
 
     const renderItem = useCallback<SortableGridRenderItem<ImageType>>(({ item, index }) => {

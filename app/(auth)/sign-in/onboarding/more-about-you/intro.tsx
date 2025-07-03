@@ -29,6 +29,7 @@ import Animated, {
     FadeInRight,
     FadeInUp
 } from 'react-native-reanimated';
+import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 const AnimatedHeading = Animated.createAnimatedComponent(Heading)
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 
@@ -43,11 +44,7 @@ export default function intro() {
     const [wordCount, setWordCount] = useState(0);
     const [error, setError] = useState(false);
 
-    const {data: user} = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => await getUser(),
-        staleTime: USER_STALE_TIME,
-    })
+    const {data: user} = useExtendedUser()
 
     useEffect(() => {
         if (user && user.intro) {
@@ -114,6 +111,7 @@ export default function intro() {
                         <Textarea className={`bg-background-50 h-[150px]`} size="lg">
                             <TextareaInput
                                 placeholder={i18n.t("onboarding.moreAboutYou.intro.placeholder")}
+                                value={textValue}
                                 className={`p-4 items-start`}
                                 multiline
                                 style={{ textAlignVertical: "top" }}
