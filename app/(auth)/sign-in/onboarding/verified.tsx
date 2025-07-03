@@ -31,7 +31,7 @@ export default function Verified() {
     return (
         <Box className="px-5 gap-4 flex-1 items-center justify-center">
             <AnimatedHstack
-                entering={FadeInDown.duration(400)}
+                entering={FadeInDown.duration(400).springify()}
                 className="gap-4 w-full justify-center items-center"
             >
                 <Icon as={LogoIcon} className="w-[72px] h-[72px]" />
@@ -40,7 +40,7 @@ export default function Verified() {
                 </Text>
             </AnimatedHstack>
             <AnimatedText
-                entering={FadeInDown.delay(400).duration(400)}
+                entering={FadeInDown.delay(400).duration(400).springify()}
                 className="font-roboto text-typography-500 text-base leading-6"
             >
                 {i18n.t("onboarding.verified.accountVerifiedSubText")}

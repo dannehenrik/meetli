@@ -17,21 +17,28 @@ import { supabase } from "@/utils/supabase";
 import { usePathname, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 
-
-
 import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { Gender } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
+import Animated, {
+  FadeInDown,
+  FadeInRight,
+  FadeInUp,
+} from 'react-native-reanimated';
+const AnimatedHeader = Animated.createAnimatedComponent(Heading)
+const AnimatedCheckboxGroup = Animated.createAnimatedComponent(CheckboxGroup)
+const AnimatedCheckboxLabel = Animated.createAnimatedComponent(CheckboxLabel)
+const AnimatedCheckboxIndicator = Animated.createAnimatedComponent(CheckboxIndicator)
 
 export default function interest() {
     const queryClient = useQueryClient();
 
     const {showErrorToast} = useAwesomeToast();
 
-    const {data: user, error, isPending} = useQuery({
+    const {data: user} = useQuery({
         queryKey: ['user'],
         queryFn: async () => await getUser(),
         staleTime: USER_STALE_TIME,
@@ -90,27 +97,34 @@ export default function interest() {
 
                 <FormControl className="w-full">
                     <VStack className="gap-6">
-                        <Heading className="font-roboto font-semibold text-2xl">
+                        <AnimatedHeader 
+                        className="font-roboto font-semibold text-2xl"
+                        entering={FadeInDown.duration(600).springify().delay(100)} 
+                        >
                             {i18n.t("onboarding.gender.genderInterestInfo")}
-                        </Heading>
+                        </AnimatedHeader>
 
                         <VStack className="gap-4">
-                            <CheckboxGroup
+                            <AnimatedCheckboxGroup
                                 value={genders}
                                 onChange={(keys) => setGenders(keys)}
                                 className="gap-3"
+                                entering={FadeInUp.delay(400).duration(500).springify()}
                             >
                                 <Checkbox
                                 value="woman"
                                 size="md"
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
-                                    <CheckboxLabel className="font-roboto font-medium text-typography-950">
+                                    <AnimatedCheckboxLabel
+                                    className="font-roboto font-medium text-typography-950"
+                                    entering={FadeInRight.delay(600).duration(500).springify()}
+                                    >
                                         {i18n.t("onboarding.gender.woman")}
-                                    </CheckboxLabel>
-                                    <CheckboxIndicator>
+                                    </AnimatedCheckboxLabel>
+                                    <AnimatedCheckboxIndicator entering={FadeInRight.delay(500).duration(500).springify()}>
                                         <CheckboxIcon as={CheckIcon} />
-                                    </CheckboxIndicator>
+                                    </AnimatedCheckboxIndicator>
                                 </Checkbox>
 
                                 <Checkbox
@@ -118,12 +132,15 @@ export default function interest() {
                                 size="md"
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
-                                    <CheckboxLabel className="font-roboto font-medium text-typography-950">
+                                    <AnimatedCheckboxLabel 
+                                    className="font-roboto font-medium text-typography-950"
+                                    entering={FadeInRight.delay(700).duration(500).springify()}
+                                    >
                                         {i18n.t("onboarding.gender.male")}
-                                    </CheckboxLabel>
-                                    <CheckboxIndicator>
+                                    </AnimatedCheckboxLabel>
+                                    <AnimatedCheckboxIndicator entering={FadeInRight.delay(600).duration(500).springify()}>
                                         <CheckboxIcon as={CheckIcon} />
-                                    </CheckboxIndicator>
+                                    </AnimatedCheckboxIndicator>
                                 </Checkbox>
 
                                 <Checkbox
@@ -131,14 +148,17 @@ export default function interest() {
                                 size="md"
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
-                                    <CheckboxLabel className="font-roboto font-medium text-typography-950">
+                                    <AnimatedCheckboxLabel 
+                                    className="font-roboto font-medium text-typography-950"
+                                    entering={FadeInRight.delay(800).duration(500).springify()}
+                                    >
                                         {i18n.t("onboarding.gender.nonBinary")}
-                                    </CheckboxLabel>
-                                    <CheckboxIndicator>
+                                    </AnimatedCheckboxLabel>
+                                    <AnimatedCheckboxIndicator entering={FadeInRight.delay(700).duration(500).springify()}>
                                         <CheckboxIcon as={CheckIcon} />
-                                    </CheckboxIndicator>
+                                    </AnimatedCheckboxIndicator>
                                 </Checkbox>
-                            </CheckboxGroup>
+                            </AnimatedCheckboxGroup>
                         </VStack>
 
                         <InfoOnboarding

@@ -45,6 +45,14 @@ import { View } from "react-native";
 import type { SortableGridRenderItem } from 'react-native-sortables';
 import Sortable from 'react-native-sortables';
 import { useFab } from "@/components/shared/floating-fab/FabContext";
+import Animated, {
+  FadeInDown,
+  FadeInRight,
+  FadeInLeft,
+  FadeInUp,
+} from 'react-native-reanimated';
+const AnimatedBox = Animated.createAnimatedComponent(Box)
+const AnimatedText = Animated.createAnimatedComponent(Text)
 
 
 export default function Pictures() {
@@ -217,7 +225,9 @@ export default function Pictures() {
 
         return (
             <Sortable.Handle mode={isPlaceholder ? 'fixed' : 'draggable'}>
-                <Box className="aspect-square relative">
+                <AnimatedBox 
+                className="aspect-square relative" 
+                entering={index % 2 === 0 ? FadeInLeft.delay(400 + (100 * index)).duration(500).springify() : FadeInLeft.delay(400 + (100 * index)).duration(500).springify()}>
                     {!isPlaceholder ? (
                     <>
                         <Image
@@ -291,7 +301,7 @@ export default function Pictures() {
                     </Pressable>
                     
                 )}
-                </Box>
+                </AnimatedBox>
             </Sortable.Handle>
         );
     }, []);
@@ -336,7 +346,7 @@ export default function Pictures() {
    
                 <VStack className="gap-6 w-full">
                     <VStack className="gap-3">
-                        <Box className="flex-row items-center gap-2">
+                        <AnimatedBox className="flex-row items-center gap-2" entering={FadeInDown.duration(600).springify().delay(100)}>
                             <Heading className="font-roboto font-semibold text-2xl">
                                 {i18n.t("onboarding.pictures.title")}
                             </Heading>
@@ -345,10 +355,13 @@ export default function Pictures() {
                                     {user.images?.length || 0}/{MAX_PROFILE_IMAGES_AMOUNT}
                                 </BadgeText>
                             </Badge>
-                        </Box>
-                        <Text className="font-normal font-roboto text-typography-400">
+                        </AnimatedBox>
+                        <AnimatedText 
+                        entering={FadeInUp.delay(400).duration(500).springify()} 
+                        className="font-normal font-roboto text-typography-400"
+                        >
                         {i18n.t("onboarding.pictures.instructions")}
-                        </Text>
+                        </AnimatedText>
                     </VStack>
                 
                     <View>

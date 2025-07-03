@@ -26,13 +26,24 @@ import { Gender } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
+import Animated, {
+  FadeInDown,
+  FadeInRight,
+  FadeInLeft,
+  FadeInUp,
+} from 'react-native-reanimated';
+const AnimatedHeader = Animated.createAnimatedComponent(Heading)
+const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
+const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
+const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
+
 
 export default function gender() {
     const {showErrorToast} = useAwesomeToast();
     const queryClient = useQueryClient();
     const router = useRouter();
 
-    const {data: user, error, isPending} = useQuery({
+    const {data: user} = useQuery({
         queryKey: ['user'],
         queryFn: async () => await getUser(),
         staleTime: USER_STALE_TIME,
@@ -89,23 +100,34 @@ export default function gender() {
 
                 <FormControl className="w-full">
                     <VStack className="gap-6">
-                        <Heading className="font-roboto font-semibold text-2xl">
+                        <AnimatedHeader 
+                        className="font-roboto font-semibold text-2xl"
+                        entering={FadeInDown.duration(600).springify().delay(100)} 
+                        >
                             {i18n.t("onboarding.gender.howDoYouIdentify")}
-                        </Heading>
+                        </AnimatedHeader>
 
                         <VStack className="gap-4">
-                            <RadioGroup className="gap-3" value={gender} onChange={setGender}>
+                            <AnimatedRadioGroup 
+                            className="gap-3" 
+                            entering={FadeInUp.delay(400).duration(500).springify()}
+                            value={gender} 
+                            onChange={setGender}
+                            >
                                 <Radio
                                 value="woman"
                                 size="md"
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
-                                    <RadioLabel className="font-roboto font-medium text-typography-950">
+                                    <AnimatedRadioLabel 
+                                    entering={FadeInLeft.delay(600).duration(500).springify()}
+                                    className="font-roboto font-medium text-typography-950"
+                                    >
                                         {i18n.t("onboarding.gender.woman")}
-                                    </RadioLabel>
-                                    <RadioIndicator>
+                                    </AnimatedRadioLabel>
+                                    <AnimatedRadioIndicator entering={FadeInLeft.delay(500).duration(500).springify()}>
                                         <RadioIcon as={CircleIcon} />
-                                    </RadioIndicator>
+                                    </AnimatedRadioIndicator>
                                 </Radio>
 
                                 <Radio
@@ -113,27 +135,33 @@ export default function gender() {
                                 size="md"
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
-                                    <RadioLabel className="font-roboto font-medium text-typography-950">
+                                    <AnimatedRadioLabel 
+                                    className="font-roboto font-medium text-typography-950"
+                                    entering={FadeInLeft.delay(700).duration(500).springify()}
+                                    >
                                         {i18n.t("onboarding.gender.male")}
-                                    </RadioLabel>
-                                    <RadioIndicator>
+                                    </AnimatedRadioLabel>
+                                    <AnimatedRadioIndicator entering={FadeInLeft.delay(600).duration(500).springify()}>
                                         <RadioIcon as={CircleIcon} />
-                                    </RadioIndicator>
+                                    </AnimatedRadioIndicator>
                                 </Radio>
 
                                 <Radio
-                                    value="non-binary"
-                                    size="md"
-                                    className="bg-background-50 py-3 px-4 rounded-lg justify-between"
+                                value="non-binary"
+                                size="md"
+                                className="bg-background-50 py-3 px-4 rounded-lg justify-between"
+                                >
+                                    <AnimatedRadioLabel 
+                                    className="font-roboto font-medium text-typography-950"
+                                    entering={FadeInLeft.delay(800).duration(500).springify()}
                                     >
-                                    <RadioLabel className="font-roboto font-medium text-typography-950">
                                         {i18n.t("onboarding.gender.nonBinary")}
-                                    </RadioLabel>
-                                    <RadioIndicator>
+                                    </AnimatedRadioLabel>
+                                    <AnimatedRadioIndicator entering={FadeInLeft.delay(700).duration(500).springify()}>
                                         <RadioIcon as={CircleIcon} />
-                                    </RadioIndicator>
+                                    </AnimatedRadioIndicator>
                                 </Radio>
-                            </RadioGroup>
+                            </AnimatedRadioGroup>
                         </VStack>
 
                         <InfoOnboarding

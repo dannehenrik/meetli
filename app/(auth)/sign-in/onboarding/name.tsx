@@ -15,26 +15,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import Animated, {
-  Easing,
-  FadeIn,
   FadeInDown,
-  FadeInUp,
-  SlideInDown,
-  SlideInUp,
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
   FadeInRight,
   FadeInLeft,
-  FadeOutUp,
-  FadeOutRight,
-  FadeOutLeft,
 } from 'react-native-reanimated';
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedInput = Animated.createAnimatedComponent(Input);
-
-
 
 export default function name() {
     const {showErrorToast} = useAwesomeToast();
@@ -100,23 +86,35 @@ export default function name() {
 
                 <VStack className="gap-6 w-full">
                 
-                    <AnimatedHeader entering={FadeInDown.duration(600).springify().delay(100)} className="font-roboto font-semibold text-2xl">
+                    <AnimatedHeader 
+                    entering={FadeInDown.duration(600).springify().delay(100)} 
+                    className="font-roboto font-semibold text-2xl"
+                    >
                         {i18n.t("onboarding.name.whatIsYourName")}
                     </AnimatedHeader>
 
                     <VStack className="gap-4">
 
-                        <AnimatedInput entering={FadeInLeft.delay(300).duration(500).springify()} className="rounded-lg" size="lg">
+                        <AnimatedInput 
+                        className="rounded-lg" 
+                        size="lg"
+                        entering={FadeInLeft.delay(300).duration(500).springify()} 
+                        >
                             <InputField placeholder={i18n.t('onboarding.name.firstName')} value={firstName} onChangeText={setFirstName} />
                         </AnimatedInput>
                     
-                        <AnimatedInput entering={FadeInRight.delay(500).duration(500).springify()} className="rounded-lg" size="lg">
+                        <AnimatedInput 
+                        size="lg"
+                        className="rounded-lg" 
+                        entering={FadeInRight.delay(500).duration(500).springify()} 
+                        >
                             <InputField placeholder={i18n.t('onboarding.name.lastName')}value={lastName} onChangeText={setLastName} />
                         </AnimatedInput>
 
                     </VStack>
 
                     {/* <InfoOnboarding info="This will be used to match you to people" /> */}
+                {/* </VStack> */}
                 </VStack>
             </Box>
         </Box>

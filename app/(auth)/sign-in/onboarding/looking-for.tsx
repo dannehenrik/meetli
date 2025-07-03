@@ -20,6 +20,17 @@ import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, router } from "expo-router";
 import React, { useEffect, useState } from "react";
+import Animated, {
+  FadeInDown,
+  FadeInRight,
+  FadeInLeft,
+  FadeInUp,
+} from 'react-native-reanimated';
+const AnimatedHeader = Animated.createAnimatedComponent(Heading)
+const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
+const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
+const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
+// const AnimatedRadioGroup = Animated.createAnimatedComponent(CheckboxGroup)
 
 const lookingForOptions = [
   { value: "serious", label: i18n.t("onboarding.lookingFor.options.serious") },
@@ -97,27 +108,39 @@ export default function lookingFor() {
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
 
                 <FormControl className="w-full gap-6">
-                    <Heading className="font-roboto font-semibold text-2xl">
+                    <AnimatedHeader 
+                    className="font-roboto font-semibold text-2xl"
+                    entering={FadeInDown.duration(600).springify().delay(100)} 
+                    >
                         {i18n.t("onboarding.lookingFor.lookingForInstruction")}
-                    </Heading>
+                    </AnimatedHeader>
 
-                    <RadioGroup className="gap-3" value={lookingFor} onChange={setLookingfor}>
-                        {lookingForOptions.map((option) => 
+                    <AnimatedRadioGroup 
+                    className="gap-3" 
+                    entering={FadeInUp.delay(400).duration(400).springify()}
+                    value={lookingFor} 
+                    onChange={setLookingfor}
+                    >
+                        {lookingForOptions.map((option, index) => 
                             <Radio
                             value={option.value}
                             size="md"
                             key={option.value}
                             className="bg-background-50 py-3 px-4 rounded-lg justify-between"
+                            
                             >
-                                <RadioLabel className="font-roboto font-medium text-typography-950 flex-1">
+                                <AnimatedRadioLabel 
+                                className="font-roboto font-medium text-typography-950 flex-1" 
+                                entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
+                                >
                                     {option.label}
-                                </RadioLabel>
-                                <RadioIndicator>
+                                </AnimatedRadioLabel>
+                                <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
                                     <RadioIcon as={CircleIcon} />
-                                </RadioIndicator>
+                                </AnimatedRadioIndicator>
                             </Radio>
                         )}
-                    </RadioGroup>
+                    </AnimatedRadioGroup>
 
                     <InfoOnboarding
                         info={i18n.t("onboarding.lookingFor.lookingForClarification")}

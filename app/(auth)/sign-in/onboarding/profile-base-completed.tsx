@@ -10,6 +10,9 @@ import React from "react";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 const AnimatedVstack = Animated.createAnimatedComponent(VStack);
+const AnimatedHeading = Animated.createAnimatedComponent(Heading);
+const AnimatedText = Animated.createAnimatedComponent(Text);
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 export default function ProfileBaseComplete() {
     
@@ -20,24 +23,27 @@ export default function ProfileBaseComplete() {
                 entering={FadeInDown.duration(400)}
                 className="gap-7 justify-center items-center"
             >
-                <Image
+                <AnimatedImage
                     source={require("@/assets/images/onboarding/onboarding-completed.png")}
                     alt="Profile complete"
                     className="w-[350px] h-[338px]"
                 />
 
-                <AnimatedVstack
-                    entering={FadeInDown.delay(400).duration(400)}
-                    className="gap-2"
-                >
-                    <Heading className="text-typography-950 text-4xl font-roboto font-semibold text-center">
+                <VStack className="gap-2">
+                    <AnimatedHeading 
+                    className="text-typography-950 text-4xl font-roboto font-semibold text-center"
+                    entering={FadeInDown.duration(400).springify()}
+                    >
                         {i18n.t("onboarding.profileBaseCompleted.title")}
-                    </Heading>
+                    </AnimatedHeading>
 
-                    <Text className="text-typography-500 text-xl font-roboto font-medium text-center">
+                    <AnimatedText 
+                    className="text-typography-500 text-xl font-roboto font-medium text-center"
+                    entering={FadeInDown.delay(400).duration(400).springify()}
+                    >
                         {i18n.t("onboarding.profileBaseCompleted.description")}
-                    </Text>
-                </AnimatedVstack>
+                    </AnimatedText>
+                </VStack>
             </AnimatedVstack>
         </Box>
     );

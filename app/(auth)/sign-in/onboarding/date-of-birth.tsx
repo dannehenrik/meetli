@@ -20,6 +20,14 @@ import { usePathname, router } from "expo-router";
 import { Calendar } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { Platform } from "react-native";
+import Animated, {
+  FadeInDown,
+  FadeInRight,
+  FadeInLeft,
+  FadeInUp,
+} from 'react-native-reanimated';
+const AnimatedHeader = Animated.createAnimatedComponent(Heading)
+const AnimatedInput = Animated.createAnimatedComponent(Input);
 
 export default function Dateofbirth() {
     const {showErrorToast} = useAwesomeToast();
@@ -113,9 +121,12 @@ export default function Dateofbirth() {
 
                 <FormControl className="w-full">
                     <VStack className="gap-6">
-                        <Heading className="font-roboto font-semibold text-2xl">
+                        <AnimatedHeader 
+                        className="font-roboto font-semibold text-2xl"
+                        entering={FadeInDown.duration(600).springify().delay(100)}
+                        >
                             {i18n.t('onboarding.dob.whatIsYourDOB')}
-                        </Heading>
+                        </AnimatedHeader>
 
                         <VStack className="gap-4">
 
@@ -157,7 +168,12 @@ export default function Dateofbirth() {
 
 
                             {!showDatePicker && (
-                                <Input className="rounded-lg" size="lg" isReadOnly={true}>
+                                <AnimatedInput 
+                                className="rounded-lg" 
+                                size="lg" 
+                                isReadOnly={true}
+                                entering={FadeInUp.delay(400).duration(500).springify()} 
+                                >
                                     <InputSlot className="pl-3">
                                         <InputIcon as={Calendar}>
                                         </InputIcon>
@@ -167,7 +183,7 @@ export default function Dateofbirth() {
                                         placeholder={i18n.t('onboarding.dob.dob')} 
                                         value={new Date(dateOfBirth).toLocaleDateString()}/>
                                         {/* value={""}/> */}
-                                </Input>
+                                </AnimatedInput>
                             )}
 
                         </VStack>
