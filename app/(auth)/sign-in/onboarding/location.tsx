@@ -176,7 +176,10 @@ export default function LocationScreen() {
                     <Button 
                         variant="outline" 
                         className="w-full" 
-                        onPress={openSettings}
+                        onPress={() => {
+                            triggerHaptic("button")
+                            openSettings()
+                        }}
                         size="lg"
                     >
                         <ButtonText>{i18n.t("onboarding.location.openSettingsButton")}</ButtonText>

@@ -127,7 +127,16 @@ const englishLanguage = {
         profileBaseCompleted: {
             title: "Your profile is ready! 🤩",
             description: "Now we’ll continue with a few more questions to get to know you even better and to make your profile shine 🌟"
+        },
+        moreAboutYou: {
+            intro: {
+                title: "Write a small intro to yourself!",
+                placeholder: "Write your cool intro here.",
+                wordError: "Too many words!",
+                words: "words"
+            }
         }
+
     }
 }
 

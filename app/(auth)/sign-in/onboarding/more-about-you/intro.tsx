@@ -1,40 +1,47 @@
 import {
-  FormControl,
-  FormControlHelper,
-  FormControlHelperText,
+    FormControl,
+    FormControlError,
+    FormControlErrorText,
+    FormControlHelper,
+    FormControlHelperText,
 } from "@/components/ui/form-control";
 
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 
-import React, { useEffect, useState } from "react";
 import { i18n } from "@/app/_layout";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
-import { ChevronRightIcon } from "@/components/ui/icon";
-import { Image } from "@/components/ui/image";
-import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router, usePathname } from "expo-router";
+import React, { useEffect, useState } from "react";
 
-import Animated, { FadeInDown } from "react-native-reanimated";
 import { MAX_WORD_INTRO } from "@/constants/constants";
+import { triggerHaptic } from "@/utils/haptics";
+import { useColorScheme } from "react-native";
+import Animated, {
+    FadeInDown,
+    FadeInLeft,
+    FadeInRight,
+    FadeInUp
+} from 'react-native-reanimated';
+const AnimatedHeading = Animated.createAnimatedComponent(Heading)
+const AnimatedBox = Animated.createAnimatedComponent(Box)
 
 
 
 export default function intro() {
+    const theme = useColorScheme()
+
     const {showErrorToast} = useAwesomeToast();
 
     const [textValue, setTextValue] = useState("");
     const [wordCount, setWordCount] = useState(0);
-    const [wordError, setWordError] = useState(false);
+    const [error, setError] = useState(false);
 
     const {data: user} = useQuery({
         queryKey: ['user'],
@@ -62,44 +69,52 @@ export default function intro() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        if (pathName === "/sign-in/onboarding/profile-base-completed") {
+        if (pathName === "/sign-in/onboarding/more-about-you/intro") {
             setFabState({
-                label: i18n.t("onboarding.fab.continue"),
+                label: undefined,
                 isLoading: false,
-                isDisabled: false,
+                isDisabled: error || wordCount === 0,
                 onPress: () => {
                     router.push("/sign-in/onboarding/more-about-you/intro");
                     mutation.mutate();
                 }
             })
         }
-    }, [pathName])
+    }, [pathName, wordCount, error])
   
 
     useEffect(() => {
             const words = textValue.trim() ? textValue.trim().split(/\s+/) : [];
-            if (words.length !== MAX_WORD_INTRO) {
-                setWordCount(words.length);
-            }
+            setWordCount(words.length);
     }, [textValue]);
 
     useEffect(() => {
-        if (wordCount > 120) {setWordError(true)};
+        if (wordCount > MAX_WORD_INTRO && !error) { 
+            triggerHaptic("error");
+            setError(true) 
+        };
+
+        if (wordCount <= 120 && error) {
+            setError(false);
+        }
     }, [wordCount]);
 
   return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
 
-                <FormControl className="w-full gap-6">
-                    <Heading className="font-roboto font-semibold text-2xl">
-                        Write a small intro to yourself!
-                    </Heading>
-                    <Box>
-                        <Textarea className="bg-background-50 h-[150px]" size="lg">
+                <FormControl className="w-full gap-6" isInvalid={error}>
+                    <AnimatedHeading 
+                    className="font-roboto font-semibold text-2xl"
+                    entering={FadeInDown.duration(400).springify()}
+                    >
+                        {i18n.t("onboarding.moreAboutYou.intro.title")}
+                    </AnimatedHeading>
+                    <AnimatedBox entering={FadeInDown.delay(400).duration(400).springify()}>
+                        <Textarea className={`bg-background-50 h-[150px] text-${theme === "dark" ? "white" : "black"}`} size="lg">
                             <TextareaInput
-                                placeholder="Write your cool intro here.."
-                                className="p-4 text-typography-800 items-start"
+                                placeholder={i18n.t("onboarding.moreAboutYou.intro.placeholder")}
+                                className={`p-4 items-start text-${theme === "dark" ? "white" : "black"}`}
                                 multiline
                                 style={{ textAlignVertical: "top" }}
                                 onChangeText={(text) => {
@@ -107,12 +122,15 @@ export default function intro() {
                                 }}
                             />
                         </Textarea>
+                        <FormControlError>
+                            <FormControlErrorText>{i18n.t("onboarding.moreAboutYou.intro.wordError")}</FormControlErrorText>
+                        </FormControlError>
                         <FormControlHelper className="flex justify-end">
-                            <FormControlHelperText className="text-typography-400 font-roboto font-normal text-md">
-                                {wordCount} words/120
+                             <FormControlHelperText className="text-typography-400 font-roboto font-normal text-md">
+                                {`${wordCount} ${i18n.t("onboarding.moreAboutYou.intro.words")}/${MAX_WORD_INTRO}`}
                             </FormControlHelperText>
                         </FormControlHelper>
-                    </Box>
+                    </AnimatedBox>
                 </FormControl>
             </Box>
         </Box>
@@ -122,7 +140,7 @@ export default function intro() {
 
 
 async function updateUser(userId: string, text: string) {
-    const {error} = await supabase.from('users').update({intro: text}).eq('id', userId)
+    const {error} = await supabase.from('user_additional_info').update({intro: text}).eq('id', userId)
     if (error) throw new Error("Something went wrong when updating the user: " + error.message);
 }
 

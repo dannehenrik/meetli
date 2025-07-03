@@ -115,6 +115,7 @@ export const config = {
     "--color-typography-900": "38 38 39",
     "--color-typography-950": "23 23 23",
 
+
     /* Outline */
     "--color-outline-0": "253 254 254",
     "--color-outline-50": "243 243 243",
