@@ -108,153 +108,163 @@ import * as Haptics from 'expo-haptics';
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function AnimatedFloatingFab() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const { isDisabled = false, onPress, label, isLoading } = useFab().fabState;
+    const router = useRouter();
+    const pathname = usePathname();
+    const { isDisabled, onPress, label, isLoading } = useFab().fabState;
 
     const colorTheme = useColorScheme();
     // const backgroundColor = colorTheme === 'dark' ? '#ffffff' : '#1a1a1a';  // dark bg vs light bg
     const backgroundColor = colorTheme === 'dark' ? '#ffffff' : '#000000';  // dark bg vs light bg
     const textColor = colorTheme === 'dark' ? '#000000' : '#ffffff';        // white text vs black text
     const iconColor = colorTheme === 'dark' ? '#000000' : '#ffffff';
-  
-  const defaultText = getDefaultFabLabel(pathname);
-  const currentLabel = label ?? defaultText;
-  const hasLabel = Boolean(currentLabel);
-  
-  // Animated values
-  const labelAnimation = useSharedValue(hasLabel ? 1 : 0);
-  const fabWidth = useSharedValue(hasLabel ? 200 : 56); // Increased width for full text
-  
-  // Less bouncy spring configuration
-  const bouncySpringConfig = {
-    damping: 18,
-    stiffness: 180,
-    mass: 1.2,
-  };
-  
-  useEffect(() => {
-    if (hasLabel) {
-      labelAnimation.value = withSpring(1, bouncySpringConfig);
-      // Dynamic width calculation based on text length
-      const estimatedWidth = Math.max(140, (currentLabel?.length || 0) * 8 + 60);
-      fabWidth.value = withSpring(estimatedWidth, bouncySpringConfig);
-    } else {
-      labelAnimation.value = withSpring(0, bouncySpringConfig);
-      fabWidth.value = withSpring(56, bouncySpringConfig);
+
+    // Disabled styles
+    const disabledBgColor = colorTheme === 'dark' ? '#cccccc' : '#333333';
+    const disabledTextColor = colorTheme === 'dark' ? '#888888' : '#aaaaaa';
+    const disabledIconColor = disabledTextColor;
+
+    
+    const defaultText = getDefaultFabLabel(pathname);
+    const currentLabel = label ?? defaultText;
+    const hasLabel = Boolean(currentLabel);
+    
+    // Animated values
+    const labelAnimation = useSharedValue(hasLabel ? 1 : 0);
+    const fabWidth = useSharedValue(hasLabel ? 200 : 56); // Increased width for full text
+    
+    // Less bouncy spring configuration
+    const bouncySpringConfig = {
+        damping: 18,
+        stiffness: 180,
+        mass: 1.2,
+    };
+    
+    useEffect(() => {
+        if (hasLabel) {
+        labelAnimation.value = withSpring(1, bouncySpringConfig);
+        // Dynamic width calculation based on text length
+        const estimatedWidth = Math.max(140, (currentLabel?.length || 0) * 8 + 60);
+        fabWidth.value = withSpring(estimatedWidth, bouncySpringConfig);
+        } else {
+        labelAnimation.value = withSpring(0, bouncySpringConfig);
+        fabWidth.value = withSpring(56, bouncySpringConfig);
+        }
+    }, [hasLabel, currentLabel]);
+    
+    function defaultOnPress() {
+        const nextRoute = getReroutePath(pathname);
+        if (nextRoute) {
+            router.push(nextRoute);
+        }
     }
-  }, [hasLabel, currentLabel]);
-  
-  function defaultOnPress() {
-    const nextRoute = getReroutePath(pathname);
-    if (nextRoute) {
-      router.push(nextRoute);
-    }
-  }
-  
-  // Animated styles
-  const fabAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      width: fabWidth.value,
-      transform: [
-        {
-          scale: interpolate(
+    
+    // Animated styles
+    const fabAnimatedStyle = useAnimatedStyle(() => {
+        return {
+        width: fabWidth.value,
+        transform: [
+            {
+            scale: interpolate(
+                labelAnimation.value,
+                [0, 1],
+                [1, 1.05],
+                Extrapolation.CLAMP
+            ),
+            },
+        ],
+        };
+    });
+    
+    const labelAnimatedStyle = useAnimatedStyle(() => {
+        return {
+        opacity: interpolate(
             labelAnimation.value,
-            [0, 1],
-            [1, 1.05],
+            [0, 0.98, 1],
+            [0, 0, 1],
             Extrapolation.CLAMP
-          ),
-        },
-      ],
-    };
-  });
-  
-  const labelAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        labelAnimation.value,
-        [0, 0.98, 1],
-        [0, 0, 1],
-        Extrapolation.CLAMP
-      ),
-      transform: [
-        {
-          translateX: interpolate(
-            labelAnimation.value,
-            [0, 1],
-            [20, 0],
-            Extrapolation.CLAMP
-          ),
-        },
-        {
-          scale: interpolate(
-            labelAnimation.value,
-            [0, 0.5, 1],
-            [0.9, 0.95, 1],
-            Extrapolation.CLAMP
-          ),
-        },
-      ],
-    };
-  });
-  
-  const iconAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: interpolate(
-            labelAnimation.value,
-            [0, 1],
-            [0, 6],
-            Extrapolation.CLAMP
-          ),
-        },
-        {
-          rotate: interpolate(
-            labelAnimation.value,
-            [0, 1],
-            [0, 5],
-            Extrapolation.CLAMP
-          ) + 'deg',
-        },
-      ],
-    };
-  });
-  
-  return (
-    <View style={styles.container}>
-      <AnimatedTouchableOpacity
-        style={[styles.fab, fabAnimatedStyle, {backgroundColor: backgroundColor}]}
-        onPress={() => {
-            Haptics.impactAsync(
-                Haptics.ImpactFeedbackStyle.Light
-            );
-            (onPress ?? defaultOnPress)()
-        }}
-        disabled={isDisabled}
-        activeOpacity={0.8}
-      >
-        {isLoading ? (
-          <View style={styles.spinnerContainer}>
-            <Spinner />
-          </View>
-        ) : (
-          <View style={styles.fabContent}>
-            <Animated.View style={[styles.labelContainer, labelAnimatedStyle]}>
-              {hasLabel && (
-                <Text style={[styles.fabLabel, {color: textColor}]} numberOfLines={1}>
-                  {currentLabel}
-                </Text>
-              )}
-            </Animated.View>
-            <Animated.View style={iconAnimatedStyle}>
-              <ChevronRight size={20} color={iconColor} />
-            </Animated.View>
-          </View>
-        )}
-      </AnimatedTouchableOpacity>
-    </View>
-  );
+        ),
+        transform: [
+            {
+            translateX: interpolate(
+                labelAnimation.value,
+                [0, 1],
+                [20, 0],
+                Extrapolation.CLAMP
+            ),
+            },
+            {
+            scale: interpolate(
+                labelAnimation.value,
+                [0, 0.5, 1],
+                [0.9, 0.95, 1],
+                Extrapolation.CLAMP
+            ),
+            },
+        ],
+        };
+    });
+    
+    const iconAnimatedStyle = useAnimatedStyle(() => {
+        return {
+        transform: [
+            {
+            translateX: interpolate(
+                labelAnimation.value,
+                [0, 1],
+                [0, 6],
+                Extrapolation.CLAMP
+            ),
+            },
+            {
+            rotate: interpolate(
+                labelAnimation.value,
+                [0, 1],
+                [0, 5],
+                Extrapolation.CLAMP
+            ) + 'deg',
+            },
+        ],
+        };
+    });
+    
+    return (
+        <View style={styles.container}>
+        <AnimatedTouchableOpacity
+            style={[styles.fab, fabAnimatedStyle, {backgroundColor: isDisabled ? disabledBgColor : backgroundColor, opacity: isDisabled ? 0.6 : 1},
+            ]}
+
+            onPress={() => {
+                if (isDisabled) return
+                Haptics.impactAsync(
+                    Haptics.ImpactFeedbackStyle.Light
+                );
+                (onPress ?? defaultOnPress)()
+            }}
+            disabled={isDisabled}
+            activeOpacity={0.8}
+        >
+            {isLoading ? (
+            <View style={styles.spinnerContainer}>
+                <Spinner />
+            </View>
+            ) : (
+            <View style={styles.fabContent}>
+                <Animated.View style={[styles.labelContainer, labelAnimatedStyle]}>
+                {hasLabel && (
+                    <Text style={[styles.fabLabel, {color: isDisabled ? disabledTextColor : textColor}]} numberOfLines={1}>
+
+                    {currentLabel}
+                    </Text>
+                )}
+                </Animated.View>
+                <Animated.View style={iconAnimatedStyle}>
+                <ChevronRight size={20} color={isDisabled ? disabledIconColor : iconColor} />
+                </Animated.View>
+            </View>
+            )}
+        </AnimatedTouchableOpacity>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({

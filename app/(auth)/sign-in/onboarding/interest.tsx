@@ -8,30 +8,28 @@ import {
     CheckboxIndicator,
     CheckboxLabel,
 } from "@/components/ui/checkbox";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import { FormControl } from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading";
-import { CheckIcon, ChevronRightIcon } from "@/components/ui/icon";
+import { CheckIcon } from "@/components/ui/icon";
 import { VStack } from "@/components/ui/vstack";
 import { supabase } from "@/utils/supabase";
-import { usePathname, router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { Gender } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useFab } from "@/components/shared/floating-fab/FabContext";
 import Animated, {
-  FadeInDown,
-  FadeInRight,
-  FadeInUp,
+    FadeInDown,
+    FadeInUp
 } from 'react-native-reanimated';
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedCheckboxGroup = Animated.createAnimatedComponent(CheckboxGroup)
 const AnimatedCheckboxLabel = Animated.createAnimatedComponent(CheckboxLabel)
-const AnimatedCheckboxIndicator = Animated.createAnimatedComponent(CheckboxIndicator)
+// const CheckboxIndicator = Animated.createAnimatedComponent(CheckboxIndicator)
 
 export default function interest() {
     const queryClient = useQueryClient();
@@ -65,6 +63,9 @@ export default function interest() {
         }
     }, [user]);
 
+    useEffect(() => {
+        console.log("Genders: ", genders);
+    }, [genders])
     // Setting the fab
     const pathName = usePathname();
     const { setFabState } = useFab();
@@ -79,12 +80,7 @@ export default function interest() {
                     }
                 }
             })
-        } else {
-            setFabState({
-                isDisabled: false,
-                onPress: undefined,
-            })
-        }
+        } 
     }, [genders, user, pathName])
 
     
@@ -99,7 +95,7 @@ export default function interest() {
                     <VStack className="gap-6">
                         <AnimatedHeader 
                         className="font-roboto font-semibold text-2xl"
-                        entering={FadeInDown.duration(600).springify().delay(100)} 
+                        entering={FadeInDown.delay(100).duration(600).springify().delay(100)}
                         >
                             {i18n.t("onboarding.gender.genderInterestInfo")}
                         </AnimatedHeader>
@@ -118,13 +114,13 @@ export default function interest() {
                                 >
                                     <AnimatedCheckboxLabel
                                     className="font-roboto font-medium text-typography-950"
-                                    entering={FadeInRight.delay(600).duration(500).springify()}
+                                    entering={FadeInDown.delay(800).duration(500).springify()}
                                     >
                                         {i18n.t("onboarding.gender.woman")}
                                     </AnimatedCheckboxLabel>
-                                    <AnimatedCheckboxIndicator entering={FadeInRight.delay(500).duration(500).springify()}>
+                                    <CheckboxIndicator>
                                         <CheckboxIcon as={CheckIcon} />
-                                    </AnimatedCheckboxIndicator>
+                                    </CheckboxIndicator>
                                 </Checkbox>
 
                                 <Checkbox
@@ -134,13 +130,13 @@ export default function interest() {
                                 >
                                     <AnimatedCheckboxLabel 
                                     className="font-roboto font-medium text-typography-950"
-                                    entering={FadeInRight.delay(700).duration(500).springify()}
+                                    entering={FadeInDown.delay(900).duration(500).springify()}
                                     >
                                         {i18n.t("onboarding.gender.male")}
                                     </AnimatedCheckboxLabel>
-                                    <AnimatedCheckboxIndicator entering={FadeInRight.delay(600).duration(500).springify()}>
+                                    <CheckboxIndicator>
                                         <CheckboxIcon as={CheckIcon} />
-                                    </AnimatedCheckboxIndicator>
+                                    </CheckboxIndicator>
                                 </Checkbox>
 
                                 <Checkbox
@@ -150,13 +146,13 @@ export default function interest() {
                                 >
                                     <AnimatedCheckboxLabel 
                                     className="font-roboto font-medium text-typography-950"
-                                    entering={FadeInRight.delay(800).duration(500).springify()}
+                                    entering={FadeInDown.delay(1000).duration(500).springify()}
                                     >
                                         {i18n.t("onboarding.gender.nonBinary")}
                                     </AnimatedCheckboxLabel>
-                                    <AnimatedCheckboxIndicator entering={FadeInRight.delay(700).duration(500).springify()}>
+                                    <CheckboxIndicator>
                                         <CheckboxIcon as={CheckIcon} />
-                                    </AnimatedCheckboxIndicator>
+                                    </CheckboxIndicator>
                                 </Checkbox>
                             </AnimatedCheckboxGroup>
                         </VStack>

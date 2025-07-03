@@ -1,13 +1,11 @@
 import { i18n } from "@/app/_layout";
 import { Badge, BadgeText } from "@/components/ui/badge";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
 import {
     AddIcon,
-    ChevronRightIcon,
     Icon,
-    RemoveIcon,
+    RemoveIcon
 } from "@/components/ui/icon";
 import { Image } from 'expo-image';
 // import { Image } from "@/components/ui/image";
@@ -16,10 +14,10 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { MAX_PROFILE_IMAGES_AMOUNT } from "@/constants/constants";
 import { decode } from 'base64-arraybuffer';
+import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
 import { router, usePathname } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import * as Haptics from 'expo-haptics';
 
 
 
@@ -31,6 +29,7 @@ import {
     ActionsheetDragIndicatorWrapper
 } from "@/components/ui/actionsheet";
 
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -42,22 +41,18 @@ import { generateUniqueUrl } from "@/utils/generateUniqueUrl";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { View } from "react-native";
+import Animated, {
+    FadeInDown,
+    FadeInLeft,
+    FadeInUp
+} from 'react-native-reanimated';
 import type { SortableGridRenderItem } from 'react-native-sortables';
 import Sortable from 'react-native-sortables';
-import { useFab } from "@/components/shared/floating-fab/FabContext";
-import Animated, {
-  FadeInDown,
-  FadeInRight,
-  FadeInLeft,
-  FadeInUp,
-} from 'react-native-reanimated';
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedText = Animated.createAnimatedComponent(Text)
 
 
 export default function Pictures() {
-
-    
     const queryClient = useQueryClient();
     const { showErrorToast } = useAwesomeToast();
 
@@ -103,13 +98,13 @@ export default function Pictures() {
     // Get the images from the cache
     function getImages() {
         const userData = queryClient.getQueryData<User>(['user']);
-        if (!userData?.images) throw new Error("User data not found");
+        if (!userData) throw new Error("User data not found");
 
         return userData.images ?? []
     }
     function getUserId() {
         const userData = queryClient.getQueryData<User>(['user']);
-        if (!userData?.images) throw new Error("User data not found");
+        if (!userData) throw new Error("User data not found");
 
         return userData.id
     }
@@ -227,7 +222,7 @@ export default function Pictures() {
             <Sortable.Handle mode={isPlaceholder ? 'fixed' : 'draggable'}>
                 <AnimatedBox 
                 className="aspect-square relative" 
-                entering={index % 2 === 0 ? FadeInLeft.delay(400 + (100 * index)).duration(500).springify() : FadeInLeft.delay(400 + (100 * index)).duration(500).springify()}>
+                entering={FadeInLeft.delay(800 + (100 * index)).duration(500).springify()}>
                     {!isPlaceholder ? (
                     <>
                         <Image
@@ -322,19 +317,13 @@ export default function Pictures() {
     const { setFabState } = useFab();
     useEffect(() => {
         if (pathName === "/sign-in/onboarding/pictures") {
-            setFabState({
-                isDisabled: user?.images?.length === 0,
-                onPress: () => {
-                    router.push("/sign-in/onboarding/profile-base-completed")
-                }
-            })
-        } else {
-            setFabState({
-                isDisabled: false,
-                onPress: undefined,
-            })
+            console.log("TJaaa");
+            const images = user?.images ?? [];
+            console.log("Isdisabled: ", images.length === 0)
+            
         }
-    }, [user, pathName, router])
+
+    }, [pathName, user])
 
     
     if (!user) return null
@@ -346,7 +335,7 @@ export default function Pictures() {
    
                 <VStack className="gap-6 w-full">
                     <VStack className="gap-3">
-                        <AnimatedBox className="flex-row items-center gap-2" entering={FadeInDown.duration(600).springify().delay(100)}>
+                        <AnimatedBox className="flex-row items-center gap-2" entering={FadeInDown.delay(100).duration(600).springify().delay(100)}>
                             <Heading className="font-roboto font-semibold text-2xl">
                                 {i18n.t("onboarding.pictures.title")}
                             </Heading>

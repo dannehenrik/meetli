@@ -2,10 +2,9 @@ import { i18n } from "@/app/_layout";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import { FormControl } from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading";
-import { ChevronRightIcon, CircleIcon } from "@/components/ui/icon";
+import { CircleIcon } from "@/components/ui/icon";
 import {
     Radio,
     RadioGroup,
@@ -18,13 +17,12 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usePathname, useRouter, router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 import Animated, {
-  FadeInDown,
-  FadeInRight,
-  FadeInLeft,
-  FadeInUp,
+    FadeInDown,
+    FadeInLeft,
+    FadeInUp
 } from 'react-native-reanimated';
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
@@ -91,12 +89,13 @@ export default function lookingFor() {
                     }
                 }
             })
-        } else {
-            setFabState({
-                isDisabled: false,
-                onPress: undefined,
-            })
         }
+        // return () => {
+        //     setFabState({
+        //         isDisabled: true,
+        //         onPress: undefined,
+        //     })
+        // }
     }, [lookingFor, user, pathName])
 
     
@@ -110,7 +109,7 @@ export default function lookingFor() {
                 <FormControl className="w-full gap-6">
                     <AnimatedHeader 
                     className="font-roboto font-semibold text-2xl"
-                    entering={FadeInDown.duration(600).springify().delay(100)} 
+                    entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
                     >
                         {i18n.t("onboarding.lookingFor.lookingForInstruction")}
                     </AnimatedHeader>

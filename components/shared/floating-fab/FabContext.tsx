@@ -12,7 +12,7 @@ const FabContext = createContext<{
     fabState: FabState;
     setFabState: (state: FabState) => void;
 }>({
-    fabState: { label: null },
+    fabState: { },
     setFabState: () => {},
 });
 

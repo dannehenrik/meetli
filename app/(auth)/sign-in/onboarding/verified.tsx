@@ -21,11 +21,15 @@ export default function Verified() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        setFabState({
-            onPress: () => {
-                router.push("/sign-in/onboarding/name");
-            }
-        })
+        if (pathName === "/sign-in/onboarding/verified") {
+            setFabState({
+                onPress: () => {
+                    router.push("/sign-in/onboarding/name");
+                },
+                isDisabled: false,
+            })
+        } 
+        
     }, [pathName])
     
     return (

@@ -1,10 +1,8 @@
 import { i18n } from "@/app/_layout";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import { FormControl } from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading";
-import { ChevronRightIcon } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
@@ -16,15 +14,13 @@ import { getDeviceLangugage } from "@/utils/getDeviceLangugage";
 import { supabase } from "@/utils/supabase";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usePathname, router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { Calendar } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import Animated, {
-  FadeInDown,
-  FadeInRight,
-  FadeInLeft,
-  FadeInUp,
+    FadeInDown,
+    FadeInUp
 } from 'react-native-reanimated';
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedInput = Animated.createAnimatedComponent(Input);
@@ -80,9 +76,11 @@ export default function Dateofbirth() {
                     }
                 }
             })
-        } else {
+        }
+        return () => {
             setFabState({
-                onPress: undefined
+                onPress: undefined,
+                isDisabled: true
             })
         }
     }, [dateOfBirth, user, pathName])
@@ -123,7 +121,7 @@ export default function Dateofbirth() {
                     <VStack className="gap-6">
                         <AnimatedHeader 
                         className="font-roboto font-semibold text-2xl"
-                        entering={FadeInDown.duration(600).springify().delay(100)}
+                        entering={FadeInDown.delay(100).duration(600).springify().delay(100)}
                         >
                             {i18n.t('onboarding.dob.whatIsYourDOB')}
                         </AnimatedHeader>

@@ -14,6 +14,9 @@ const BAR_WIDTH = 200; // Adjust as needed
 export function ProgressBar({ pathName }: { pathName: string }) {
 
     const onboardingRoutes = [
+        { progress: null, route: "/sign-in" },
+        { progress: null, route: "/sign-in/onboarding/email" },
+        { progress: null, route: "/sign-in/onboarding/otp" },
         { progress: null, route: "/sign-in/onboarding/verified" },
         { progress: 0, route: "/sign-in/onboarding/name" },
         { progress: 1, route: "/sign-in/onboarding/date-of-birth" },

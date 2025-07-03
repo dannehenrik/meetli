@@ -3,9 +3,8 @@ import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
-import { ChevronRightIcon, Icon } from "@/components/ui/icon";
+import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { getUserId } from "@/server/auth/getUser";
@@ -14,11 +13,14 @@ import { getCoordinates } from "@/utils/getLocation";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Location from "expo-location";
-import { usePathname, router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { AlertCircle, Check, LocateFixed } from "lucide-react-native";
 import { useEffect } from "react";
 import { Linking, Platform, useColorScheme } from "react-native";
-
+import Animated, {
+    FadeInDown
+} from 'react-native-reanimated';
+const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 
 type LocationStatus = "granted" | "denied" | "undetermined";
 
@@ -61,7 +63,6 @@ export default function LocationScreen() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-
         if (pathName === "/sign-in/onboarding/location") {
             setFabState({
                 isDisabled: locationStatus === "undetermined",
@@ -72,12 +73,13 @@ export default function LocationScreen() {
                     }
                 }
             })
-        } else {
-            setFabState({
-                isDisabled: false,
-                onPress: undefined
-            })
-        }
+        }  
+        // return () => {
+        //     setFabState({
+        //         isDisabled: true,
+        //         onPress: undefined
+        //     })
+        // }
     }, [locationStatus, pathName])
 
     async function checkLocationPermissions(): Promise<LocationStatus> {
@@ -124,9 +126,12 @@ export default function LocationScreen() {
             <Box className="flex-1 justify-start items-start gap-5 px-5 top-11 w-[100%]">
 
 
-                <Heading className="font-roboto font-semibold text-2xl">
+                <AnimatedHeader 
+                className="font-roboto font-semibold text-2xl"
+                entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
+                >
                     {i18n.t("onboarding.location.title")}
-                </Heading>
+                </AnimatedHeader>
 
                 <Text>{locationStatusMessages[locationStatus ?? "undetermined"]}</Text>
 

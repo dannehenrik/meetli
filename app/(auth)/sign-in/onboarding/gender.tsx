@@ -1,10 +1,9 @@
 import { i18n } from "@/app/_layout";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import { FormControl } from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading";
-import { ChevronRightIcon, CircleIcon } from "@/components/ui/icon";
+import { CircleIcon } from "@/components/ui/icon";
 import {
     Radio,
     RadioGroup,
@@ -19,18 +18,16 @@ import React from "react";
 import { useEffect, useState } from "react";
 
 
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { Gender } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useFab } from "@/components/shared/floating-fab/FabContext";
 import Animated, {
-  FadeInDown,
-  FadeInRight,
-  FadeInLeft,
-  FadeInUp,
+    FadeInDown,
+    FadeInUp
 } from 'react-native-reanimated';
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
@@ -76,7 +73,7 @@ export default function gender() {
     useEffect(() => {
         if (pathName === "/sign-in/onboarding/gender") {
             setFabState({
-                isDisabled: gender.length === 0,
+                isDisabled: !gender,
                 onPress: () => {
                     router.push("/sign-in/onboarding/interest");
                     if (gender !== user?.gender) {
@@ -84,12 +81,13 @@ export default function gender() {
                     }
                 }
             })
-        } else {
-            setFabState({
-                isDisabled: false,
-                onPress: undefined,
-            })
         }
+        // return () => {
+        //     setFabState({
+        //         isDisabled: true,
+        //         onPress: undefined,
+        //     })
+        // }
     }, [gender, user, pathName])
 
     if (!user) return null
@@ -102,7 +100,7 @@ export default function gender() {
                     <VStack className="gap-6">
                         <AnimatedHeader 
                         className="font-roboto font-semibold text-2xl"
-                        entering={FadeInDown.duration(600).springify().delay(100)} 
+                        entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
                         >
                             {i18n.t("onboarding.gender.howDoYouIdentify")}
                         </AnimatedHeader>
@@ -120,12 +118,12 @@ export default function gender() {
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >
                                     <AnimatedRadioLabel 
-                                    entering={FadeInLeft.delay(600).duration(500).springify()}
+                                    entering={FadeInUp.delay(800).duration(500).springify()}
                                     className="font-roboto font-medium text-typography-950"
                                     >
                                         {i18n.t("onboarding.gender.woman")}
                                     </AnimatedRadioLabel>
-                                    <AnimatedRadioIndicator entering={FadeInLeft.delay(500).duration(500).springify()}>
+                                    <AnimatedRadioIndicator entering={FadeInUp.delay(800).duration(500).springify()}>
                                         <RadioIcon as={CircleIcon} />
                                     </AnimatedRadioIndicator>
                                 </Radio>
@@ -137,11 +135,11 @@ export default function gender() {
                                 >
                                     <AnimatedRadioLabel 
                                     className="font-roboto font-medium text-typography-950"
-                                    entering={FadeInLeft.delay(700).duration(500).springify()}
+                                    entering={FadeInUp.delay(900).duration(500).springify()}
                                     >
                                         {i18n.t("onboarding.gender.male")}
                                     </AnimatedRadioLabel>
-                                    <AnimatedRadioIndicator entering={FadeInLeft.delay(600).duration(500).springify()}>
+                                    <AnimatedRadioIndicator entering={FadeInUp.delay(900).duration(500).springify()}>
                                         <RadioIcon as={CircleIcon} />
                                     </AnimatedRadioIndicator>
                                 </Radio>
@@ -153,11 +151,11 @@ export default function gender() {
                                 >
                                     <AnimatedRadioLabel 
                                     className="font-roboto font-medium text-typography-950"
-                                    entering={FadeInLeft.delay(800).duration(500).springify()}
+                                    entering={FadeInUp.delay(1000).duration(500).springify()}
                                     >
                                         {i18n.t("onboarding.gender.nonBinary")}
                                     </AnimatedRadioLabel>
-                                    <AnimatedRadioIndicator entering={FadeInLeft.delay(700).duration(500).springify()}>
+                                    <AnimatedRadioIndicator entering={FadeInUp.delay(1000).duration(500).springify()}>
                                         <RadioIcon as={CircleIcon} />
                                     </AnimatedRadioIndicator>
                                 </Radio>

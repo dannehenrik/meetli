@@ -20,6 +20,14 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
+import Animated, {
+    FadeInDown,
+    FadeInLeft,
+    FadeInRight,
+    FadeInUp
+} from 'react-native-reanimated';
+const AnimatedBox = Animated.createAnimatedComponent(Box)
+const AnimatedInput = Animated.createAnimatedComponent(Input)
 
 
 export default function Email() {
@@ -52,13 +60,14 @@ export default function Email() {
                 isLoading: mutation.isPending,
                 onPress: () => handleSubmit(email)
             })
-        } else {
-            setFabState({
-                isDisabled: false,
-                isLoading: false,
-                onPress: undefined,
-            })
-        }
+        } 
+        // return () => {
+        //     setFabState({
+        //         isDisabled: true,
+        //         isLoading: false,
+        //         onPress: undefined,
+        //     })
+        // }
     }, [email, mutation.isPending, pathName])
 
 
@@ -79,20 +88,25 @@ export default function Email() {
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
             {/* <OnboardingHeader/> */}
             <Box className="flex-1 justify-start items-center gap-12 px-5 top-20">
-                <Box className="flex justify-start gap-3">
+                <AnimatedBox 
+                entering={FadeInDown.duration(400).springify()}
+                className="flex justify-start gap-3">
                     <Text className="font-roboto text-2xl font-semibold leading-7">
                         {i18n.t('onboarding.email.loginInstruction')}
                     </Text>
                     <Text className="font-roboto text-typography-500 leading-6">
                         {i18n.t('onboarding.email.loginSubInstruction')}
                     </Text>
-                </Box>
+                </AnimatedBox>
 
                 <FormControl isInvalid={error}>
-
-                    <Input className="w-full">
+                    <AnimatedBox entering={FadeInDown.delay(400).duration(400).springify()} className="w-full">
+                    <AnimatedInput 
+                    className="w-full"
+                    // entering={FadeInDown.delay(400).duration(400).springify()}
+                    >
                         <InputField onFocus={() => setError(false)}  value={email} onChangeText={setEmail} placeholder={i18n.t('onboarding.email.enterEmail')}/>
-                    </Input>
+                    </AnimatedInput>
 
 
                     <FormControlHelper>
@@ -102,6 +116,7 @@ export default function Email() {
                     <FormControlError>
                         <FormControlErrorText>{i18n.t('onboarding.email.enterEmailError')}</FormControlErrorText>
                     </FormControlError>
+                    </AnimatedBox>
                 </FormControl>
 
             </Box>

@@ -10,7 +10,14 @@ import { useColorScheme } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "@/server/auth/getUser";
 import { AppleIcon, GoogleIcon } from "@/assets/icons/icons";
-
+import Animated, {
+    FadeInDown,
+    FadeInLeft,
+    FadeInRight,
+    FadeInUp
+} from 'react-native-reanimated';
+const AnimatedBox = Animated.createAnimatedComponent(Box)
+const AnimatedButton = Animated.createAnimatedComponent(Button)
 
 export default function LoginMain() {
     const colorScheme = useColorScheme();
@@ -23,30 +30,39 @@ export default function LoginMain() {
             style={{ paddingBottom: insets.bottom + 40, paddingTop: insets.top + 60 }}
         >
             {/* Header */}
-            <Box className="gap-2 items-center">
+            <AnimatedBox 
+            entering={FadeInDown.duration(400).springify()}
+            className="gap-2 items-center"
+            >
                 <Text className="text-3xl font-bold text-center">
                     {i18n.t("onboarding.signIn.welcomeBack")}
                 </Text>
                 <Text className="text-base text-typography-500 text-center">
                     {i18n.t("onboarding.signIn.signInToContinue")}
                 </Text>
-            </Box>
+            </AnimatedBox>
 
             {/* Auth Buttons */}
             <Box className="w-full gap-4">
-                <Button className="w-full flex-row gap-3 items-center justify-center text-white">
+                <AnimatedButton 
+                entering={FadeInDown.delay(200).duration(500).springify()}
+                className="w-full flex-row gap-3 items-center justify-center bg-primary-700"
+                >
                     <GoogleIcon/>
-                    <ButtonText className="text-base font-medium text-background-900">
+                    <ButtonText className="text-base font-medium text-background-0">
                         {i18n.t("onboarding.signIn.continueWithGoogle")}
                     </ButtonText>
-                </Button>
+                </AnimatedButton>
 
-                <Button className="w-full flex-row gap-3 items-center justify-center text-white">
+                <AnimatedButton 
+                className="w-full flex-row gap-3 items-center justify-center bg-primary-700"
+                entering={FadeInDown.delay(300).duration(500).springify()}
+                >
                     <AppleIcon/>
-                    <ButtonText className="text-base font-medium text-background-900">
+                    <ButtonText className="text-base font-medium text-background-0">
                         {i18n.t("onboarding.signIn.continueWithApple")}
                     </ButtonText>
-                </Button>
+                </AnimatedButton>
 
                 {/* <Box className="border-t border-background-200 my-4" /> */}
                 <Box className="flex-row items-center my-6">
@@ -58,16 +74,17 @@ export default function LoginMain() {
                 </Box>
 
 
-                <Button 
+                <AnimatedButton 
                     variant="outline" 
                     className="w-full flex-row gap-3 items-center justify-center"
+                    entering={FadeInDown.delay(500).duration(800).springify()}
                     onPress={() => router.push("/sign-in/onboarding/email")}
                 >
                     <Icon size="lg" className="text-primary-500" as={Mail}/>
                     <ButtonText className="text-base font-medium text-primary-500">
                         {i18n.t("onboarding.signIn.continueWithEmail")}
                     </ButtonText>
-                </Button>
+                </AnimatedButton>
             </Box>
 
             {/* Footer (optional) */}

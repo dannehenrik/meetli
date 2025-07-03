@@ -1,9 +1,7 @@
 import { i18n } from "@/app/_layout";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
-import { ChevronRightIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 
 import { VStack } from "@/components/ui/vstack";
@@ -12,12 +10,12 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usePathname, router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 import Animated, {
-  FadeInDown,
-  FadeInRight,
-  FadeInLeft,
+    FadeInDown,
+    FadeInLeft,
+    FadeInRight,
 } from 'react-native-reanimated';
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedInput = Animated.createAnimatedComponent(Input);
@@ -48,28 +46,6 @@ export default function name() {
         }
     })
 
-    // Setting the fab
-    const pathName = usePathname();
-    const { setFabState } = useFab();
-    useEffect(() => {
-        if (pathName === "/sign-in/onboarding/name") {
-            setFabState({
-                isDisabled: firstName.length === 0 || lastName.length === 0 ,
-                onPress: () => {
-                    router.push("/sign-in/onboarding/date-of-birth");
-                    if (firstName !== user?.first_name || lastName !== user?.last_name) {
-                        mutation.mutate();
-                    }
-                }
-            })
-        } else {
-            setFabState({
-                isDisabled: false,
-                onPress: undefined,
-            })
-        }
-    }, [firstName, lastName, user, pathName])
-
     // Set initial values when user data is loaded
     useEffect(() => {
         if (user) {
@@ -77,6 +53,29 @@ export default function name() {
             setLastName(user.last_name ?? '');
         }
     }, [user]);
+
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        if (pathName === "/sign-in/onboarding/name") {
+            setFabState({
+                isDisabled: !firstName|| !lastName ,
+                onPress: () => {
+                    router.push("/sign-in/onboarding/date-of-birth");
+                    if (firstName !== user?.first_name || lastName !== user?.last_name) {
+                        mutation.mutate();
+                    }
+                }
+            })
+        }
+        // return () => {
+        //     setFabState({
+        //         isDisabled: true,
+        //         onPress: undefined,
+        //     })
+        // }
+    }, [firstName, lastName, user, pathName])
 
     if (!user) return null
 
@@ -87,7 +86,7 @@ export default function name() {
                 <VStack className="gap-6 w-full">
                 
                     <AnimatedHeader 
-                    entering={FadeInDown.duration(600).springify().delay(100)} 
+                    entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
                     className="font-roboto font-semibold text-2xl"
                     >
                         {i18n.t("onboarding.name.whatIsYourName")}
