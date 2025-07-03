@@ -1,18 +1,15 @@
 import { i18n } from "@/app/_layout";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
-import { ChevronRightIcon } from "@/components/ui/icon";
 import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
+import { useCoreUser } from "@/hooks/user/useCoreUser";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
-import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router, usePathname } from "expo-router";
 import React, { useEffect } from "react";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -26,7 +23,7 @@ export default function ProfileBaseComplete() {
     const queryClient = useQueryClient();
     const {showErrorToast} = useAwesomeToast();
 
-    const {data: user} = useExtendedUser() //Prefetching
+    const {data: user} = useCoreUser() //
 
     const mutation = useMutation({
         mutationFn: async () => setOnboardingCompleted(user?.id ?? ""),
@@ -36,7 +33,7 @@ export default function ProfileBaseComplete() {
             router.back();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: ['user', 'status']})
+            queryClient.invalidateQueries({queryKey: ['user']})
         }
 
     })

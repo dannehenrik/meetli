@@ -1,4 +1,3 @@
-import { User } from "@/types";
 import { supabase } from "@/utils/supabase";
 
 type UserStatus = {

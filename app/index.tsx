@@ -1,7 +1,4 @@
-import { getUser } from "@/server/auth/getUser";
-import { useQuery } from "@tanstack/react-query";
 import { Redirect } from "expo-router";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useUserStatus } from "@/hooks/user/useUserStatus";
 
 export default function Main() {

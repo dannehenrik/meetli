@@ -12,9 +12,7 @@ import { i18n } from "@/app/_layout";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
-import { USER_STALE_TIME } from "@/constants/staleTimes";
 import { useAwesomeToast } from "@/hooks/toasts";
-import { getUser } from "@/server/auth/getUser";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router, usePathname } from "expo-router";
@@ -23,12 +21,7 @@ import React, { useEffect, useState } from "react";
 import { MAX_WORD_INTRO } from "@/constants/constants";
 import { triggerHaptic } from "@/utils/haptics";
 import { useColorScheme } from "react-native";
-import Animated, {
-    FadeInDown,
-    FadeInLeft,
-    FadeInRight,
-    FadeInUp
-} from 'react-native-reanimated';
+import Animated, {FadeInDown} from 'react-native-reanimated';
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 const AnimatedHeading = Animated.createAnimatedComponent(Heading)
 const AnimatedBox = Animated.createAnimatedComponent(Box)
@@ -36,8 +29,6 @@ const AnimatedBox = Animated.createAnimatedComponent(Box)
 
 
 export default function intro() {
-    const theme = useColorScheme()
-
     const {showErrorToast} = useAwesomeToast();
 
     const [textValue, setTextValue] = useState("");

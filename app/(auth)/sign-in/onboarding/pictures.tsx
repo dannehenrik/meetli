@@ -34,7 +34,7 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { useCoreUser } from "@/hooks/user/useCoreUser";
-import { ImageType, User } from "@/types";
+import { CoreUser, ImageType } from "@/types";
 import { generateUniqueUrl } from "@/utils/generateUniqueUrl";
 import { triggerHaptic } from "@/utils/haptics";
 import { supabase } from "@/utils/supabase";
@@ -64,10 +64,10 @@ export default function Pictures() {
 
     // Updates the cache with new images
     function updateCache(images: ImageType[]) {
-        const user = queryClient.getQueryData<User>(['user', 'core']);
+        const user = queryClient.getQueryData<CoreUser>(['user', 'core']);
         if ( !user ) return
 
-        queryClient.setQueryData(["user"], {
+        queryClient.setQueryData(["user", 'core'], {
             ...user, images: images
         });
     }
@@ -75,7 +75,7 @@ export default function Pictures() {
     function addImageInCache(image: ImageType) {
         const images = getImages();
 
-        queryClient.setQueryData(["user"], {...user, images: [...images, image]});
+        queryClient.setQueryData(["user", 'core'], {...user, images: [...images, image]});
     }
 
     // Replaces an image in the cache
@@ -93,19 +93,19 @@ export default function Pictures() {
         const images = getImages();
 
         const newImages = images.filter((image) => imageToRemove.filePath !== image.filePath )
-        queryClient.setQueryData(["user"], {...user, images: newImages})
+        queryClient.setQueryData(["user", 'core'], {...user, images: newImages})
     }
 
     // Get the images from the cache
     function getImages() {
-        const userData = queryClient.getQueryData<User>(['user', 'core']);
-        if (!userData) throw new Error("User data not found");
+        const userData = queryClient.getQueryData<CoreUser>(['user', 'core']);
+        if (!userData) throw new Error("CoreUser data not found");
 
         return userData.images ?? []
     }
     function getUserId() {
-        const userData = queryClient.getQueryData<User>(['user', 'core']);
-        if (!userData) throw new Error("User data not found");
+        const userData = queryClient.getQueryData<CoreUser>(['user', 'core']);
+        if (!userData) throw new Error("CoreUser data not found");
 
         return userData.id
     }

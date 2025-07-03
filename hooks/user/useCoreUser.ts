@@ -1,18 +1,18 @@
-import { useQuery } from "@tanstack/react-query"
 import { USER_STALE_TIME } from "@/constants/staleTimes"
-import { User } from "@/types"
+import { CoreUser } from "@/types"
 import { supabase } from "@/utils/supabase"
+import { useQuery } from "@tanstack/react-query"
 
 export function useCoreUser() {
-    return useQuery<User>({
+    return useQuery<CoreUser>({
         queryKey: ['user', 'core'],
-        queryFn: getUser,
+        queryFn: fetchUser,
         staleTime: USER_STALE_TIME,
     })
 }
 
 
-export async function getUser() : Promise<User>{
+export async function fetchUser() : Promise<CoreUser>{
     const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (!user || userError) { throw new Error("Something went wrong when fetching the user: " + userError?.message) }

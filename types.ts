@@ -1,5 +1,5 @@
 
-export interface User {
+export interface CoreUser {
     id: string,
     onboarding_completed: boolean,
     created_at: string,

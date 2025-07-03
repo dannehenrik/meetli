@@ -2,12 +2,9 @@ import { i18n } from "@/app/_layout";
 import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { OTPComponent } from "@/components/shared/otp-input";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon } from "@/components/ui/fab";
-import { ChevronRightIcon } from "@/components/ui/icon";
-import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { useAwesomeToast } from "@/hooks/toasts";
-import { getUserFromId } from "@/server/auth/getUser";
+import { fetchUserFromId } from "@/server/auth/fetchUserFromId";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "expo-router";
@@ -93,7 +90,7 @@ async function handleOtpVerification(email: string, otp: string) {
     })
     if (error || !data || !data.user) throw new Error("OTP verification failed: " + error?.message)
 
-    const user = await getUserFromId(data.user.id);
+    const user = await fetchUserFromId(data.user.id);
 
     return user
 }

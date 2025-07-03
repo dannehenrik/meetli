@@ -2,25 +2,17 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
-import { Icon, MailIcon } from "@/components/ui/icon"; // Assume you have these icons or similar
-import { Apple, Mail } from "lucide-react-native";
+import { Icon } from "@/components/ui/icon"; // Assume you have these icons or similar
+import { Mail } from "lucide-react-native";
 import { i18n } from "@/app/_layout";
 import { useRouter } from "expo-router";
 import { useColorScheme } from "react-native";
-import { useQuery } from "@tanstack/react-query";
-import { getUser } from "@/server/auth/getUser";
 import { AppleIcon, GoogleIcon } from "@/assets/icons/icons";
-import Animated, {
-    FadeInDown,
-    FadeInLeft,
-    FadeInRight,
-    FadeInUp
-} from 'react-native-reanimated';
+import Animated, {FadeInDown} from 'react-native-reanimated';
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedButton = Animated.createAnimatedComponent(Button)
 
 export default function LoginMain() {
-    const colorScheme = useColorScheme();
     const router = useRouter();
     const insets = useSafeAreaInsets();
 

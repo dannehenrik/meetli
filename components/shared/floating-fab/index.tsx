@@ -227,7 +227,9 @@ export default function AnimatedFloatingFab() {
         ],
         };
     });
-    
+
+    if (pathname === "/sign-in") return null
+
     return (
         <View style={styles.container}>
         <AnimatedTouchableOpacity

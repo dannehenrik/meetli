@@ -32,7 +32,6 @@ import { supabase } from "@/utils/supabase";
 import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { translations } from '@/constants/translations'
-import { getUser } from "@/server/auth/getUser";
 import { fetchUserStatus } from "@/server/auth/fetchUserStatus";
 export const i18n = new I18n(translations);
 

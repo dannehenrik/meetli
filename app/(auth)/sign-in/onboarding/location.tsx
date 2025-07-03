@@ -8,8 +8,6 @@ import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { useCoreUser } from "@/hooks/user/useCoreUser";
-import { fetchUserId } from "@/server/auth/fetchUserId";
-import { getUserId } from "@/server/auth/getUser";
 import { LocationType } from "@/types";
 import { getCoordinates } from "@/utils/getLocation";
 import { triggerHaptic } from "@/utils/haptics";
