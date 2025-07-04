@@ -340,7 +340,7 @@ export default function Pictures() {
                             <Heading className="font-roboto font-semibold text-2xl">
                                 {i18n.t("onboarding.pictures.title")}
                             </Heading>
-                            <Badge size="sm">
+                            <Badge size="md" className="rounded-md">
                                 <BadgeText>
                                     {user.images?.length || 0}/{MAX_PROFILE_IMAGES_AMOUNT}
                                 </BadgeText>
