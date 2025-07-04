@@ -4,6 +4,9 @@ const englishLanguage = {
     cancel: "Cancel",
     accept: "Accept",
     confirm: "Confirm",
+    delete: "Delete",
+    skip: "Skip",
+    continue: "Continue",
     messages: {
         error: {
             somethingWentWrong: "Something went wrong!",
@@ -29,6 +32,10 @@ const englishLanguage = {
             verify: "Verify",
             enterDetails: "Enter details",
             continue: "Continue"
+        },
+        skipButton: {
+            skipOnboardingTitle: "Skip Optional Setup?",
+            skipOnboardingDescription: "You're about to skip the rest of the onboarding steps. You can complete them later from your profile.",
         },
         signIn: {
             welcomeBack: "Welcome Back",
@@ -392,6 +399,7 @@ const englishLanguage = {
 const swedishLanguage = {
     cancel: "Avbryt",
     accept: "Acceptera",
+
     confirm: "Bekräfta",
     messages: {
         error: {
