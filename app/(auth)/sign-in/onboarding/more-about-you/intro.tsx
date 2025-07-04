@@ -123,7 +123,7 @@ export default function intro() {
                 </FormControl>
             </Box>
         </Box>
-  );
+    );
 };
 
 
