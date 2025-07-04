@@ -23,7 +23,6 @@ export async function fetchExtendedUser() : Promise<ExtendedUser>{
         .eq('id', user.id)
         .single();
 
-    console.log("Data: ", data)
 
     if (error || !data) { throw new Error("Something went wrong when fetching the user: " + error?.message) }
 
