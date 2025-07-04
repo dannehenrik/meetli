@@ -68,7 +68,7 @@ export default function Interests() {
                 isLoading: false,
                 isDisabled: false,
                 onPress: () => {
-                    router.push("/home");
+                    // router.push("/home");
                     mutation.mutate()
                 },
             });

@@ -130,13 +130,13 @@ const englishLanguage = {
         },
         moreAboutYou: {
             intro: {
-                title: "Write a small intro to yourself!",
+                title: "💬 Write a small intro to yourself!",
                 placeholder: "Write your cool intro here.",
                 wordError: "Too many words!",
                 words: "words"
             },
             interests: {
-                title: "What are your interests?",
+                title: "🏀 What are your interests?",
                 instructions: "Choose up to 6 different interests so you can find like-minded people.",
                 requestInterestPrompt: "Didn’t find your interests here? Request it here!",
                 request: "Request"
