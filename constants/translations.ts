@@ -134,6 +134,13 @@ const englishLanguage = {
                 placeholder: "Write your cool intro here.",
                 wordError: "Too many words!",
                 words: "words"
+            },
+            interests: {
+                title: "What are your interests?",
+                instructions: "Choose up to 6 different interests so you can find like-minded people.",
+                requestInterestPrompt: "Didn’t find your interests here? Request it here!",
+                request: "Request"
+
             }
         }
     },

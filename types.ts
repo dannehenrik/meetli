@@ -1,3 +1,4 @@
+import { InterestType } from "./constants/interests"
 
 export interface CoreUser {
     id: string,
@@ -35,4 +36,5 @@ export type LookingFor = "serious" | "serious-casual" | "casual-serious" | "casu
 export interface ExtendedUser {
     id: string, 
     intro: string,
+    interests: {interest: string}[],
 }

@@ -22,12 +22,45 @@ import Animated, {
     FadeInUp
 } from 'react-native-reanimated';
 import { i18n } from "@/app/_layout";
+import { triggerHaptic } from "@/utils/haptics";
+import { supabase } from "@/utils/supabase";
+import { useExtendedUser } from "@/hooks/user/useExtendedUser";
+import { useMutation } from "@tanstack/react-query";
+import { useAwesomeToast } from "@/hooks/toasts";
 const AnimatedBox = Animated.createAnimatedComponent(Box)
+const AnimatedVstack = Animated.createAnimatedComponent(VStack)
+const AnimatedInput = Animated.createAnimatedComponent(Input)
+
 
 export default function Interests() {
+    const {showErrorToast} = useAwesomeToast();
+    
+
+    const {data: user} = useExtendedUser();
+
+    const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>("");
+
+    useEffect(() => {
+        if (user && user.interests) {
+            setSelectedInterests(user.interests.map((interest) => interest.interest))
+        }
+    }, [user])
+
+    const mutation = useMutation({
+        mutationFn: async () => updateUserInterests(selectedInterests),
+        onError: (error) => {
+            console.error(error.message)
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"));
+            router.back();
+        },
+    })
+
+
+
+    // Setting the fab
     const pathName = usePathname();
     const { setFabState } = useFab();
-
     useEffect(() => {
         if (pathName === "/sign-in/onboarding/more-about-you/interests") {
             setFabState({
@@ -35,19 +68,18 @@ export default function Interests() {
                 isLoading: false,
                 isDisabled: false,
                 onPress: () => {
-                router.push("/home");
+                    router.push("/home");
+                    mutation.mutate()
                 },
             });
         }
     }, [pathName]);
 
-    const [selectedInterests, setSelectedInterests] = useState<InterestType[]>([]);
-    const [searchQuery, setSearchQuery] = useState<string>("");
-
-    function toggleInterest(interest: InterestType) {
+    function toggleInterest(interest: string) {
+        triggerHaptic("select")
         setSelectedInterests((prev) =>
-            prev.some((item) => item.value === interest.value)
-                ? prev.filter((item) => item.value !== interest.value)
+            prev.some((item) => item === interest)
+                ? prev.filter((item) => item !== interest)
                 : [...prev, interest]
         );
     };
@@ -66,10 +98,10 @@ export default function Interests() {
         <Box className="flex-1 bg-background-0">
             <Box className="px-5 pt-11 pb-4 bg-background-0 z-10">
 
-                <VStack className="gap-3 mb-8">
-                    <AnimatedBox className="flex-row items-center gap-2" entering={FadeInDown.delay(100).duration(600).springify().delay(100)}>
+                <AnimatedVstack entering={FadeInDown.duration(400).springify()} className="gap-3 mb-8">
+                    <AnimatedBox className="flex-row items-center gap-2" >
                         <Heading className="font-roboto font-semibold text-2xl">
-                            What are your interests?
+                            {i18n.t("onboarding.moreAboutYou.interests.title")}
                         </Heading>
                         <Badge size="md" className="rounded-md">
                             <BadgeText>
@@ -77,12 +109,18 @@ export default function Interests() {
                             </BadgeText>
                         </Badge>
                     </AnimatedBox>
-                    <Text className="font-normal font-roboto text-typography-400" >Välj upp till 6 olika intressen så att du kan hitta likasinnade personer.</Text>
-                </VStack>
+                    <Text className="font-normal font-roboto text-typography-400" >
+                        {i18n.t("onboarding.moreAboutYou.interests.instructions")}
+                    </Text>
+                </AnimatedVstack>
 
                 <SelectedInterests selectedInterests={selectedInterests} onToggle={toggleInterest} />
                 
-                <Input className="border-typography-200 rounded-lg" size="md">
+                <AnimatedInput 
+                className="border-typography-200 rounded-lg" 
+                size="md"
+                entering={FadeInDown.delay(400).duration(400).springify()} 
+                >
                     <InputField
                     placeholder="Search your interests"
                     className="font-normal font-roboto py-2"
@@ -92,7 +130,7 @@ export default function Interests() {
                     <InputSlot className="pr-3.5">
                         <InputIcon as={SearchIcon} className="text-typography-300" />
                     </InputSlot>
-                </Input>
+                </AnimatedInput>
             </Box>
 
             <ScrollView
@@ -105,11 +143,11 @@ export default function Interests() {
                         {searchQuery.length > 0 ? (
                             <Box className="flex flex-row flex-wrap gap-2">
                                 {filteredInterests.map((interest) => {
-                                    const isSelected = selectedInterests.some((item) => item.value === interest.value);
+                                    const isSelected = selectedInterests.some((item) => item === interest.value);
                                     return (
                                         <InterestBadge
                                         key={interest.value}
-                                        interest={interest}
+                                        interest={interest.value}
                                         isSelected={isSelected}
                                         onToggle={toggleInterest}
                                         />
@@ -132,11 +170,11 @@ export default function Interests() {
 
                         <HStack className="justify-between items-center bg-background-50 p-3 rounded-lg w-full gap-2">
                             <Text className="flex-1">
-                                Didn’t find your interests here? Just go on add it!
+                                {i18n.t("onboarding.moreAboutYou.interests.requestInterestPrompt")}
                             </Text>
                             <Button className="bg-background-900 px-4 rounded-[4px] data-[active=true]:bg-background-700">
                                 <ButtonText className="text-typography-50 data-[active=true]:text-typography-0 font-roboto font-medium text-sm">
-                                    Add New
+                                    {i18n.t("onboarding.moreAboutYou.interests.request")}
                                 </ButtonText>
                             </Button>
                         </HStack>
@@ -152,7 +190,7 @@ export default function Interests() {
 
 
 
-function SelectedInterests({selectedInterests, onToggle} : {selectedInterests: InterestType[], onToggle: (interest: InterestType) => void}) {
+function SelectedInterests({selectedInterests, onToggle} : {selectedInterests: string[], onToggle: (interest: string) => void}) {
 
     if (selectedInterests.length === 0) return null
 
@@ -160,7 +198,7 @@ function SelectedInterests({selectedInterests, onToggle} : {selectedInterests: I
         <Box className="mb-2">
             <ScrollView horizontal={true} className="gap-4" showsHorizontalScrollIndicator={false}>
                 {selectedInterests.map((interest) => (
-                    <Box key={interest.value} className="mr-2">
+                    <Box key={interest} className="mr-2">
                         <InterestBadge withRemoveButton={true} interest={interest} isSelected={true} onToggle={onToggle}/>
                     </Box>
                 ))}
@@ -175,9 +213,9 @@ const InterestBadge = ({
     onToggle,
     withRemoveButton = false,
 }: {
-    interest: InterestType;
+    interest: string;
     isSelected: boolean;
-    onToggle: (interest: InterestType) => void;
+    onToggle: (interest: string) => void;
     withRemoveButton?: boolean
 }) => (
     <Pressable
@@ -188,7 +226,7 @@ const InterestBadge = ({
     >
         <HStack className="gap-2 items-center">
             <Text className={`font-sfpro text-sm font-normal ${isSelected ? "text-white" : ""}`}>
-                {i18n.t(`interests.interests.${interest.value}`)}
+                {i18n.t(`interests.interests.${interest}`)}
             </Text>
 
             {withRemoveButton && (
@@ -207,24 +245,28 @@ const InterestGroup = ({
 }: {
     group: string;
     interests: InterestType[];
-    selectedInterests: InterestType[];
-    onToggle: (interest: InterestType) => void;
+    selectedInterests: string[];
+    onToggle: (interest: string) => void;
 }) => {
     const [expanded, setExpanded] = useState(false);
     const visibleItems = expanded ? interests : interests.slice(0, 6);
 
     return (
-        <VStack key={group} className="gap-4">
+        <AnimatedVstack 
+        key={group} 
+        className="gap-4"
+        entering={FadeInLeft.delay(600).duration(400).springify()}
+        >
             <Text className="font-roboto font-medium text-lg text-typography-800">
                 {i18n.t(`interests.groups.${group}`)}
             </Text>
             <Box className="flex flex-row flex-wrap gap-2">
                 {visibleItems.map((interest) => {
-                    const isSelected = selectedInterests.some((item) => item.value === interest.value);
+                    const isSelected = selectedInterests.some((item) => item === interest.value);
                     return (
                         <InterestBadge
                         key={interest.value}
-                        interest={interest}
+                        interest={interest.value}
                         isSelected={isSelected}
                         onToggle={onToggle}
                         />
@@ -232,7 +274,12 @@ const InterestGroup = ({
                 })}
             </Box>
             {interests.length > 6 && (
-                <Pressable onPress={() => setExpanded((prev) => !prev)}>
+                <Pressable 
+                onPress={() => {
+                    triggerHaptic("buttonLight")
+                    setExpanded((prev) => !prev)
+                }}
+                >
                     <HStack className="items-center">
                         <Text className="text-primary-700 font-roboto font-medium text-sm">
                             {expanded ? "Show less" : "Show more"}
@@ -241,6 +288,13 @@ const InterestGroup = ({
                     </HStack>
                 </Pressable>
             )}
-        </VStack>
+        </AnimatedVstack>
     );
 };
+
+
+async function updateUserInterests(interests: string[]) {
+    const {error} = await supabase.rpc('update_user_interests', {user_interests: interests})
+
+    if (error) throw new Error("Something went wrong when updating the user interests: " + error.message)
+}
