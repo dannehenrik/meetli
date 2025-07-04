@@ -76,13 +76,22 @@ export default function Interests() {
     }, [pathName]);
 
     function toggleInterest(interest: string) {
-        triggerHaptic("select")
-        setSelectedInterests((prev) =>
-            prev.some((item) => item === interest)
-                ? prev.filter((item) => item !== interest)
-                : [...prev, interest]
-        );
-    };
+        const isSelected = selectedInterests.includes(interest);
+
+        if (isSelected) {
+            setSelectedInterests((prev) => prev.filter((item) => item !== interest));
+            return;
+        }
+
+        if (selectedInterests.length >= MAX_INTERESTS_AMOUNT) {
+            triggerHaptic("error");
+            return;
+        }
+
+        triggerHaptic("select");
+        setSelectedInterests((prev) => [...prev, interest]);
+    }
+
 
     const filteredInterests = interestsList.filter((interest) =>
         i18n.t(`interests.interests.${interest.value}`).toLowerCase().includes(searchQuery.toLowerCase())
@@ -220,7 +229,7 @@ const InterestBadge = ({
 }) => (
     <Pressable
     onPress={() => onToggle(interest)}
-    className={`bg-background-50 py-1 px-3 rounded-3xl border border-background-100 ${
+    className={`bg-background-50 py-1 px-3 rounded-3xl border border-background-100 active:bg-background-100 ${
     isSelected ? "border-primary-800/10 bg-primary-700/80" : ""
     }`}
     >

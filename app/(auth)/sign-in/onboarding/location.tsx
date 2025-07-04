@@ -187,10 +187,7 @@ export default function LocationScreen() {
                     </Button>
                 )}
 
-                <InfoOnboarding
-                    info={i18n.t("onboarding.location.info")}
-                    classNameIcon="mt-1"
-                />
+                <InfoOnboarding info={i18n.t("onboarding.location.info")}/>
             </Box>
         </Box>
     );

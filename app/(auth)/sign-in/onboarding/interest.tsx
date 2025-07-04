@@ -156,7 +156,6 @@ export default function interest() {
 
                         <InfoOnboarding
                         info={i18n.t("onboarding.changeInformationLaterInfo")}
-                        classNameIcon="mt-1"
                         />
                     </VStack>
                 </FormControl>

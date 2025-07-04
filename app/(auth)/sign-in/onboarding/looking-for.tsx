@@ -134,10 +134,7 @@ export default function lookingFor() {
                         )}
                     </AnimatedRadioGroup>
 
-                    <InfoOnboarding
-                        info={i18n.t("onboarding.lookingFor.lookingForClarification")}
-                        classNameIcon="mt-1"
-                    />
+                    <InfoOnboarding info={i18n.t("onboarding.lookingFor.lookingForClarification")}/>
                 </FormControl>
             </Box>
         </Box>

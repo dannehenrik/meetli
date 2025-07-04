@@ -23,6 +23,7 @@ import { triggerHaptic } from "@/utils/haptics";
 import { useColorScheme } from "react-native";
 import Animated, {FadeInDown} from 'react-native-reanimated';
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
+import { InfoOnboarding } from "@/components/shared/info-onboarding";
 const AnimatedHeading = Animated.createAnimatedComponent(Heading)
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 
@@ -89,7 +90,7 @@ export default function intro() {
 
   return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
-            <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
+            <Box className="flex-1 justify-start items-start gap-6 px-5 top-11 w-[100%]">
 
                 <FormControl className="w-full gap-6" isInvalid={error}>
                     <AnimatedHeading 
@@ -121,6 +122,8 @@ export default function intro() {
                         </FormControlHelper>
                     </AnimatedBox>
                 </FormControl>
+
+                <InfoOnboarding info={i18n.t("onboarding.moreAboutYou.everythingIsSkippable")} />
             </Box>
         </Box>
     );

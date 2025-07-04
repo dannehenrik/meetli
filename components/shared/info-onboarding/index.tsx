@@ -12,7 +12,7 @@ export const InfoOnboarding = ({ info, classNameIcon }: { info: string, classNam
   const colorTheme = useColorScheme();
   return (
     <AnimatedHstack 
-    className="gap-[6px] w-full items-start justify-start"
+    className="gap-[6px] w-full items-center justify-start"
     entering={FadeIn.delay(600).duration(400)}
     >
       <Icon as={InfoIcon} className={`text-typography-${colorTheme === "dark" ? 300 : 600} ${classNameIcon}`} />

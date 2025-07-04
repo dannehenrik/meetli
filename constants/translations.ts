@@ -50,7 +50,7 @@ const englishLanguage = {
         },
         otp: {
             otpInstruction: "Enter verification code",
-            otpSubInstruction: "We have sent you a verification code to your mobile number",
+            otpSubInstruction: "We have sent you a verification code to your email",
         },
         verified: {
             accountVerifiedText: "Yayy! Your profile is verified!",
@@ -129,6 +129,7 @@ const englishLanguage = {
             description: "Now we’ll continue with a few more questions to get to know you even better and to make your profile shine 🌟"
         },
         moreAboutYou: {
+            everythingIsSkippable: "You can skip everything from now on",
             intro: {
                 title: "💬 Write a small intro to yourself!",
                 placeholder: "Write your cool intro here.",
@@ -438,7 +439,7 @@ const swedishLanguage = {
         },
         otp: {
             otpInstruction: "Ange verifieringskod",
-            otpSubInstruction: "Vi har skickat en verifieringskod till ditt telefonnummer",
+            otpSubInstruction: "Vi har skickat en verifieringskod till email",
         },
         verified: {
             accountVerifiedText: "Ja! Din profil är verifierad!",
@@ -517,6 +518,7 @@ const swedishLanguage = {
             description: "Nu fortsätter vi med några fler frågor för att lära känna dig ännu bättre och för att få din profil att sticka ut 🌟"
         },
         moreAboutYou: {
+            everythingIsSkippable: "Allt från och med nu kan du skippa",
             intro: {
                 title: "💬 Skriv en kort presentation om dig själv!",
                 placeholder: "Skriv din coola presentation här.",

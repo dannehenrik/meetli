@@ -8,7 +8,7 @@ import { i18n } from "@/app/_layout";
 import { useRouter } from "expo-router";
 import { useColorScheme } from "react-native";
 import { AppleIcon, GoogleIcon } from "@/assets/icons/icons";
-import Animated, {FadeInDown} from 'react-native-reanimated';
+import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated';
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedButton = Animated.createAnimatedComponent(Button)
 
@@ -57,13 +57,13 @@ export default function LoginMain() {
                 </AnimatedButton>
 
                 {/* <Box className="border-t border-background-200 my-4" /> */}
-                <Box className="flex-row items-center my-6">
+                <AnimatedBox entering={FadeIn.delay(500).duration(400)} className="flex-row items-center my-6">
                     <Box className="flex-1 h-px bg-gray-300" />
                         <Text className="mx-3 text-gray-500 font-medium">
                             {i18n.t("onboarding.signIn.or")} {/* or just "or"/"eller" directly */}
                         </Text>
                     <Box className="flex-1 h-px bg-gray-300" />
-                </Box>
+                </AnimatedBox>
 
 
                 <AnimatedButton 
@@ -80,11 +80,11 @@ export default function LoginMain() {
             </Box>
 
             {/* Footer (optional) */}
-            <Box className="items-center">
+            <AnimatedBox entering={FadeIn.delay(600).duration(400)} className="items-center">
                 <Text className="text-xs text-typography-400 text-center">
                     {i18n.t("onboarding.signIn.agreeToTermsAndPolicy")}
                 </Text>
-            </Box>
+            </AnimatedBox>
         </Box>
     );
 }
