@@ -105,13 +105,13 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
             <GluestackUIProvider mode={"system"}>
                 {/* <SafeAreaView className="flex-1 bg-background-0"> */}
-                <SafeAreaView edges={["top"]} className="flex-1 bg-background-0">
+                {/* <SafeAreaView edges={["top"]} className="flex-1 bg-background-0"> */}
                     <GestureHandlerRootView style={{ flex: 1 }}>
                         <BottomSheetModalProvider>
                             <Slot/>
                         </BottomSheetModalProvider>
                     </GestureHandlerRootView>
-                </SafeAreaView>
+                {/* </SafeAreaView> */}
             </GluestackUIProvider>
         </QueryClientProvider>
     );

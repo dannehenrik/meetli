@@ -6,6 +6,7 @@ import { Box } from "@/components/ui/box";
 
 import FloatingFab from "@/components/shared/floating-fab";
 import { FabProvider } from "@/components/shared/floating-fab/FabContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RootLayout() {
 
@@ -17,6 +18,7 @@ export default function RootLayout() {
     };
     return (
         <FabProvider>
+            <SafeAreaView edges={["top"]} className="flex-1 bg-background-0">
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 className="flex-1"
@@ -39,6 +41,7 @@ export default function RootLayout() {
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
             <FloatingFab/>
+            </SafeAreaView>
         </FabProvider>
     );
 }

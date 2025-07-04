@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import { Box } from "@/components/ui/box";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
 
 export default function ChatLayout() {
     return (
+      <SafeAreaView className="flex-1 bg-background-0">
         <Stack
             screenOptions={{
                 headerShown: false,
@@ -20,5 +22,6 @@ export default function ChatLayout() {
             <Stack.Screen name="edit-profile" />
             <Stack.Screen name="messages/[id]" />
         </Stack>
+        </SafeAreaView>
     );
 }
