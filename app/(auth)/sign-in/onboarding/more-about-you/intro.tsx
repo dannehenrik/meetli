@@ -61,9 +61,9 @@ export default function intro() {
             setFabState({
                 label: undefined,
                 isLoading: false,
-                isDisabled: error || wordCount === 0,
+                isDisabled: error,
                 onPress: () => {
-                    router.push("/sign-in/onboarding/more-about-you/intro");
+                    router.push("/sign-in/onboarding/more-about-you/interests");
                     mutation.mutate();
                 }
             })

@@ -1,3 +1,4 @@
+import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Fab, FabIcon } from "@/components/ui/fab";
@@ -8,8 +9,8 @@ import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { router } from "expo-router";
-import React, { useState } from "react";
+import { router, usePathname } from "expo-router";
+import React, { useEffect, useState } from "react";
 
 export default function interests() {
     const interestsList = [
@@ -27,6 +28,22 @@ export default function interests() {
         "Nature",
         "Rock Climbing",
     ];
+
+    // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        if (pathName === "/sign-in/onboarding/more-about-you/intro") {
+            setFabState({
+                label: undefined,
+                isLoading: false,
+                isDisabled: false,
+                onPress: () => {
+                    router.push("/home");
+                }
+            })
+        }
+    }, [pathName])
 
     const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -67,21 +84,21 @@ export default function interests() {
                         </InputSlot>
                     </Input>
                     <Box className="flex flex-row flex-wrap gap-2">
-                        {filteredInterests.map((interest, index) => (
-                        <Pressable
-                            key={index}
-                            onPress={() => toggleInterest(interest)}
-                            className={`bg-background-100 py-2 px-4 rounded-3xl border ${
-                            selectedInterests.includes(interest)
-                                ? "border border-primary-400 bg-transparent"
-                                : ""
-                            }`}
-                        >
-                            <Text className="text-white font-sfpro text-sm font-normal">
-                            {interest}
-                            </Text>
-                        </Pressable>
-                        ))}
+                        {filteredInterests.map((interest, index) => {
+                            const isSelected = selectedInterests.includes(interest)
+                            return(
+                                <Pressable
+                                    key={index}
+                                    onPress={() => toggleInterest(interest)}
+                                    className={`bg-background-50 py-2 px-4 rounded-3xl border border-background-100 ${
+                                    isSelected ? "border border-primary-800 bg-primary-700" : "" }`}
+                                >
+                                    <Text className={`font-sfpro text-sm font-normal ${isSelected ? "text-white" : ""}`}>
+                                    {interest}
+                                    </Text>
+                                </Pressable>
+                            )
+                        })}
                     </Box>
                     </VStack>
                     <HStack className="justify-between items-center bg-background-50 p-3 rounded-lg w-full gap-2">
@@ -97,15 +114,7 @@ export default function interests() {
                 </VStack>
                 </Box>
             </Box>
-            <Fab
-                size="lg"
-                onPress={() => {
-                router.push("/sign-in/onboarding/profile-answers");
-                }}
-                className="bg-background-950 rounded-lg data-[active=true]:bg-background-900"
-            >
-                <FabIcon as={ChevronRightIcon} />
-            </Fab>
+            
         </Box>
     );
 };
