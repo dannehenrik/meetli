@@ -29,7 +29,7 @@ export default function Interests() {
     const { setFabState } = useFab();
 
     useEffect(() => {
-        if (pathName === "/sign-in/onboarding/more-about-you/intro") {
+        if (pathName === "/sign-in/onboarding/more-about-you/interests") {
             setFabState({
                 label: undefined,
                 isLoading: false,
@@ -96,7 +96,7 @@ export default function Interests() {
             </Box>
 
             <ScrollView
-            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 60 }}
+            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 90 }}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="interactive"
             >

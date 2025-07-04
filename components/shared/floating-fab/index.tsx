@@ -104,11 +104,13 @@ import { i18n } from '@/app/_layout';
 import { useTheme } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
 import { triggerHaptic } from '@/utils/haptics';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function AnimatedFloatingFab() {
+    const insets = useSafeAreaInsets();
     const router = useRouter();
     const pathname = usePathname();
     const { isDisabled, onPress, label, isLoading } = useFab().fabState;
@@ -231,7 +233,7 @@ export default function AnimatedFloatingFab() {
     if (pathname === "/sign-in") return null
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {bottom: insets.bottom + 12}]}>
         <AnimatedTouchableOpacity
             style={[styles.fab, fabAnimatedStyle, {backgroundColor: isDisabled ? disabledBgColor : backgroundColor, opacity: isDisabled ? 0.6 : 1},
             ]}

@@ -20,7 +20,7 @@ export default function RootLayout() {
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 className="flex-1"
-                keyboardVerticalOffset={85}
+                // keyboardVerticalOffset={85}
             >
                 <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
                     <Box className="flex-1 bg-background-0">
