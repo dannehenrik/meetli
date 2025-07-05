@@ -28,70 +28,57 @@ const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
 const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
-// const AnimatedRadioGroup = Animated.createAnimatedComponent(CheckboxGroup)
-import { trainingHabitsOptions } from "@/types";
+import { TrainingHabit, trainingHabitsOptions } from "@/types";
+import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 
-// const trainingHabitsOptions = [
-//     { value: "regularly", label: i18n.t("onboarding.moreAboutYou.training.options.regularly") },
-//     { value: "occasionally", label: i18n.t("onboarding.moreAboutYou.training.options.occasionally") },
-//     { value: "everydayActive", label: i18n.t("onboarding.moreAboutYou.training.options.everydayActive") },
-//     // { value: "calmActivities", label: i18n.t("onboarding.moreAboutYou.training.options.calmActivities") },
-//     { value: "whenMotivated", label: i18n.t("onboarding.moreAboutYou.training.options.whenMotivated") },
-//     { value: "notMyThing", label: i18n.t("onboarding.moreAboutYou.training.options.notMyThing") }
-// ];
-
-
-export type LookingFor = "serious" | "serious-casual" | "casual-serious" | "casual" | "not-sure" | "friends"
 
 export default function training() {
     const queryClient = useQueryClient();
-
     const {showErrorToast} = useAwesomeToast();
 
-    const [trainingHabit, setTrainingHabit] = useState('');
+    const [trainingHabits, setTrainingHabits] = useState('');
 
-
-    // const {data: user} = useCoreUser()
-
-    // const mutation = useMutation({
-    //     mutationFn: async () => updateUser(user?.id ?? "", lookingFor as LookingFor),
-    //     onError: (error) => {
-    //         console.error(error.message)
-    //         showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
-    //         router.back();
-    //     },
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries({ queryKey: ['user', 'core']})
-    //     }
-    // })
+    const {data: user} = useExtendedUser()
 
     // Set initial values when user data is loaded
-    // useEffect(() => {
-    //     if (user && user.looking_for) {
-    //         setLookingfor(user.looking_for); // adjust to match your user schema
-    //     }
-    // }, [user]);
+    useEffect(() => {
+        if (user && user.training_habits) {
+            setTrainingHabits(user.training_habits);
+        }
+    }, [user]);
+
+    const mutation = useMutation({
+        mutationFn: async () => updateUser(user?.id ?? "", trainingHabits as TrainingHabit),
+        onError: (error) => {
+            console.error(error.message)
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
+            router.back();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['user', 'extended']})
+        }
+    })
 
     // Setting the fab
-    // const pathName = usePathname();
-    // const { setFabState } = useFab();
-    // useEffect(() => {
-    //     if (pathName === "/sign-in/onboarding/looking-for") {
-    //         setFabState({
-    //             isDisabled: lookingFor.length === 0,
-    //             onPress: () => {
-    //                 router.push("/sign-in/onboarding/location");
-    //                 if (lookingFor !== user?.looking_for) {
-    //                     mutation.mutate()
-    //                 }
-    //             }
-    //         })
-    //     }
-    // }, [lookingFor, user, pathName])
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        if (pathName === "/sign-in/onboarding/more-about-you/training-habits") {
+            setFabState({
+                isDisabled: false,
+                onPress: () => {
+                    // router.push("/sign-in/onboarding/location");
+                    if (trainingHabits !== user?.training_habits) {
+                        mutation.mutate()
+                    }
+                }
+            })
+        }
+    }, [user, pathName])
 
     
 
-    // if (!user) return null
+    if (!user) return null
 
     return (
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center pb-[100px]">
@@ -108,10 +95,10 @@ export default function training() {
                     <AnimatedRadioGroup 
                     className="gap-3" 
                     entering={FadeInUp.delay(400).duration(400).springify()}
-                    value={trainingHabit} 
+                    value={trainingHabits} 
                     onChange={(value) => {
                         triggerHaptic("select")
-                        setTrainingHabit(value)
+                        setTrainingHabits(value)
                     }}
                     >
                         {trainingHabitsOptions.map((option, index) => 
@@ -142,8 +129,8 @@ export default function training() {
     );
 };
 
-async function updateUser(userId: string, lookingFor: LookingFor) {
-    const {error} = await supabase.from('users').update({looking_for: lookingFor}).eq('id', userId);
+async function updateUser(userId: string, trainingHabits: TrainingHabit) {
+    const {error} = await supabase.from('user_additional_info').update({training_habits: trainingHabits}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

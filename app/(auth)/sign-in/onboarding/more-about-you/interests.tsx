@@ -33,7 +33,7 @@ const AnimatedInput = Animated.createAnimatedComponent(Input)
 
 
 export default function Interests() {
-    const {showErrorToast} = useAwesomeToast();
+    const {showErrorToast, showWarningToast, showInfoToast} = useAwesomeToast();
     
 
     const {data: user} = useExtendedUser();
@@ -68,7 +68,7 @@ export default function Interests() {
                 isLoading: false,
                 isDisabled: false,
                 onPress: () => {
-                    router.push("/sign-in/onboarding/more-about-you/training");
+                    router.push("/sign-in/onboarding/more-about-you/training-habits");
                     mutation.mutate()
                 },
             });

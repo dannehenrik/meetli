@@ -40,6 +40,7 @@ export interface ExtendedUser {
     id: string, 
     intro: string,
     interests: {interest: string}[],
+    training_habits: TrainingHabit,
 }
 
 
