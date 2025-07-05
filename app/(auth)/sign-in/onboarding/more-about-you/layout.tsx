@@ -21,6 +21,8 @@ export default function layout() {
             <Stack.Screen name="training-habits" />
             <Stack.Screen name="smoking-habits" />
             <Stack.Screen name="drinking-habits" />
+            <Stack.Screen name="religion" />
+            <Stack.Screen name="political-view" />
         </Stack>
 
     </>

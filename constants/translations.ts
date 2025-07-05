@@ -194,6 +194,33 @@ const englishLanguage = {
                     regularly: "🍻 Regularly",
                     sober: "🧘 I'm sober"
                 }
+            },
+            religion: {
+                title: "🙏 Do you identify with a religion?",
+                options: {
+                    none: "🚫 Not religious",
+                    spiritual: "🌌 Spiritual but not religious",
+                    christianity: "✝️ Christianity",
+                    islam: "🕌 Islam",
+                    judaism: "✡️ Judaism",
+                    hinduism: "🕉️ Hinduism",
+                    buddhism: "☸️ Buddhism",
+                    other: "🔎 Other religion",
+                    preferNotToSay: "🙊 Prefer not to say"
+                }
+            },
+            politicalView: {
+                title: "🗳️ How would you describe your political views?",
+                options: {
+                    apolitical: "🙅 Not into politics",
+                    moderate: "⚖️ Moderate",
+                    left: "🌹 Left-leaning",
+                    right: "🦅 Right-leaning",
+                    progressive: "🌈 Progressive",
+                    conservative: "🏛️ Conservative",
+                    other: "🧭 Other",
+                    preferNotToSay: "🙊 Prefer not to say"
+                }
             }
 
         }

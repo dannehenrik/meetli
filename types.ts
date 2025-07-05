@@ -43,7 +43,9 @@ export interface ExtendedUser {
     training_habits: TrainingHabit,
     food_choice: FoodChoice,
     drinking_habits: DrinkingHabits,
-    smoking_habits: SmokingHabits
+    smoking_habits: SmokingHabits,
+    religion: Religion,
+    political_view: PoliticalView
 }
 
 
@@ -59,3 +61,9 @@ export const smokingHabitsOptions = ["no", "socially", "occasionally", "regularl
 
 export type DrinkingHabits = "no" | "socially" | "occasionally" | "regularly" | "sober"
 export const drinkingHabitsOptions = ["no", "socially", "occasionally", "regularly", "sober"]
+
+export type Religion = "none" | "spiritual" | "christianity" | "islam" | "judaism" | "hinduism" | "buddhism" | "other" | "preferNotToSay"
+export const religionOptions = ["none", "spiritual", "christianity", "islam", "judaism", "hinduism", "buddhism", "other", "preferNotToSay"]
+
+export type PoliticalView = "apolitical" | "moderate" | "left" | "right" | "progressive" | "conservative" | "other" | "preferNotToSay";
+export const politicalViewOptions = ["apolitical", "moderate", "left", "right", "progressive", "conservative", "other", "preferNotToSay"];
