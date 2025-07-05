@@ -30,6 +30,7 @@ const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
 import { TrainingHabit, trainingHabitsOptions } from "@/types";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
+import { ScrollView } from "react-native-gesture-handler";
 
 
 export default function training() {
@@ -91,36 +92,40 @@ export default function training() {
                     >
                         {i18n.t("onboarding.moreAboutYou.training.title")}
                     </AnimatedHeader>
-
-                    <AnimatedRadioGroup 
-                    className="gap-3" 
-                    entering={FadeInUp.delay(400).duration(400).springify()}
-                    value={trainingHabits} 
-                    onChange={(value) => {
-                        triggerHaptic("select")
-                        setTrainingHabits(value)
-                    }}
+                    <ScrollView 
+                    showsVerticalScrollIndicator={false} 
+                    contentContainerStyle={{paddingBottom: 110 }}
                     >
-                        {trainingHabitsOptions.map((option, index) => 
-                            <Radio
-                            value={option}
-                            size="md"
-                            key={option}
-                            className="bg-background-50 py-3 px-4 rounded-lg justify-between"
-                            
-                            >
-                                <AnimatedRadioLabel 
-                                className="font-roboto font-medium text-typography-950 flex-1" 
-                                entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
+                        <AnimatedRadioGroup 
+                        className="gap-3" 
+                        entering={FadeInUp.delay(400).duration(400).springify()}
+                        value={trainingHabits} 
+                        onChange={(value) => {
+                            triggerHaptic("select")
+                            setTrainingHabits(value)
+                        }}
+                        >
+                            {trainingHabitsOptions.map((option, index) => 
+                                <Radio
+                                value={option}
+                                size="md"
+                                key={option}
+                                className="bg-background-50 py-3 px-4 rounded-lg justify-between"
+                                
                                 >
-                                    {i18n.t(`onboarding.moreAboutYou.training.options.${option}`)}
-                                </AnimatedRadioLabel>
-                                <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
-                                    <RadioIcon as={CircleIcon} />
-                                </AnimatedRadioIndicator>
-                            </Radio>
-                        )}
-                    </AnimatedRadioGroup>
+                                    <AnimatedRadioLabel 
+                                    className="font-roboto font-medium text-typography-950 flex-1" 
+                                    entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
+                                    >
+                                        {i18n.t(`onboarding.moreAboutYou.training.options.${option}`)}
+                                    </AnimatedRadioLabel>
+                                    <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
+                                        <RadioIcon as={CircleIcon} />
+                                    </AnimatedRadioIndicator>
+                                </Radio>
+                            )}
+                        </AnimatedRadioGroup>
+                    </ScrollView>
 
                     {/* <InfoOnboarding info={i18n.t("onboarding.lookingFor.lookingForClarification")}/> */}
                 </FormControl>

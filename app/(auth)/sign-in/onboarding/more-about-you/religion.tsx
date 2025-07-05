@@ -92,36 +92,39 @@ export default function smokingHabits() {
                     >
                         {i18n.t("onboarding.moreAboutYou.religion.title")}
                     </AnimatedHeader>
-                    <ScrollView>
-                    <AnimatedRadioGroup 
-                    className="gap-3" 
-                    entering={FadeInUp.delay(400).duration(400).springify()}
-                    value={religion} 
-                    onChange={(value) => {
-                        triggerHaptic("select")
-                        setReligion(value)
-                    }}
+                    <ScrollView 
+                    showsVerticalScrollIndicator={false} 
+                    contentContainerStyle={{paddingBottom: 110 }}
                     >
-                        {religionOptions.map((option, index) => 
-                            <Radio
-                            value={option}
-                            size="md"
-                            key={option}
-                            className="bg-background-50 py-3 px-4 rounded-lg justify-between"
-                            
-                            >
-                                <AnimatedRadioLabel 
-                                className="font-roboto font-medium text-typography-950 flex-1" 
-                                entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
+                        <AnimatedRadioGroup 
+                        className="gap-3" 
+                        entering={FadeInUp.delay(400).duration(400).springify()}
+                        value={religion} 
+                        onChange={(value) => {
+                            triggerHaptic("select")
+                            setReligion(value)
+                        }}
+                        >
+                            {religionOptions.map((option, index) => 
+                                <Radio
+                                value={option}
+                                size="md"
+                                key={option}
+                                className="bg-background-50 py-3 px-4 rounded-lg justify-between"
+                                
                                 >
-                                    {i18n.t(`onboarding.moreAboutYou.religion.options.${option}`)}
-                                </AnimatedRadioLabel>
-                                <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
-                                    <RadioIcon as={CircleIcon} />
-                                </AnimatedRadioIndicator>
-                            </Radio>
-                        )}
-                    </AnimatedRadioGroup>
+                                    <AnimatedRadioLabel 
+                                    className="font-roboto font-medium text-typography-950 flex-1" 
+                                    entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
+                                    >
+                                        {i18n.t(`onboarding.moreAboutYou.religion.options.${option}`)}
+                                    </AnimatedRadioLabel>
+                                    <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
+                                        <RadioIcon as={CircleIcon} />
+                                    </AnimatedRadioIndicator>
+                                </Radio>
+                            )}
+                        </AnimatedRadioGroup>
                     </ScrollView>
 
                     {/* <InfoOnboarding info={i18n.t("onboarding.lookingFor.lookingForClarification")}/> */}
