@@ -19,6 +19,8 @@ export default function layout() {
             <Stack.Screen name="intro" />
             <Stack.Screen name="interests" />
             <Stack.Screen name="training-habits" />
+            <Stack.Screen name="smoking-habits" />
+            <Stack.Screen name="drinking-habits" />
         </Stack>
 
     </>

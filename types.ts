@@ -41,8 +41,21 @@ export interface ExtendedUser {
     intro: string,
     interests: {interest: string}[],
     training_habits: TrainingHabit,
+    food_choice: FoodChoice,
+    drinking_habits: DrinkingHabits,
+    smoking_habits: SmokingHabits
 }
 
 
 export type TrainingHabit = "regularly" | "occasionally" | "everydayActive" | "whenMotivated" | "notMyThing"
 export const trainingHabitsOptions = ["regularly", "occasionally", "everydayActive", "whenMotivated", "notMyThing"];
+
+
+export type FoodChoice = "everything" | "healthy" | "vegetarian" | "vegan" | "picky" | "allergies" | "fitnessFocused" | "halal" | "kosher"
+export const foodChoicesOptions = ["everything", "healthy","fitnessFocused", "picky", "vegetarian", "vegan",  "halal", "kosher", "allergies"]
+
+export type SmokingHabits = "no" | "socially" | "occasionally" | "regularly" | "tryingToQuit"
+export const smokingHabitsOptions = ["no", "socially", "occasionally", "regularly", "tryingToQuit"]
+
+export type DrinkingHabits = "no" | "socially" | "occasionally" | "regularly" | "sober"
+export const drinkingHabitsOptions = ["no", "socially", "occasionally", "regularly", "sober"]

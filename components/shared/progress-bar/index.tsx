@@ -28,6 +28,10 @@ export function ProgressBar({ pathName }: { pathName: string }) {
         { progress: null, route: "/sign-in/onboarding/profile-base-completed" },
         { progress: 0, route: "/sign-in/onboarding/more-about-you/intro" },
         { progress: 1, route: "/sign-in/onboarding/more-about-you/interests" },
+        { progress: 2, route: "/sign-in/onboarding/more-about-you/training-habits" },
+        { progress: 3, route: "/sign-in/onboarding/more-about-you/food-choice" },
+        { progress: 4, route: "/sign-in/onboarding/more-about-you/smoking-habits" },
+        { progress: 5, route: "/sign-in/onboarding/more-about-you/drinking-habits" },
     ];
 
     const currentRoute = onboardingRoutes.find(r => r.route === pathName);

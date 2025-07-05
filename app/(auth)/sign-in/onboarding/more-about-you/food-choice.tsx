@@ -28,27 +28,28 @@ const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
 const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
-import { TrainingHabit, trainingHabitsOptions } from "@/types";
+import { foodChoicesOptions, FoodChoice } from "@/types";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
+import { ScrollView } from "react-native-gesture-handler";
 
 
-export default function training() {
+export default function foodChoices() {
     const queryClient = useQueryClient();
     const {showErrorToast} = useAwesomeToast();
 
-    const [trainingHabits, setTrainingHabits] = useState('');
+    const [foodChoice, setFoodChoice] = useState('');
 
     const {data: user} = useExtendedUser()
 
     // Set initial values when user data is loaded
     useEffect(() => {
-        if (user && user.training_habits) {
-            setTrainingHabits(user.training_habits);
+        if (user && user.food_choice) {
+            setFoodChoice(user.food_choice);
         }
     }, [user]);
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", trainingHabits as TrainingHabit),
+        mutationFn: async () => updateUser(user?.id ?? "", foodChoice as FoodChoice),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
@@ -63,12 +64,12 @@ export default function training() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        if (pathName === "/sign-in/onboarding/more-about-you/training-habits") {
+        if (pathName === "/sign-in/onboarding/more-about-you/food-choice") {
             setFabState({
                 isDisabled: false,
                 onPress: () => {
-                    // router.push("/sign-in/onboarding/location");
-                    if (trainingHabits !== user?.training_habits) {
+                    router.push("/sign-in/onboarding/more-about-you/smoking-habits");
+                    if (foodChoice !== user?.food_choice) {
                         mutation.mutate()
                     }
                 }
@@ -89,19 +90,19 @@ export default function training() {
                     className="font-roboto font-semibold text-2xl"
                     entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
                     >
-                        {i18n.t("onboarding.moreAboutYou.training.title")}
+                        {i18n.t("onboarding.moreAboutYou.foodChoice.title")}
                     </AnimatedHeader>
-
+                    <ScrollView>
                     <AnimatedRadioGroup 
                     className="gap-3" 
                     entering={FadeInUp.delay(400).duration(400).springify()}
-                    value={trainingHabits} 
+                    value={foodChoice} 
                     onChange={(value) => {
                         triggerHaptic("select")
-                        setTrainingHabits(value)
+                        setFoodChoice(value)
                     }}
                     >
-                        {trainingHabitsOptions.map((option, index) => 
+                        {foodChoicesOptions.map((option, index) => 
                             <Radio
                             value={option}
                             size="md"
@@ -113,7 +114,7 @@ export default function training() {
                                 className="font-roboto font-medium text-typography-950 flex-1" 
                                 entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
                                 >
-                                    {i18n.t(`onboarding.moreAboutYou.training.options.${option}`)}
+                                    {i18n.t(`onboarding.moreAboutYou.foodChoice.options.${option}`)}
                                 </AnimatedRadioLabel>
                                 <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
                                     <RadioIcon as={CircleIcon} />
@@ -121,6 +122,7 @@ export default function training() {
                             </Radio>
                         )}
                     </AnimatedRadioGroup>
+                    </ScrollView>
 
                     {/* <InfoOnboarding info={i18n.t("onboarding.lookingFor.lookingForClarification")}/> */}
                 </FormControl>
@@ -129,8 +131,8 @@ export default function training() {
     );
 };
 
-async function updateUser(userId: string, trainingHabits: TrainingHabit) {
-    const {error} = await supabase.from('user_additional_info').update({training_habits: trainingHabits}).eq('id', userId);
+async function updateUser(userId: string, foodChoice: FoodChoice) {
+    const {error} = await supabase.from('user_additional_info').update({food_choice: foodChoice}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

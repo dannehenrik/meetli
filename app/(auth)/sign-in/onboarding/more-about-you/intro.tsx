@@ -73,8 +73,8 @@ export default function intro() {
   
 
     useEffect(() => {
-            const words = textValue.trim() ? textValue.trim().split(/\s+/) : [];
-            setWordCount(words.length);
+        const words = textValue.trim() ? textValue.trim().split(/\s+/) : [];
+        setWordCount(words.length);
     }, [textValue]);
 
     useEffect(() => {

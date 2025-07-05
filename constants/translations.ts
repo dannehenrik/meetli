@@ -158,7 +158,41 @@ const englishLanguage = {
                     occasionally: "🏃‍♀️ Occasionally (1–3 times a week)",
                     everydayActive: "🚴‍♂️ I'm active in my daily life",
                     whenMotivated: "😅 I work out from time to time",
-                    notMyThing: "🍿 Working out?",
+                    notMyThing: "🍿 Working out? (never)",
+                }
+            },
+            foodChoice: {
+                title: "🍽️ How would you describe your eating habits?",
+                options: {
+                    everything: "🍕 Eat everything – no restrictions",
+                    healthy: "🥗 Mostly healthy",
+                    vegetarian: "🥦 Vegetarian",
+                    vegan: "🌱 Vegan",
+                    picky: "🙈 Picky eater",
+                    allergies: "⚠️ Dietary restrictions (allergies etc...)",
+                    fitnessFocused: "🍗 Fitness-focused",
+                    halal: "🕌 Halal",
+                    kosher: "✡️ Kosher"
+                }
+            },
+            smoking: {
+                title: "🚬 Do you smoke?",
+                options: {
+                    no: "❌ No",
+                    socially: "🍷 Only socially",
+                    occasionally: "🚬 Occasionally",
+                    regularly: "💨 Regularly",
+                    tryingToQuit: "🛑 Trying to quit"
+                }
+            },
+            drinking: {
+                title: "🍷 Do you drink alcohol?",
+                options: {
+                    no: "🚫 Never",
+                    socially: "🥂 Socially",
+                    occasionally: "🍸 Occasionally",
+                    regularly: "🍻 Regularly",
+                    sober: "🧘 I'm sober"
                 }
             }
 
