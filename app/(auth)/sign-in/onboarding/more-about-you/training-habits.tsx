@@ -68,7 +68,7 @@ export default function training() {
                 isDisabled: false,
                 onPress: () => {
                     router.push("/sign-in/onboarding/more-about-you/food-choice");
-                    if (trainingHabits !== user?.training_habits) {
+                    if (trainingHabits && trainingHabits !== user?.training_habits) {
                         mutation.mutate()
                     }
                 }

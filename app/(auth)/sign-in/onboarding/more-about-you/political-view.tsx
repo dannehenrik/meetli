@@ -69,7 +69,7 @@ export default function smokingHabits() {
                 isDisabled: false,
                 onPress: () => {
                     // router.push("/sign-in/onboarding/more-about-you/political-view");
-                    if (politicalView !== user?.political_view) {
+                    if (politicalView && politicalView !== user?.political_view) {
                         mutation.mutate()
                     }
                 }

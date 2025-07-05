@@ -45,12 +45,15 @@ export interface ExtendedUser {
     drinking_habits: DrinkingHabits,
     smoking_habits: SmokingHabits,
     religion: Religion,
-    political_view: PoliticalView
+    political_view: PoliticalView,
+    children: Children,
+    pets: Pets,
+    education: Education
 }
 
 
-export type TrainingHabit = "regularly" | "occasionally" | "everydayActive" | "whenMotivated" | "notMyThing"
-export const trainingHabitsOptions = ["regularly", "occasionally", "everydayActive", "whenMotivated", "notMyThing"];
+export type TrainingHabit = "serious" | "regularly" | "occasionally" | "everydayActive" | "whenMotivated" | "notMyThing"
+export const trainingHabitsOptions = ["serious", "regularly", "occasionally", "everydayActive", "whenMotivated", "notMyThing"];
 
 
 export type FoodChoice = "everything" | "healthy" | "vegetarian" | "vegan" | "picky" | "allergies" | "fitnessFocused" | "halal" | "kosher"
@@ -67,3 +70,14 @@ export const religionOptions = ["none", "spiritual", "christianity", "islam", "j
 
 export type PoliticalView = "apolitical" | "moderate" | "left" | "right" | "progressive" | "conservative" | "other" | "preferNotToSay";
 export const politicalViewOptions = ["apolitical", "moderate", "left", "right", "progressive", "conservative", "other", "preferNotToSay"];
+
+
+export type Education = "highSchool" | "college" | "bachelors" | "masters" | "phd" | "other" | "preferNotToSay";
+export const educationOptions = ["highSchool", "college", "bachelors", "masters", "phd", "other", "preferNotToSay"];
+
+export type Pets = "no" | "dog" | "cat" | "reptile" | "amphibian" | "bird" | "fish" | "hamster" | "rabbit" | "want" | "dontWant" | "multiple" | "allergic";
+export const petsOptions = ["no", "dog", "cat", "reptile", "amphibian", "bird", "fish", "hamster", "rabbit", "want", "dontWant", "multiple", "allergic"];
+
+export type Children = "no" | "yes" | "many" | "haveMore" | "haveNoMore" | "undecided";
+export const childrenOptions = ["no", "yes", "many", "haveMore", "haveNoMore", "undecided"];
+

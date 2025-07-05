@@ -69,7 +69,7 @@ export default function smokingHabits() {
                 isDisabled: false,
                 onPress: () => {
                     router.push("/sign-in/onboarding/more-about-you/drinking-habits");
-                    if (smokingHabit !== user?.smoking_habits) {
+                    if (smokingHabit && smokingHabit !== user?.smoking_habits) {
                         mutation.mutate()
                     }
                 }

@@ -154,12 +154,14 @@ const englishLanguage = {
             training: {
                 title: "💪 How often do you work out?",
                 options: {
+                    serious: "🔥 I'm very serious about my training",
                     regularly: "🏋️‍♂️ Regularly (4+ times a week)",
                     occasionally: "🏃‍♀️ Occasionally (1–3 times a week)",
-                    everydayActive: "🚴‍♂️ I'm active in my daily life",
+                    everydayActive: "🚶‍♂️ Active in daily life (walking, moving)",
                     whenMotivated: "😅 I work out from time to time",
                     notMyThing: "🍿 Working out? (never)",
                 }
+
             },
             foodChoice: {
                 title: "🍽️ How would you describe your eating habits?",
@@ -169,7 +171,7 @@ const englishLanguage = {
                     vegetarian: "🥦 Vegetarian",
                     vegan: "🌱 Vegan",
                     picky: "🙈 Picky eater",
-                    allergies: "⚠️ Dietary restrictions (allergies etc...)",
+                    allergies: "🤧 Dietary restrictions (allergies etc...)",
                     fitnessFocused: "🍗 Fitness-focused",
                     halal: "🕌 Halal",
                     kosher: "✡️ Kosher"
@@ -219,6 +221,47 @@ const englishLanguage = {
                     progressive: "🌈 Progressive",
                     conservative: "🏛️ Conservative",
                     other: "🧭 Other",
+                    preferNotToSay: "🙊 Prefer not to say"
+                }
+            },
+            children: {
+                title: "👶 Do you want children?",
+                options: {
+                    no: "🚫 No",
+                    yes: "✅ Yes",
+                    many: "🎉 Many kids!",
+                    haveMore: "👨‍👩‍👧 Have kids & want more",
+                    haveNoMore: "👨‍👩‍👧 Have kids & don’t want more",
+                    undecided: "🤔 Not decided yet"
+                }
+            },
+            pets: {
+                title: "🐾 Do you have any pets?",
+                options: {
+                    no: "🚫 No pets",
+                    dog: "🐶 Dog",
+                    cat: "🐱 Cat",
+                    reptile: "🦎 Reptile",
+                    amphibian: "🐸 Amphibian",
+                    bird: "🐦 Bird",
+                    fish: "🐠 Fish",
+                    hamster: "🐹 Hamster",
+                    rabbit: "🐰 Rabbit",
+                    want: "❤️ Want pets",
+                    dontWant: "🙅 No pets for me",
+                    multiple: "🐕🐈 Multiple pets",
+                    allergic: "🤧 Allergic to pets"
+                }
+            },
+            education: {
+                title: "🎓 What is your highest level of education?",
+                options: {
+                    highSchool: "🏫 High school",
+                    college: "📘 College / University",
+                    bachelors: "🎓 Bachelor's degree",
+                    masters: "🎓 Master's degree",
+                    phd: "📚 PhD or Doctorate",
+                    other: "🧠 Other",
                     preferNotToSay: "🙊 Prefer not to say"
                 }
             }
