@@ -56,14 +56,14 @@ export type TrainingHabit = "serious" | "regularly" | "occasionally" | "everyday
 export const trainingHabitsOptions = ["serious", "regularly", "occasionally", "everydayActive", "whenMotivated", "notMyThing"];
 
 
-export type FoodChoice = "everything" | "healthy" | "vegetarian" | "vegan" | "picky" | "allergies" | "fitnessFocused" | "halal" | "kosher"
-export const foodChoicesOptions = ["everything", "healthy","fitnessFocused", "picky", "vegetarian", "vegan",  "halal", "kosher", "allergies"]
+export type FoodChoice = "everything" | "healthy" | "vegetarian" | "vegan" | "picky" | "allergies" | "fitnessFocused" | "halal" | "kosher" | "other"
+export const foodChoicesOptions = ["everything", "healthy","fitnessFocused", "picky", "vegetarian", "vegan",  "halal", "kosher", "allergies", "other"]
 
-export type SmokingHabits = "no" | "socially" | "occasionally" | "regularly" | "tryingToQuit"
-export const smokingHabitsOptions = ["no", "socially", "occasionally", "regularly", "tryingToQuit"]
+export type SmokingHabits = "no" | "socially" | "occasionally" | "regularly" | "tryingToQuit" | "preferNotToSay"
+export const smokingHabitsOptions = ["no", "socially", "occasionally", "regularly", "tryingToQuit", "preferNotToSay"]
 
-export type DrinkingHabits = "no" | "socially" | "occasionally" | "regularly" | "sober"
-export const drinkingHabitsOptions = ["no", "socially", "occasionally", "regularly", "sober"]
+export type DrinkingHabits = "no" | "socially" | "occasionally" | "regularly" | "sober" | "preferNotToSay"
+export const drinkingHabitsOptions = ["no", "socially", "occasionally", "regularly", "sober", "preferNotToSay"]
 
 export type Religion = "none" | "spiritual" | "christianity" | "islam" | "judaism" | "hinduism" | "buddhism" | "other" | "preferNotToSay"
 export const religionOptions = ["none", "spiritual", "christianity", "islam", "judaism", "hinduism", "buddhism", "other", "preferNotToSay"]
@@ -76,7 +76,7 @@ export type Education = "highSchool" | "college" | "bachelors" | "masters" | "ph
 export const educationOptions = ["highSchool", "college", "bachelors", "masters", "phd", "other", "preferNotToSay"];
 
 export type Pets = "no" | "dog" | "cat" | "reptile" | "amphibian" | "bird" | "fish" | "hamster" | "rabbit" | "want" | "dontWant" | "multiple" | "allergic";
-export const petsOptions = ["no", "dog", "cat", "reptile", "amphibian", "bird", "fish", "hamster", "rabbit", "want", "dontWant", "multiple", "allergic"];
+export const petsOptions = ["no", "dog", "cat", "reptile", "amphibian", "bird", "fish", "hamster", "rabbit", "multiple", "want", "dontWant", "allergic"];
 
 export type Children = "no" | "yes" | "many" | "haveMore" | "haveNoMore" | "undecided";
 export const childrenOptions = ["no", "yes", "many", "haveMore", "haveNoMore", "undecided"];

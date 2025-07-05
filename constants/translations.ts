@@ -174,7 +174,8 @@ const englishLanguage = {
                     allergies: "🤧 Dietary restrictions (allergies etc...)",
                     fitnessFocused: "🍗 Fitness-focused",
                     halal: "🕌 Halal",
-                    kosher: "✡️ Kosher"
+                    kosher: "✡️ Kosher",
+                    other: "🍽️ Other"
                 }
             },
             smoking: {
@@ -184,7 +185,8 @@ const englishLanguage = {
                     socially: "🍷 Only socially",
                     occasionally: "🚬 Occasionally",
                     regularly: "💨 Regularly",
-                    tryingToQuit: "🛑 Trying to quit"
+                    tryingToQuit: "🛑 Trying to quit",
+                    preferNotToSay: "🙊 Prefer not to say"
                 }
             },
             drinking: {
@@ -194,7 +196,8 @@ const englishLanguage = {
                     socially: "🥂 Socially",
                     occasionally: "🍸 Occasionally",
                     regularly: "🍻 Regularly",
-                    sober: "🧘 I'm sober"
+                    sober: "🧘 I'm sober",
+                    preferNotToSay: "🙊 Prefer not to say"
                 }
             },
             religion: {
