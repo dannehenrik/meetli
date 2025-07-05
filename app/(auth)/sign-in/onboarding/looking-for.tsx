@@ -24,23 +24,13 @@ import Animated, {
     FadeInLeft,
     FadeInUp
 } from 'react-native-reanimated';
+import { lookingForOptions, LookingFor } from "@/types";
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
 const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
-// const AnimatedRadioGroup = Animated.createAnimatedComponent(CheckboxGroup)
-
-const lookingForOptions = [
-  { value: "serious", label: i18n.t("onboarding.lookingFor.options.serious") },
-  { value: "serious-casual", label: i18n.t("onboarding.lookingFor.options.seriousCasual") },
-  { value: "casual-serious", label: i18n.t("onboarding.lookingFor.options.casualSerious") },
-  { value: "casual", label: i18n.t("onboarding.lookingFor.options.casual") },
-  { value: "not-sure", label: i18n.t("onboarding.lookingFor.options.notSure") },
-  { value: "friends", label: i18n.t("onboarding.lookingFor.options.friends") },
-];
 
 
-export type LookingFor = "serious" | "serious-casual" | "casual-serious" | "casual" | "not-sure" | "friends"
 
 export default function lookingFor() {
     const queryClient = useQueryClient();
@@ -115,9 +105,9 @@ export default function lookingFor() {
                     >
                         {lookingForOptions.map((option, index) => 
                             <Radio
-                            value={option.value}
+                            value={option}
                             size="md"
-                            key={option.value}
+                            key={option}
                             className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                             
                             >
@@ -125,7 +115,7 @@ export default function lookingFor() {
                                 className="font-roboto font-medium text-typography-950 flex-1" 
                                 entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
                                 >
-                                    {option.label}
+                                    {i18n.t(`onboarding.lookingFor.options.${option}`)}
                                 </AnimatedRadioLabel>
                                 <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
                                     <RadioIcon as={CircleIcon} />

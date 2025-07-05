@@ -29,15 +29,16 @@ const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
 const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
 // const AnimatedRadioGroup = Animated.createAnimatedComponent(CheckboxGroup)
+import { trainingHabitsOptions } from "@/types";
 
-const trainingHabitsOptions = [
-    { value: "regularly", label: i18n.t("onboarding.moreAboutYou.training.options.regularly") },
-    { value: "occasionally", label: i18n.t("onboarding.moreAboutYou.training.options.occasionally") },
-    { value: "everydayActive", label: i18n.t("onboarding.moreAboutYou.training.options.everydayActive") },
-    // { value: "calmActivities", label: i18n.t("onboarding.moreAboutYou.training.options.calmActivities") },
-    { value: "whenMotivated", label: i18n.t("onboarding.moreAboutYou.training.options.whenMotivated") },
-    { value: "notMyThing", label: i18n.t("onboarding.moreAboutYou.training.options.notMyThing") }
-];
+// const trainingHabitsOptions = [
+//     { value: "regularly", label: i18n.t("onboarding.moreAboutYou.training.options.regularly") },
+//     { value: "occasionally", label: i18n.t("onboarding.moreAboutYou.training.options.occasionally") },
+//     { value: "everydayActive", label: i18n.t("onboarding.moreAboutYou.training.options.everydayActive") },
+//     // { value: "calmActivities", label: i18n.t("onboarding.moreAboutYou.training.options.calmActivities") },
+//     { value: "whenMotivated", label: i18n.t("onboarding.moreAboutYou.training.options.whenMotivated") },
+//     { value: "notMyThing", label: i18n.t("onboarding.moreAboutYou.training.options.notMyThing") }
+// ];
 
 
 export type LookingFor = "serious" | "serious-casual" | "casual-serious" | "casual" | "not-sure" | "friends"
@@ -115,9 +116,9 @@ export default function training() {
                     >
                         {trainingHabitsOptions.map((option, index) => 
                             <Radio
-                            value={option.value}
+                            value={option}
                             size="md"
-                            key={option.value}
+                            key={option}
                             className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                             
                             >
@@ -125,7 +126,7 @@ export default function training() {
                                 className="font-roboto font-medium text-typography-950 flex-1" 
                                 entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
                                 >
-                                    {option.label}
+                                    {i18n.t(`onboarding.moreAboutYou.training.options.${option}`)}
                                 </AnimatedRadioLabel>
                                 <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
                                     <RadioIcon as={CircleIcon} />

@@ -1,5 +1,7 @@
 // Set the key-value pairs for the different languages you want to support.
 
+import lookingFor from "@/app/(auth)/sign-in/onboarding/looking-for";
+
 const englishLanguage = {
     cancel: "Cancel",
     accept: "Accept",
@@ -155,9 +157,8 @@ const englishLanguage = {
                     regularly: "🏋️‍♂️ Regularly (4+ times a week)",
                     occasionally: "🏃‍♀️ Occasionally (1–3 times a week)",
                     everydayActive: "🚴‍♂️ I'm active in my daily life",
-                    // calmActivities: "🧘‍♀️ I prefer calm activities – yoga, walks, etc.",
                     whenMotivated: "😅 I work out from time to time",
-                    notMyThing: "🍿 Working out?"
+                    notMyThing: "🍿 Working out?",
                 }
             }
 

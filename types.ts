@@ -29,8 +29,11 @@ export interface LocationType {
     latitude: number,
 }
 
-export type Gender = "male" | "woman" | "non-binary"
-export type LookingFor = "serious" | "serious-casual" | "casual-serious" | "casual" | "not-sure" | "friends"
+export type Gender = "male" | "woman" | "nonBinary"
+export const genderOptions = ["male", "woman", "nonBinary"]
+
+export type LookingFor = "serious" | "seriousCasual" | "casualSerious" | "casual" | "notSure" | "friends"
+export const lookingForOptions = ["serious", "seriousCasual", "casualSerious", "casual", "notSure", "friends"]
 
 
 export interface ExtendedUser {
@@ -38,3 +41,7 @@ export interface ExtendedUser {
     intro: string,
     interests: {interest: string}[],
 }
+
+
+export type TrainingHabit = "regularly" | "occasionally" | "everydayActive" | "whenMotivated" | "notMyThing"
+export const trainingHabitsOptions = ["regularly", "occasionally", "everydayActive", "whenMotivated", "notMyThing"];
