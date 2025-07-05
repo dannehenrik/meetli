@@ -34,6 +34,9 @@ export function ProgressBar({ pathName }: { pathName: string }) {
         { progress: 5, route: "/sign-in/onboarding/more-about-you/drinking-habits" },
         { progress: 6, route: "/sign-in/onboarding/more-about-you/religion" },
         { progress: 7, route: "/sign-in/onboarding/more-about-you/political-view" },
+        { progress: 8, route: "/sign-in/onboarding/more-about-you/children"},
+        { progress: 9, route: "/sign-in/onboarding/more-about-you/pets"},
+        { progress: 10, route: "/sign-in/onboarding/more-about-you/education"},
     ];
 
     const currentRoute = onboardingRoutes.find(r => r.route === pathName);

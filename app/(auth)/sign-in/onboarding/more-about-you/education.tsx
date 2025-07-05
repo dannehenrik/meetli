@@ -28,7 +28,7 @@ const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
 const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
-import { politicalViewOptions, PoliticalView } from "@/types";
+import { Education, educationOptions } from "@/types";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -37,19 +37,19 @@ export default function smokingHabits() {
     const queryClient = useQueryClient();
     const {showErrorToast} = useAwesomeToast();
 
-    const [politicalView, setPoliticalView] = useState('');
+    const [education, setEducation] = useState('');
 
     const {data: user} = useExtendedUser()
 
     // Set initial values when user data is loaded
     useEffect(() => {
-        if (user && user.political_view) {
-            setPoliticalView(user.political_view);
+        if (user && user.education) {
+            setEducation(user.education);
         }
     }, [user]);
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", politicalView as PoliticalView),
+        mutationFn: async () => updateUser(user?.id ?? "", education as Education),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
@@ -64,12 +64,12 @@ export default function smokingHabits() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        if (pathName === "/sign-in/onboarding/more-about-you/political-view") {
+        if (pathName === "/sign-in/onboarding/more-about-you/education") {
             setFabState({
                 isDisabled: false,
                 onPress: () => {
-                    router.push("/sign-in/onboarding/more-about-you/children");
-                    if (politicalView && politicalView !== user?.political_view) {
+                    // router.push("/sign-in/onboarding/more-about-you/education");
+                    if (education && education !== user?.education) {
                         mutation.mutate()
                     }
                 }
@@ -90,19 +90,19 @@ export default function smokingHabits() {
                     className="font-roboto font-semibold text-2xl"
                     entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
                     >
-                        {i18n.t("onboarding.moreAboutYou.politicalView.title")}
+                        {i18n.t("onboarding.moreAboutYou.education.title")}
                     </AnimatedHeader>
                     <ScrollView>
                     <AnimatedRadioGroup 
                     className="gap-3" 
                     entering={FadeInUp.delay(400).duration(400).springify()}
-                    value={politicalView} 
+                    value={education} 
                     onChange={(value) => {
                         triggerHaptic("select")
-                        setPoliticalView(value)
+                        setEducation(value)
                     }}
                     >
-                        {politicalViewOptions.map((option, index) => 
+                        {educationOptions.map((option, index) => 
                             <Radio
                             value={option}
                             size="md"
@@ -114,7 +114,7 @@ export default function smokingHabits() {
                                 className="font-roboto font-medium text-typography-950 flex-1" 
                                 entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
                                 >
-                                    {i18n.t(`onboarding.moreAboutYou.politicalView.options.${option}`)}
+                                    {i18n.t(`onboarding.moreAboutYou.education.options.${option}`)}
                                 </AnimatedRadioLabel>
                                 <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
                                     <RadioIcon as={CircleIcon} />
@@ -131,8 +131,8 @@ export default function smokingHabits() {
     );
 };
 
-async function updateUser(userId: string, politicalView: PoliticalView) {
-    const {error} = await supabase.from('user_additional_info').update({political_view: politicalView}).eq('id', userId);
+async function updateUser(userId: string, education: Education) {
+    const {error} = await supabase.from('user_additional_info').update({education: education}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

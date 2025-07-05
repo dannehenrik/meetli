@@ -23,6 +23,9 @@ export default function layout() {
             <Stack.Screen name="drinking-habits" />
             <Stack.Screen name="religion" />
             <Stack.Screen name="political-view" />
+            <Stack.Screen name="children" />
+            <Stack.Screen name="pets" />
+            <Stack.Screen name="education" />
         </Stack>
 
     </>
