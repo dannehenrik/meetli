@@ -29,11 +29,13 @@ const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
 const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
 const AnimatedText = Animated.createAnimatedComponent(Text)
+const AnimatedInput = Animated.createAnimatedComponent(Input)
 import { occupationIndustries, OccupationIndustry } from "@/types";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 import { ScrollView } from "react-native-gesture-handler";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { Input, InputField } from "@/components/ui/input";
 
 
 export default function smokingHabits() {
@@ -41,18 +43,20 @@ export default function smokingHabits() {
     const {showErrorToast} = useAwesomeToast();
 
     const [industry, setIndustry] = useState('');
+    const [jobTitle, setJobTitle] = useState('');
 
     const {data: user} = useExtendedUser()
 
     // Set initial values when user data is loaded
     useEffect(() => {
-        if (user && user.occupation_industry) {
+        if (user && user.occupation_industry && user.job_title) {
             setIndustry(user.occupation_industry);
+            setJobTitle(user.job_title)
         }
     }, [user]);
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", industry as OccupationIndustry),
+        mutationFn: async () => updateUser(user?.id ?? "", industry as OccupationIndustry, jobTitle),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
@@ -72,13 +76,13 @@ export default function smokingHabits() {
                 isDisabled: false,
                 onPress: () => {
                     // router.push("/sign-in/onboarding/more-about-you/political-view");
-                    if (industry && industry !== user?.occupation_industry) {
+                    if (industry && (industry !== user?.occupation_industry || jobTitle !== user?.job_title) ) {
                         mutation.mutate()
                     }
                 }
             })
         }
-    }, [user, pathName, industry])
+    }, [user, pathName, industry, jobTitle])
 
     
 
@@ -97,19 +101,28 @@ export default function smokingHabits() {
                             {i18n.t("onboarding.moreAboutYou.occupation.title")}
                         </AnimatedHeader>
                         <AnimatedText 
-                        entering={FadeInUp.delay(400).duration(500).springify()} 
+                        entering={FadeInDown.delay(400).duration(500).springify()} 
                         className="font-normal font-roboto text-typography-400"
                         >
                         {i18n.t("onboarding.moreAboutYou.occupation.description")}
                         </AnimatedText>
                     </VStack>
 
+                    <AnimatedInput entering={FadeInUp.delay(600).duration(500).springify()} className="w-full">
+                        <InputField 
+                        value={jobTitle}
+                        onChangeText={setJobTitle}
+                        placeholder={i18n.t("onboarding.moreAboutYou.occupation.placeholder")}
+                        />
+                    </AnimatedInput>
+
                     <ScrollView 
                     showsVerticalScrollIndicator={false} 
-                    contentContainerStyle={{paddingBottom: 110 }}
+                    contentContainerStyle={{paddingBottom: 180 }}
+                    keyboardDismissMode="on-drag"
                     >
                         <AnimatedRadioGroup 
-                        className="gap-3" 
+                        className="gap-3 pb-8" 
                         entering={FadeInUp.delay(400).duration(400).springify()}
                         value={industry} 
                         onChange={(value) => {
@@ -137,17 +150,16 @@ export default function smokingHabits() {
                                 </Radio>
                             )}
                         </AnimatedRadioGroup>
+                        <InfoOnboarding info={i18n.t(`onboarding.moreAboutYou.occupation.instruction`)}/>
                     </ScrollView>
-
-                    <InfoOnboarding info={i18n.t(`onboarding.moreAboutYou.occupation.instruction`)}/>
                 </FormControl>
             </Box>
         </Box>
     );
 };
 
-async function updateUser(userId: string, industry: OccupationIndustry) {
-    const {error} = await supabase.from('user_additional_info').update({occupation_industry: industry}).eq('id', userId);
+async function updateUser(userId: string, industry: OccupationIndustry, jobTitle: string) {
+    const {error} = await supabase.from('user_additional_info').update({occupation_industry: industry, job_title: jobTitle}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

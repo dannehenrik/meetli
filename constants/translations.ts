@@ -259,6 +259,7 @@ const englishLanguage = {
             occupation: {
                 title: "💼 What occupation do you have?",
                 description: "Tell us your job title first, then choose the industry that best describes your field.",
+                placeholder: "Jobtitle",
                 options: {
                     technology: "💻 Technology",
                     healthcare: "🏥 Healthcare",
