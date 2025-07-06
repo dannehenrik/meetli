@@ -75,7 +75,7 @@ export default function foodChoices() {
                 }
             })
         }
-    }, [user, pathName])
+    }, [user, pathName, foodChoice])
 
     
 

@@ -75,7 +75,7 @@ export default function smokingHabits() {
                 }
             })
         }
-    }, [user, pathName])
+    }, [user, pathName, drinkingHabit])
 
     
 

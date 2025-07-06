@@ -26,6 +26,7 @@ export default function layout() {
             <Stack.Screen name="children" />
             <Stack.Screen name="pets" />
             <Stack.Screen name="education" />
+            <Stack.Screen name="occupation" />
         </Stack>
 
     </>

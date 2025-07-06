@@ -68,14 +68,14 @@ export default function smokingHabits() {
             setFabState({
                 isDisabled: false,
                 onPress: () => {
-                    // router.push("/sign-in/onboarding/more-about-you/education");
+                    router.push("/sign-in/onboarding/more-about-you/occupation");
                     if (education && education !== user?.education) {
                         mutation.mutate()
                     }
                 }
             })
         }
-    }, [user, pathName])
+    }, [user, pathName, education])
 
     
 

@@ -256,6 +256,39 @@ const englishLanguage = {
                     allergic: "🤧 Allergic to pets"
                 }
             },
+            occupation: {
+                title: "💼 What occupation do you have?",
+                description: "Tell us your job title first, then choose the industry that best describes your field.",
+                options: {
+                    technology: "💻 Technology",
+                    healthcare: "🏥 Healthcare",
+                    education: "📚 Education",
+                    finance: "💰 Finance",
+                    artsEntertainment: "🎨 Arts & Entertainment",
+                    business: "👔 Business & Management",
+                    salesMarketing: "📈 Sales & Marketing",
+                    scienceEngineering: "🔬 Science & Engineering",
+                    legal: "⚖️ Legal",
+                    hospitality: "🍽️ Hospitality",
+                    realEstate: "🏢 Real Estate",
+                    manufacturing: "🏭 Manufacturing",
+                    retail: "🛒 Retail",
+                    transportation: "✈️ Transportation",
+                    agriculture: "🌱 Agriculture",
+                    government: "🏛️ Government",
+                    nonProfit: "❤️ Non-Profit",
+                    media: "🎥 Media & Communications",
+                    sportsFitness: "⚽ Sports & Fitness",
+                    student: "🎓 Student",
+                    creative: "🎭 Creative Arts",
+                    military: "🎖️ Military",
+                    notEmployed: "🏠 Not Employed",
+                    retired: "🌴 Retired",
+                    other: "🧩 Other",
+                    preferNotToSay: "🙊 Prefer not to say"
+                },
+                instruction: "You choose an industry to enable filtering!"
+            },
             education: {
                 title: "🎓 What is your highest level of education?",
                 options: {

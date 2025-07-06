@@ -28,28 +28,31 @@ const AnimatedHeader = Animated.createAnimatedComponent(Heading)
 const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
 const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
-import { TrainingHabit, trainingHabitsOptions } from "@/types";
+const AnimatedText = Animated.createAnimatedComponent(Text)
+import { occupationIndustries, OccupationIndustry } from "@/types";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 import { ScrollView } from "react-native-gesture-handler";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
 
 
-export default function training() {
+export default function smokingHabits() {
     const queryClient = useQueryClient();
     const {showErrorToast} = useAwesomeToast();
 
-    const [trainingHabits, setTrainingHabits] = useState('');
+    const [industry, setIndustry] = useState('');
 
     const {data: user} = useExtendedUser()
 
     // Set initial values when user data is loaded
     useEffect(() => {
-        if (user && user.training_habits) {
-            setTrainingHabits(user.training_habits);
+        if (user && user.occupation_industry) {
+            setIndustry(user.occupation_industry);
         }
     }, [user]);
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", trainingHabits as TrainingHabit),
+        mutationFn: async () => updateUser(user?.id ?? "", industry as OccupationIndustry),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
@@ -64,18 +67,18 @@ export default function training() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        if (pathName === "/sign-in/onboarding/more-about-you/training-habits") {
+        if (pathName === "/sign-in/onboarding/more-about-you/occupation") {
             setFabState({
                 isDisabled: false,
                 onPress: () => {
-                    router.push("/sign-in/onboarding/more-about-you/food-choice");
-                    if (trainingHabits && trainingHabits !== user?.training_habits) {
+                    // router.push("/sign-in/onboarding/more-about-you/political-view");
+                    if (industry && industry !== user?.occupation_industry) {
                         mutation.mutate()
                     }
                 }
             })
         }
-    }, [user, pathName, trainingHabits])
+    }, [user, pathName, industry])
 
     
 
@@ -86,12 +89,21 @@ export default function training() {
             <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
 
                 <FormControl className="w-full gap-6">
-                    <AnimatedHeader 
-                    className="font-roboto font-semibold text-2xl"
-                    entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
-                    >
-                        {i18n.t("onboarding.moreAboutYou.training.title")}
-                    </AnimatedHeader>
+                    <VStack className="gap-3">
+                        <AnimatedHeader 
+                        className="font-roboto font-semibold text-2xl"
+                        entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
+                        >
+                            {i18n.t("onboarding.moreAboutYou.occupation.title")}
+                        </AnimatedHeader>
+                        <AnimatedText 
+                        entering={FadeInUp.delay(400).duration(500).springify()} 
+                        className="font-normal font-roboto text-typography-400"
+                        >
+                        {i18n.t("onboarding.moreAboutYou.occupation.description")}
+                        </AnimatedText>
+                    </VStack>
+
                     <ScrollView 
                     showsVerticalScrollIndicator={false} 
                     contentContainerStyle={{paddingBottom: 110 }}
@@ -99,13 +111,13 @@ export default function training() {
                         <AnimatedRadioGroup 
                         className="gap-3" 
                         entering={FadeInUp.delay(400).duration(400).springify()}
-                        value={trainingHabits} 
+                        value={industry} 
                         onChange={(value) => {
                             triggerHaptic("select")
-                            setTrainingHabits(value)
+                            setIndustry(value)
                         }}
                         >
-                            {trainingHabitsOptions.map((option, index) => 
+                            {occupationIndustries.map((option, index) => 
                                 <Radio
                                 value={option}
                                 size="md"
@@ -117,7 +129,7 @@ export default function training() {
                                     className="font-roboto font-medium text-typography-950 flex-1" 
                                     entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
                                     >
-                                        {i18n.t(`onboarding.moreAboutYou.training.options.${option}`)}
+                                        {i18n.t(`onboarding.moreAboutYou.occupation.options.${option}`)}
                                     </AnimatedRadioLabel>
                                     <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
                                         <RadioIcon as={CircleIcon} />
@@ -127,15 +139,15 @@ export default function training() {
                         </AnimatedRadioGroup>
                     </ScrollView>
 
-                    {/* <InfoOnboarding info={i18n.t("onboarding.lookingFor.lookingForClarification")}/> */}
+                    <InfoOnboarding info={i18n.t(`onboarding.moreAboutYou.occupation.instruction`)}/>
                 </FormControl>
             </Box>
         </Box>
     );
 };
 
-async function updateUser(userId: string, trainingHabits: TrainingHabit) {
-    const {error} = await supabase.from('user_additional_info').update({training_habits: trainingHabits}).eq('id', userId);
+async function updateUser(userId: string, industry: OccupationIndustry) {
+    const {error} = await supabase.from('user_additional_info').update({occupation_industry: industry}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }
