@@ -20,6 +20,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 
 
+
 import {
     Actionsheet,
     ActionsheetBackdrop,
@@ -27,6 +28,14 @@ import {
     ActionsheetDragIndicator,
     ActionsheetDragIndicatorWrapper
 } from "@/components/ui/actionsheet";
+
+
+import {
+  BottomSheet,
+  BottomSheetBackdrop,
+  BottomSheetDragIndicator,
+  BottomSheetContent,
+} from "@/components/shared/bottom-sheet";
 
 import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { InfoOnboarding } from "@/components/shared/info-onboarding";
@@ -39,16 +48,19 @@ import { generateUniqueUrl } from "@/utils/generateUniqueUrl";
 import { triggerHaptic } from "@/utils/haptics";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { View } from "react-native";
+import { useColorScheme, View } from "react-native";
 import Animated, {
+    FadeIn,
     FadeInDown,
     FadeInLeft,
     FadeInUp
 } from 'react-native-reanimated';
 import type { SortableGridRenderItem } from 'react-native-sortables';
 import Sortable from 'react-native-sortables';
+import { useThemeColor } from "@/hooks/useThemeColor";
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedText = Animated.createAnimatedComponent(Text)
+const AnimatedVstack = Animated.createAnimatedComponent(VStack)
 
 
 export default function Pictures() {
@@ -372,59 +384,105 @@ export default function Pictures() {
                 </VStack>
             </Box>
         </Box>
-        <Actionsheet 
-            isOpen={showActionsheet} 
-            onClose={() => setShowActionsheet(false)}
-        >
-            <ActionsheetBackdrop/>
-            <ActionsheetContent >
-                <ActionsheetDragIndicatorWrapper>
-                    <ActionsheetDragIndicator />
-                </ActionsheetDragIndicatorWrapper>
-                
-                {/* Action Buttons */}
-                <VStack space="md" className={`w-full p-4 pb-8`}>
-                    <Button
-                        action="negative"
-                        size="md"
-                        className="w-full"
-                        onPress={() => {
-                            triggerHaptic("buttonImportant")
-                            setShowActionsheet(false);
-                            if (selectedImage !== null) {
-                                deleteImageMutation.mutate({imageToDelete: selectedImage})
-                            }
-                        }}
-                    >
-                        
-                        <ButtonText>{i18n.t("onboarding.pictures.deleteImage")}</ButtonText>
-                    </Button>
-                    
-                    <Button
-                        size="md"
-                        variant="outline"
-                        className="w-full"
-                        onPress={async () => {
-                            triggerHaptic("button")
-                            setShowActionsheet(false);
-                            if (selectedImage !== null) {
-                                const image = await pickImage();
-                                if (image) {
-                                    const filePath = generateUniqueUrl();
-                                    replaceImageMutation.mutate({newImageData: image, imageToReplace: selectedImage, filePath: filePath})
-                                }
-                            }
-                        }}
-                    >
-                        <ButtonText>{i18n.t("onboarding.pictures.replaceImage")}</ButtonText>
-                    </Button>
-                
-                </VStack>
-            </ActionsheetContent>
-        </Actionsheet>
+
+        <ReplaceOrDeleteBottomSheet 
+        isOpen={showActionsheet} 
+        setIsOpen={setShowActionsheet}
+        selectedImage={selectedImage}
+        deleteImageMutation={deleteImageMutation}
+        replaceImageMutation={replaceImageMutation}
+        />
+
     </>
     );
 }
+
+
+
+function ReplaceOrDeleteBottomSheet({
+    isOpen,
+    setIsOpen,
+    selectedImage,
+    deleteImageMutation,
+    replaceImageMutation,
+}: {
+    isOpen: boolean;
+    setIsOpen: (value: boolean) => void;
+    selectedImage: ImageType | null,
+    deleteImageMutation: any
+    replaceImageMutation: any,
+}) {
+
+    return (
+        <BottomSheet
+        isOpen={isOpen}
+        index={0}
+        enableDynamicSizing
+        enableOverDrag={true}
+        onClose={() => {
+            setIsOpen(false);
+        }}
+        backdropComponent={BottomSheetBackdrop}
+        handleComponent={() => {
+            return (
+                <BottomSheetDragIndicator
+                    className="border-background-0 bg-background-0 rounded-t-xl"
+                    indicatorStyle={{
+                    backgroundColor: "gray",
+                    width: 64,
+                    height: 4,
+                    marginTop: 10,
+                    }}
+                />
+            );
+        }}
+        >
+            <BottomSheetContent className="border-primary-0 bg-background-0">
+        
+                <AnimatedVstack entering={FadeInDown.delay(100)} space="md" className="w-full flex flex-col gap-4 p-4 pb-10">
+                    <Button
+                    action="negative"
+                    size="lg"
+                    onPress={() => {
+                        triggerHaptic("buttonImportant")
+                        setIsOpen(false);
+                        if (selectedImage !== null) {
+                            deleteImageMutation.mutate({imageToDelete: selectedImage})
+                        }
+                    }}
+                    >
+                        <ButtonText className="text-typography-950 data-[active=true]:text-typography-900">
+                            {i18n.t("onboarding.pictures.deleteImage")}
+                        </ButtonText>
+                    </Button>
+                    
+                    <Button
+                    size="lg"
+                    className="bg-transparent data-[active=true]:bg-background-50"
+                    onPress={async () => {
+                        triggerHaptic("button")
+                        setIsOpen(false);
+                        if (selectedImage !== null) {
+                            const image = await pickImage();
+                            if (image) {
+                                const filePath = generateUniqueUrl();
+                                replaceImageMutation.mutate({newImageData: image, imageToReplace: selectedImage, filePath: filePath})
+                            }
+                        }
+                    }}
+                    >
+                        <ButtonText className="text-typography-950 data-[active=true]:text-typography-900">
+                            {i18n.t("onboarding.pictures.replaceImage")}
+                        </ButtonText>
+                    </Button>
+                      
+                </AnimatedVstack>
+            </BottomSheetContent>
+        </BottomSheet>
+    );
+};
+
+
 
 
 

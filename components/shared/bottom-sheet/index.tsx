@@ -18,7 +18,7 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { Platform } from "react-native";
+import { Platform, useColorScheme } from "react-native";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import type { TextProps } from "react-native";
 import { Pressable, Text } from "react-native";
@@ -111,7 +111,7 @@ const BottomSheet = ({
   onChange?: (isOpen: boolean) => void;
 }) => {
   const bottomSheetRef = useRef<GorhomBottomSheetModal>(null);
-
+  const colorScheme = useColorScheme();
   useEffect(() => {
     if (isOpen) {
       bottomSheetRef.current?.present();
@@ -136,6 +136,7 @@ const BottomSheet = ({
       }}
       onChange={onChange}
       snapPoints={snapPoints}
+      backgroundStyle={{ backgroundColor: colorScheme === "dark" ? "#121212" : "#ffffff" }}
       index={index}
       {...props}
       ref={bottomSheetRef}

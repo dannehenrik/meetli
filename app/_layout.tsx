@@ -33,6 +33,7 @@ import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { translations } from '@/constants/translations'
 import { fetchUserStatus } from "@/server/auth/fetchUserStatus";
+import { View } from "lucide-react-native";
 export const i18n = new I18n(translations);
 
 // Set the locale once at the beginning of your app.
@@ -106,7 +107,7 @@ export default function RootLayout() {
             <GluestackUIProvider mode={"system"}>
                 {/* <SafeAreaView className="flex-1 bg-background-0"> */}
                 {/* <SafeAreaView edges={["top"]} className="flex-1 bg-background-0"> */}
-                    <GestureHandlerRootView style={{ flex: 1 }}>
+                    <GestureHandlerRootView style={{ flex: 1}}>
                         <BottomSheetModalProvider>
                             <Slot/>
                         </BottomSheetModalProvider>
