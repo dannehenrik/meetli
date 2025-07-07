@@ -19,17 +19,6 @@ import { router, usePathname } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 
-
-
-import {
-    Actionsheet,
-    ActionsheetBackdrop,
-    ActionsheetContent,
-    ActionsheetDragIndicator,
-    ActionsheetDragIndicatorWrapper
-} from "@/components/ui/actionsheet";
-
-
 import {
   BottomSheet,
   BottomSheetBackdrop,

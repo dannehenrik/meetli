@@ -22,109 +22,217 @@ import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { router } from "expo-router";
-import React, { useState } from "react";
+import { router, usePathname } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { Checkbox, CheckboxIcon, CheckboxIndicator } from "@/components/ui/checkbox";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
-import { KeyboardAvoidingView, Platform, Pressable } from "react-native";
+import { Pressable } from "react-native";
+import {
+  BottomSheet,
+  BottomSheetBackdrop,
+  BottomSheetDragIndicator,
+  BottomSheetContent,
+  BottomSheetTextInput,
+} from "@/components/shared/bottom-sheet";
+import { Button, ButtonText } from "@/components/ui/button";
+import { useFab } from "@/components/shared/floating-fab/FabContext";
+import { i18n } from "@/app/_layout";
+import { triggerHaptic } from "@/utils/haptics";
+import { useExtendedUser } from "@/hooks/user/useExtendedUser";
+import { Prompt } from "@/types";
+import { supabase } from "@/utils/supabase";
+import { useMutation, UseMutationResult, useQueryClient } from "@tanstack/react-query";
+import { useAwesomeToast } from "@/hooks/toasts";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function profilePrompts() {
+    const { showErrorToast, showSuccessToast } = useAwesomeToast();
+    const queryClient = useQueryClient();
+
+    const {data: user} = useExtendedUser();
+
+    const [userPrompts, setUserPrompts] = useState<Prompt[]>([]);
+
+    useEffect(() => {
+        if (user && user.prompts) {
+            setUserPrompts(user.prompts)
+        }
+    }, [user])
+
+    function handleAnswerChange(id: string, newQuestion: string) {
+        setUserPrompts((prev) => {
+            const existing = prev.find((p) => p.id === id);
+
+            if (existing) {
+                return prev.map((p) =>
+                    p.id === id ? { ...p, question: newQuestion } : p
+                );
+            }
+
+            return [...prev, { id, question: newQuestion, active: false }];
+        });
+    }
+
+
+    function toggleActive(id: string, value?: boolean) {
+        setUserPrompts((prev) => {
+            const updated = [...prev];
+            const index = updated.findIndex((p) => p.id === id);
+
+            if (index !== -1) {
+                const currentlyActive = updated.filter((p) => p.active).length;
+                const willBeActive = typeof value === "boolean" ? value : !updated[index].active;
+
+                if (willBeActive && !updated[index].active && currentlyActive >= 3) {
+                    // Do not allow activating more than 3 prompts
+                    return prev;
+                }
+
+                updated[index] = {
+                    ...updated[index],
+                    active: willBeActive,
+                };
+
+                return updated;
+            } else {
+                const currentlyActive = updated.filter((p) => p.active).length;
+
+                if (currentlyActive >= 3) {
+                    // Do not allow adding a new active prompt
+                    return prev;
+                }
+
+                return [
+                    ...updated,
+                    { id, question: "", active: true },
+                ];
+            }
+        });
+    }
+
+    function getPromptValue(id: string): string {
+        const prompt = userPrompts.find((p) => p.id === id);
+        return prompt?.question ?? "";
+    }
+
+    function isPromptActive(id: string): boolean {
+        const prompt = userPrompts.find((p) => p.id === id);
+        return !!prompt?.active;
+    }
+
+    const mutation = useMutation({
+        mutationFn: async () => updateUser(user?.id ?? "", userPrompts),
+        onError: (error) => {
+            console.error(error.message)
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
+            router.back();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['user', 'extended']})
+        }
+    })
+
+
+
+     // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        if (pathName === "/sign-in/onboarding/more-about-you/profile-prompts") {
+            setFabState({
+                isDisabled: false,
+                onPress: () => {
+                    // router.push("/sign-in/onboarding/more-about-you/pets");
+                    mutation.mutate();        
+                }
+            })
+        }
+    }, [pathName])
   
     const prompts = [
-        {
-        id: "1",
-        question: "If your friends could describe you in one word?",
-        placeholder: `"Unpredictable" - Half tech nerd, half wilderness explorer. Never a dull moment.`,
-        },
-        {
-        id: "2",
-        question: "Two truths and a lie...",
-        placeholder: "Write three statements, make one false...",
-        },
-        {
-        id: "3",
-        question: "My perfect Sunday looks like...",
-        placeholder: "Describe your ideal Sunday...",
-        },
-        {
-        id: "4",
-        question: "My biggest passion in life is...",
-        placeholder: "Tell us what drives you...",
-        },
-        {
-        id: "5",
-        question: "One thing I'm looking for in a partner...",
-        placeholder: "Share what matters most to you...",
-        },
-        {
-        id: "6",
-        question: "Weirdest talent that might surprise you?",
-        placeholder:
-            "I can make the world's most perfect pancake stack AND solve a Rubik's cube in under 3 minutes. Breakfast + brain skills combo! 🥞🧩",
-        },
-        {
-        id: "7",
-        question: "Most embarrassing travel moment?",
-        placeholder:
-            "Got completely lost in Tokyo, accidentally joined a traditional dance parade. Ended up becoming an unexpected tourist attraction! 😂",
-        },
+        "friend_description",
+        "two_truths_one_lie",
+        "perfect_date",
+        "life_passion",
+        "partner_trait",
+        "weird_talent",
+        "hot_take",
+        "perfect_day",
+        "guilty_pleasure",
+        "love_about_you",
+        "random_object",
+        "toxic_trait",
+        "way_to_heart",
+        "swipe_right_reason",
+        "biggest_ick",
+        "perfect_weekend",
+        "debate_opinion"
     ];
 
     return (
-        // <KeyboardAvoidingView
-        //                 behavior={Platform.OS === "ios" ? "padding" : "height"}
-        //                 className="flex-1"
-        //                 >
         <Box className="flex-1 bg-background-0 gap-4 justify-start items-center">
-            <Box className="flex-1 justify-start items-start gap-11 px-5 top-11 w-[100%]">
-               
-                <VStack className="gap-[18px] flex-1 w-full pb-4">
+            <Box className="flex-1 justify-start items-start px-5 top-11 w-[100%]">
+                <VStack className="gap-[18px] w-full">
+
                     <VStack className="gap-3">
                         <Heading className="font-roboto font-semibold text-2xl">
-                        Write your profile answers
+                            {i18n.t("onboarding.moreAboutYou.profilePrompts.title")}
                         </Heading>
-                        <VStack className="gap-2">
-                        <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
-                            Select a prompt that excites you from the list below and write
-                            your answer!
-                        </Text>
-                        </VStack>
+                            <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
+                                {i18n.t("onboarding.moreAboutYou.profilePrompts.instructions")}
+                            </Text>
                     </VStack>
-                    <VStack className="gap-[16px] flex-1 ">
-                        {/* <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 200 }}> */}
-                        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 150 }}>
-                            <Pressable>
-                                <Box className="bg-background-0">
-                                <Accordion className="w-full bg-background-0 gap-4 pb-8">
-                                    {prompts.map((prompt) => (
-                                        <PromptItem key={prompt.id} prompt={prompt} />
-                                    ))}
-                                </Accordion>
-                                </Box>
-                                <Box className="bg-background-0">
-                                    <InfoOnboarding info="Pick a maximum of 3 questions" />
-                                </Box>
-                            </Pressable>
-                        </ScrollView>
-                    </VStack>
+                    
+                    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 250 }}>
+                        <Pressable>
+                            
+                            <Accordion className="w-full bg-background-0 gap-4 pb-6">
+                                {prompts.map((promptId) => (
+                                    <PromptItem 
+                                    key={promptId} 
+                                    promptId={promptId} 
+                                    isActive={isPromptActive(promptId)} 
+                                    toggleActive={toggleActive}
+                                    answer={getPromptValue(promptId)}
+                                    handleAnswerChange={handleAnswerChange}
+                                    mutation={mutation}
+                                    />
+                                ))}
+                            </Accordion>
+            
+                        </Pressable>
+                    </ScrollView>
+                        
                 </VStack>
             </Box>
-        
         </Box>
-        // </KeyboardAvoidingView>
     );
 };
 
-function PromptItem({prompt} : {prompt: {id: string, question: string, placeholder: string}}) {
-    const [isEditing, setIsEditing] = useState(false);
+interface PromptItemProps {
+    promptId: string, 
+    isActive: boolean, 
+    toggleActive: (id: string, value?: boolean) => void,
+    answer: string,
+    handleAnswerChange: (id: string, newValue: string) => void,
+    mutation: UseMutationResult<void, Error, void, unknown>
+}
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [answer, setAnswer] = useState("");
+function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChange, mutation} : PromptItemProps) {
+    const [isEditing, setIsEditing] = useState(false);
+    
     return(
     <>
-         <AccordionItem
-        value={`item-${prompt.id}`}
+    <Pressable onPress={() => {
+        if (isActive) return
+        triggerHaptic("select")
+        toggleActive(promptId, true);
+    }}
+    >
+        <AccordionItem
+        value={`item-${promptId}`}
         className="rounded-lg bg-background-50"
+        isDisabled={!isActive || mutation.isPending}
         >
             <AccordionHeader>
                 <AccordionTrigger className="focus:web:rounded-lg">
@@ -151,10 +259,17 @@ function PromptItem({prompt} : {prompt: {id: string, question: string, placehold
                             isExpanded ? "text-typography-400" : ""
                             }`}
                         >
-                            {prompt.question}
+                            {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.question`)}
                         </AccordionTitleText>
 
-                        <Checkbox >
+                        <Checkbox 
+                        value=""
+                        onChange={(value) => {
+                            triggerHaptic("select")
+                            toggleActive(promptId, value)
+                        }}
+                        isChecked={isActive}
+                        >
                             <CheckboxIndicator>
                                 <CheckboxIcon as={CheckIcon} />
                             </CheckboxIndicator>
@@ -166,17 +281,20 @@ function PromptItem({prompt} : {prompt: {id: string, question: string, placehold
                 </AccordionTrigger>
             </AccordionHeader>
             <AccordionContent>
-                    <AccordionContentText onPress={() => setIsModalOpen(true)} className="font-semibold font-roboto text-2xl text-typography-800 leading-7">
-                        {prompt.placeholder}
+                    <AccordionContentText onPress={() => setIsEditing(true)} className="font-semibold font-roboto text-2xl text-typography-800 leading-7">
+                        {answer.length === 0 ? i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`) : answer}
                     </AccordionContentText>
             </AccordionContent>
         </AccordionItem>
+        </Pressable>
 
-        <PromptEditModal
-        visible={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        prompt={prompt}
-        onSave={(value) => setAnswer(value)}
+        <PromptEditSheet
+        isOpen={isEditing}
+        setIsOpen={() => setIsEditing(false)}
+        promptId={promptId}
+        answer={answer}
+        onSave={(value) => handleAnswerChange(promptId, value)}
+        mutation={mutation}
         />
     </>
     )
@@ -184,29 +302,107 @@ function PromptItem({prompt} : {prompt: {id: string, question: string, placehold
 
 
 
-import { Modal, View, TextInput, Button } from 'react-native';
+export function PromptEditSheet({
+    isOpen,
+    setIsOpen,
+    promptId,
+    answer,
+    onSave,
+    mutation,
+}: {
+    isOpen: boolean;
+    setIsOpen: (newValue: boolean) => void;
+    promptId: string;
+    answer: string,
+    onSave: (newValue: string) => void;
+    mutation: UseMutationResult<void, Error, void, unknown>
+}) {
+    const queryClient = useQueryClient()
+    const { showSuccessToast } = useAwesomeToast();
+    const [value, setValue] = useState("");
 
-function PromptEditSheet({ visible, onClose, prompt, onSave } : {visible: boolean, onClose: () => void, prompt: {id: string, question: string, placeholder: string}, onSave: (newValue: string) => void}) {
-  const [value, setValue] = useState('');
+    useEffect(() => {
+        // Reset on open
+        if (isOpen) {
+            setValue(answer);
+        }
+    }, [isOpen, answer]);
 
-  return (
-    <Modal visible={visible} animationType="slide" transparent={true}>
-      <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.3)' }}>
-        <View style={{ backgroundColor: 'white', padding: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{prompt.question}</Text>
-          <TextInput
-            multiline
-            style={{ height: 120, borderColor: '#ccc', borderWidth: 1, marginTop: 12, padding: 10 }}
-            placeholder={prompt.placeholder}
-            value={value}
-            onChangeText={setValue}
-          />
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 10, marginTop: 10 }}>
-            <Button title="Cancel" onPress={onClose} />
-            <Button title="Save" onPress={() => { onSave(value); onClose(); }} />
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
+    useEffect(() => {
+        if (mutation.isSuccess) {
+            setIsOpen(false);
+        }
+    }, [mutation.isSuccess])
+
+    return (
+        <BottomSheet
+        isOpen={isOpen}
+        index={0}
+        enableDynamicSizing
+        enableOverDrag
+        onClose={() => setIsOpen(false)}
+        backdropComponent={BottomSheetBackdrop}
+        keyboardBehavior="interactive"
+        handleComponent={() => (
+            <BottomSheetDragIndicator
+            className="border-background-0 bg-background-0 rounded-t-xl"
+            indicatorStyle={{
+                backgroundColor: "gray",
+                width: 64,
+                height: 4,
+                marginTop: 10,
+            }}
+            />
+        )}
+        >
+            <BottomSheetContent className="border-primary-0 bg-background-0 px-5 pb-8 pt-4">
+                <VStack className="gap-6 w-full">
+                {/* Question Header */}
+
+                    <Heading className="font-semibold text-xl leading-6 text-typography-800">
+                        {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.question`)}
+                    </Heading>
+                
+                    <BottomSheetTextInput
+                    placeholder={i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`)}
+                    multiline
+                    value={value}
+                    onChangeText={setValue}
+                    style={{ minHeight: 120, maxHeight: 200, textAlignVertical: "top" }}
+                    className="text-base font-roboto text-typography-800 w-full"
+                    />
+                
+
+                    {/* Save Button */}
+                    <Button
+                    className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
+                    onPress={() => {
+                        onSave(value);
+                        mutation.mutate(undefined, {onSuccess: () => {
+                            showSuccessToast(i18n.t("messages.success.dataUpdated"))
+                            queryClient.invalidateQueries({ queryKey: ['user', 'extended']})
+                        }})
+                        // setIsOpen(false);
+                    }}
+                    disabled={value.trim().length === 0}
+                    >
+                        {mutation.isPending ? (
+                            <Spinner/>
+                        ) : (
+                        <ButtonText>
+                            Save Answer
+                        </ButtonText>
+                        )}
+                    </Button>
+                </VStack>
+            </BottomSheetContent>
+        </BottomSheet>
+    );
+}
+
+
+async function updateUser(userId: string, userPrompts: Prompt[]) {
+    const {error} = await supabase.from('user_additional_info').update({prompts: userPrompts}).eq('id', userId);
+
+    if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

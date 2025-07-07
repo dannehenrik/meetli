@@ -24,6 +24,7 @@ const englishLanguage = {
         success: {
             emailSent: "Email sent!",
             emailValidationInstructions: "Enter the 6 digit code you just received",
+            dataUpdated: "Data updated",
         }
     },
     onboarding: {
@@ -301,6 +302,83 @@ const englishLanguage = {
                     other: "🧠 Other",
                     preferNotToSay: "🙊 Prefer not to say"
                 }
+            },
+            profilePrompts: {
+                title: "✨ Your personality, in three answers",
+                instructions: "Select 1-3 prompts that excites you from the list below and write your answers!",
+                
+                prompts: {
+                    friend_description: {
+                        question: "🧑‍🤝‍🧑 How would your friends describe you?",
+                        placeholder: `"Unpredictable" – half tech nerd, half wilderness explorer. Never a dull moment.`
+                    },
+                    two_truths_one_lie: {
+                        question: "🕵️‍♂️ Two truths and a lie...",
+                        placeholder: `"1. I’ve been skydiving. 2. I hate pizza. 3. I once met Rihanna in an elevator." Can you guess? 😉`
+                    },
+                    perfect_date: {
+                        question: "🌇 My perfect date looks like...",
+                        placeholder: `"Somewhere between coffee at a quirky bookstore and losing track of time in conversation." ☕📚`
+                    },
+                    life_passion: {
+                        question: "🔥 My biggest passion in life is...",
+                        placeholder: `"Creating things that make people smile – from apps to awful puns."`
+                    },
+                    partner_trait: {
+                        question: "💘 One thing I'm looking for in a partner is...",
+                        placeholder: `"Someone who laughs at my jokes… even the questionable ones." 😂`
+                    },
+                    weird_talent: {
+                        question: "🎯 Weirdest talent that might surprise you?",
+                        placeholder: `"I can fold a fitted sheet like a hotel maid. It's my oddly specific superpower." 🛏️✨`
+                    },
+                    hot_take: {
+                        question: "🌶️ My hot take is...",
+                        placeholder: `"Pineapple absolutely belongs on pizza. And I’ll fight (playfully) for it." 🍍🍕`
+                    },
+                    perfect_day: {
+                        question: "🌞 If I could describe the perfect day...",
+                        placeholder: `"Morning swim, messy brunch, spontaneous road trip, sunset with someone fun." 🌞🚗🌅`
+                    },
+                    guilty_pleasure: {
+                        question: "😅 My guilty pleasure is...",
+                        placeholder: `"Rewatching 'The Office' for the 17th time like it’s a brand new show." 📺🫠`
+                    },
+                    love_about_you: {
+                        question: "💖 One thing I’d probably love about you is...",
+                        placeholder: `"Your taste in memes... unless you're still into Minions. Then we need to talk." 😂🙃`
+                    },
+                    random_object: {
+                        question: "🎁 The most random thing I own is...",
+                        placeholder: `"A tiny chair for my houseplants. Don’t ask." 🌱🪑`
+                    },
+                    toxic_trait: {
+                        question: "⚠️ My toxic trait is...",
+                        placeholder: `"Saying 'I’m 5 minutes away' when I’m still in the shower." 🫣⏱️`
+                    },
+                    way_to_heart: {
+                        question: "💓 The way to my heart is...",
+                        placeholder: `"Through tacos, memes, and someone who laughs at my terrible puns." 🌮💘`
+                    },
+                    swipe_right_reason: {
+                        question: "👉 What instantly makes me swipe right is...",
+                        placeholder: `"Dogs in profile pictures. Works every time." 🐶💯`
+                    },
+                    biggest_ick: {
+                        question: "🙅‍♂️ My biggest ick is...",
+                        placeholder: `"When people clap when the plane lands. Just… why?" ✈️😬`
+                    },
+                    perfect_weekend: {
+                        question: "🍝 A perfect weekend includes...",
+                        placeholder: `"Sleeping in, no plans, and probably some form of pasta." 🍝🛋️`
+                    },
+                    debate_opinion: {
+                        question: "🤔 One opinion that always starts debates with my friends...",
+                        placeholder: `"Croissants are just overrated bread. Sorry, not sorry." 🥐🔥`
+                    }
+                }
+
+
             }
 
         }

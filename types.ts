@@ -51,8 +51,22 @@ export interface ExtendedUser {
     education: Education,
     job_title: string,
     occupation_industry: OccupationIndustry,
-
+    prompts: Prompt[],
+    favorites: Favorite[],
 }
+
+export interface Favorite {
+    id: string,
+    question: string,
+    active: boolean
+}
+
+export interface Prompt {
+    id: string,
+    question: string,
+    active: boolean
+}
+
 
 
 export type TrainingHabit = "serious" | "regularly" | "occasionally" | "everydayActive" | "whenMotivated" | "notMyThing"
