@@ -75,7 +75,7 @@ export default function smokingHabits() {
             setFabState({
                 isDisabled: false,
                 onPress: () => {
-                    // router.push("/sign-in/onboarding/more-about-you/political-view");
+                    router.push("/sign-in/onboarding/more-about-you/profile-prompts");
                     if (industry && (industry !== user?.occupation_industry || jobTitle !== user?.job_title) ) {
                         mutation.mutate()
                     }

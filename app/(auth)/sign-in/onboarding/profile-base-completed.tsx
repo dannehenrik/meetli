@@ -48,7 +48,8 @@ export default function ProfileBaseComplete() {
                 label: i18n.t("onboarding.fab.continue"),
                 isDisabled: false,
                 onPress: () => {
-                    router.push("/sign-in/onboarding/more-about-you/intro");
+                    // router.push("/sign-in/onboarding/more-about-you/intro");
+                    router.push("/sign-in/onboarding/more-about-you/profile-prompts");
                     mutation.mutate();
                 }
             })

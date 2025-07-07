@@ -27,6 +27,7 @@ export default function layout() {
             <Stack.Screen name="pets" />
             <Stack.Screen name="education" />
             <Stack.Screen name="occupation" />
+            <Stack.Screen name="profile-prompts" />
         </Stack>
 
     </>
