@@ -46,7 +46,7 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function profilePrompts() {
-    const { showErrorToast, showSuccessToast } = useAwesomeToast();
+    const { showErrorToast, showInfoToast } = useAwesomeToast();
     const queryClient = useQueryClient();
 
     const {data: user} = useExtendedUser();
@@ -59,6 +59,41 @@ export default function profilePrompts() {
         }
     }, [user])
 
+    const [missClicks, setMissClicks] = useState(0);
+    useEffect(() => {
+        if (missClicks > 0 && missClicks % 3 === 0) {
+            showInfoToast(i18n.t("messages.info.onlyThree"), i18n.t("messages.info.unselect"))
+        }
+    }, [missClicks])
+
+    const mutation = useMutation({
+        mutationFn: async () => updateUser(user?.id ?? "", userPrompts),
+        onError: (error) => {
+            console.error(error.message)
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
+            router.back();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['user', 'extended']})
+        }
+    })
+
+     // Setting the fab
+    const pathName = usePathname();
+    const { setFabState } = useFab();
+    useEffect(() => {
+        if (pathName === "/sign-in/onboarding/more-about-you/profile-prompts") {
+            setFabState({
+                isDisabled: false,
+                onPress: () => {
+                    // router.push("/sign-in/onboarding/more-about-you/pets");
+                    mutation.mutate();        
+                }
+            })
+        }
+    }, [pathName])
+
+    // Utils
     function handleAnswerChange(id: string, newQuestion: string) {
         setUserPrompts((prev) => {
             const existing = prev.find((p) => p.id === id);
@@ -85,6 +120,8 @@ export default function profilePrompts() {
 
                 if (willBeActive && !updated[index].active && currentlyActive >= 3) {
                     // Do not allow activating more than 3 prompts
+                    triggerHaptic("error")
+                    setMissClicks((prev) => prev + 1)
                     return prev;
                 }
 
@@ -93,15 +130,18 @@ export default function profilePrompts() {
                     active: willBeActive,
                 };
 
+                triggerHaptic("select")
                 return updated;
             } else {
                 const currentlyActive = updated.filter((p) => p.active).length;
 
                 if (currentlyActive >= 3) {
                     // Do not allow adding a new active prompt
+                    triggerHaptic("error")
+                    setMissClicks((prev) => prev + 1)
                     return prev;
                 }
-
+                triggerHaptic("select")
                 return [
                     ...updated,
                     { id, question: "", active: true },
@@ -119,35 +159,6 @@ export default function profilePrompts() {
         const prompt = userPrompts.find((p) => p.id === id);
         return !!prompt?.active;
     }
-
-    const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", userPrompts),
-        onError: (error) => {
-            console.error(error.message)
-            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
-            router.back();
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['user', 'extended']})
-        }
-    })
-
-
-
-     // Setting the fab
-    const pathName = usePathname();
-    const { setFabState } = useFab();
-    useEffect(() => {
-        if (pathName === "/sign-in/onboarding/more-about-you/profile-prompts") {
-            setFabState({
-                isDisabled: false,
-                onPress: () => {
-                    // router.push("/sign-in/onboarding/more-about-you/pets");
-                    mutation.mutate();        
-                }
-            })
-        }
-    }, [pathName])
   
     const prompts = [
         "friend_description",
@@ -225,7 +236,6 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
     <>
     <Pressable onPress={() => {
         if (isActive) return
-        triggerHaptic("select")
         toggleActive(promptId, true);
     }}
     >
@@ -380,7 +390,6 @@ export function PromptEditSheet({
                         onSave(value);
                         mutation.mutate(undefined, {onSuccess: () => {
                             showSuccessToast(i18n.t("messages.success.dataUpdated"))
-                            queryClient.invalidateQueries({ queryKey: ['user', 'extended']})
                         }})
                         // setIsOpen(false);
                     }}
