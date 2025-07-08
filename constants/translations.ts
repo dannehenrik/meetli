@@ -28,7 +28,7 @@ const englishLanguage = {
         },
         info: {
             onlyThree: "You can only select 3 at a time",
-            unselect: "You will need to unselect one before selecting a new"
+            unselect: "You will need to unselect one before selecting a new."
         }
     },
     onboarding: {

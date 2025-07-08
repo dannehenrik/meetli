@@ -108,7 +108,7 @@ export default function Interests() {
             <Box className="px-5 pt-11 pb-4 bg-background-0 z-10">
 
                 <AnimatedVstack entering={FadeInDown.duration(400).springify()} className="gap-3 mb-8">
-                    <AnimatedBox className="flex-row items-center gap-2" >
+                    <Box className="flex-row items-center gap-2" >
                         <Heading className="font-roboto font-semibold text-2xl">
                             {i18n.t("onboarding.moreAboutYou.interests.title")}
                         </Heading>
@@ -117,7 +117,7 @@ export default function Interests() {
                                 {selectedInterests.length}/{MAX_INTERESTS_AMOUNT}
                             </BadgeText>
                         </Badge>
-                    </AnimatedBox>
+                    </Box>
                     <Text className="font-normal font-roboto text-typography-400" >
                         {i18n.t("onboarding.moreAboutYou.interests.instructions")}
                     </Text>

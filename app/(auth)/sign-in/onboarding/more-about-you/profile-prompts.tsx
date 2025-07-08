@@ -44,6 +44,18 @@ import { supabase } from "@/utils/supabase";
 import { useMutation, UseMutationResult, useQueryClient } from "@tanstack/react-query";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { Spinner } from "@/components/ui/spinner";
+import Animated, {
+    FadeIn,
+    FadeInDown,
+    FadeInLeft,
+    FadeInUp
+} from 'react-native-reanimated';
+const AnimatedVstack = Animated.createAnimatedComponent(VStack)
+const AnimatedBox = Animated.createAnimatedComponent(Box)
+const AnimatedButton = Animated.createAnimatedComponent(Button)
+const AnimatedHeading = Animated.createAnimatedComponent(Heading)
+const AnimatedBottomSheetTextInput = Animated.createAnimatedComponent(BottomSheetTextInput)
+
 
 export default function profilePrompts() {
     const { showErrorToast, showInfoToast } = useAwesomeToast();
@@ -185,34 +197,36 @@ export default function profilePrompts() {
             <Box className="flex-1 justify-start items-start px-5 top-11 w-[100%]">
                 <VStack className="gap-[18px] w-full">
 
-                    <VStack className="gap-3">
+                    <AnimatedVstack entering={FadeInDown.delay(100).duration(400).springify()}  className="gap-3">
                         <Heading className="font-roboto font-semibold text-2xl">
                             {i18n.t("onboarding.moreAboutYou.profilePrompts.title")}
                         </Heading>
-                            <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
-                                {i18n.t("onboarding.moreAboutYou.profilePrompts.instructions")}
-                            </Text>
-                    </VStack>
-                    
-                    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 250 }}>
-                        <Pressable>
-                            
-                            <Accordion className="w-full bg-background-0 gap-4 pb-6">
-                                {prompts.map((promptId) => (
-                                    <PromptItem 
-                                    key={promptId} 
-                                    promptId={promptId} 
-                                    isActive={isPromptActive(promptId)} 
-                                    toggleActive={toggleActive}
-                                    answer={getPromptValue(promptId)}
-                                    handleAnswerChange={handleAnswerChange}
-                                    mutation={mutation}
-                                    />
-                                ))}
-                            </Accordion>
-            
-                        </Pressable>
-                    </ScrollView>
+                        <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
+                            {i18n.t("onboarding.moreAboutYou.profilePrompts.instructions")}
+                        </Text>
+                    </AnimatedVstack>
+                    <AnimatedBox entering={FadeInUp.delay(400).duration(400).springify()}>
+                        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 250 }}>
+                            <Pressable>
+                                
+                                <Accordion className="w-full bg-background-0 gap-4 pb-6">
+                                    {prompts.map((promptId, index) => (
+                                        <AnimatedBox key={promptId} entering={FadeInLeft.delay(600 + (100 * index)).duration(400).springify()}>
+                                            <PromptItem 
+                                            promptId={promptId} 
+                                            isActive={isPromptActive(promptId)} 
+                                            toggleActive={toggleActive}
+                                            answer={getPromptValue(promptId)}
+                                            handleAnswerChange={handleAnswerChange}
+                                            mutation={mutation}
+                                            />
+                                        </AnimatedBox>
+                                    ))}
+                                </Accordion>
+                
+                            </Pressable>
+                        </ScrollView>
+                    </AnimatedBox>
                         
                 </VStack>
             </Box>
@@ -234,11 +248,6 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
     
     return(
     <>
-    <Pressable onPress={() => {
-        if (isActive) return
-        toggleActive(promptId, true);
-    }}
-    >
         <AccordionItem
         value={`item-${promptId}`}
         className="rounded-lg bg-background-50"
@@ -274,10 +283,7 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
 
                         <Checkbox 
                         value=""
-                        onChange={(value) => {
-                            triggerHaptic("select")
-                            toggleActive(promptId, value)
-                        }}
+                        onChange={(value) => {toggleActive(promptId, value)}}
                         isChecked={isActive}
                         >
                             <CheckboxIndicator>
@@ -291,12 +297,11 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
                 </AccordionTrigger>
             </AccordionHeader>
             <AccordionContent>
-                    <AccordionContentText onPress={() => setIsEditing(true)} className="font-semibold font-roboto text-2xl text-typography-800 leading-7">
-                        {answer.length === 0 ? i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`) : answer}
-                    </AccordionContentText>
+                <AccordionContentText onPress={() => setIsEditing(true)} className="font-semibold font-roboto text-2xl text-typography-800 leading-7">
+                    {answer.length === 0 ? i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`) : answer}
+                </AccordionContentText>
             </AccordionContent>
         </AccordionItem>
-        </Pressable>
 
         <PromptEditSheet
         isOpen={isEditing}
@@ -369,11 +374,12 @@ export function PromptEditSheet({
                 <VStack className="gap-6 w-full">
                 {/* Question Header */}
 
-                    <Heading className="font-semibold text-xl leading-6 text-typography-800">
+                    <AnimatedHeading entering={FadeInUp.delay(100).duration(400).springify()} className="font-semibold text-xl leading-6 text-typography-800">
                         {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.question`)}
-                    </Heading>
+                    </AnimatedHeading>
                 
-                    <BottomSheetTextInput
+                    <AnimatedBottomSheetTextInput
+                    entering={FadeIn.delay(600).duration(400)}
                     placeholder={i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`)}
                     multiline
                     value={value}
@@ -384,7 +390,8 @@ export function PromptEditSheet({
                 
 
                     {/* Save Button */}
-                    <Button
+                    <AnimatedButton
+                    entering={FadeInDown.delay(300).duration(400).springify()}
                     className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
                     onPress={() => {
                         onSave(value);
@@ -402,7 +409,7 @@ export function PromptEditSheet({
                             Save Answer
                         </ButtonText>
                         )}
-                    </Button>
+                    </AnimatedButton>
                 </VStack>
             </BottomSheetContent>
         </BottomSheet>

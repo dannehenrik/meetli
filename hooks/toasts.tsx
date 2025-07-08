@@ -9,6 +9,13 @@ import {
 import { VStack } from '@/components/ui/vstack';
 import { triggerHaptic } from '@/utils/haptics';
 import { AlertTriangle, CheckCircle2, Info, XCircle } from 'lucide-react-native';
+import Animated, {
+    FadeInDown,
+    FadeInLeft,
+    FadeInUp
+} from 'react-native-reanimated';
+const AnimatedVstack = Animated.createAnimatedComponent(VStack)
+const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
 export const useAwesomeToast = () => {
     const toast = useToast();
@@ -29,20 +36,24 @@ export const useAwesomeToast = () => {
                         action="success" 
                         variant="solid"
                         className="rounded-lg"
+                        style={{
+                            maxWidth: '95%', 
+                            alignSelf: 'center',
+                        }}
                     >
                         <HStack className="items-center" space='lg'>
-                            <Icon className='text-background-0' as={CheckCircle2} size='xl'/>
+                            <AnimatedIcon entering={FadeInLeft.delay(300).duration(400).springify()} className='text-background-0' as={CheckCircle2} size='xl'/>
                             
-                            <VStack>
+                            <AnimatedVstack entering={FadeInUp.delay(200).duration(400).springify()} style={{flexShrink: 1}}>
                                 <ToastTitle className="font-semibold text-lg">
                                     {title}
                                 </ToastTitle>
                                 {message && (
-                                <ToastDescription>
+                                <ToastDescription className='text-sm'>
                                     {message}
                                 </ToastDescription>
                                 )}
-                            </VStack>
+                            </AnimatedVstack>
                         </HStack>
                     </Toast>
                 );
@@ -64,20 +75,24 @@ export const useAwesomeToast = () => {
                         action="error" 
                         variant="solid"
                         className="rounded-lg"
+                        style={{
+                            maxWidth: '95%', 
+                            alignSelf: 'center',
+                        }}
                     >
                         <HStack className="items-center" space='lg'>
-                            <Icon className='text-background-0' as={XCircle} size='xl'/>
+                            <AnimatedIcon entering={FadeInLeft.delay(300).duration(400).springify()} className='text-background-0' as={XCircle} size='xl'/>
                             
-                            <VStack>
+                            <AnimatedVstack entering={FadeInUp.delay(200).duration(400).springify()} style={{flexShrink: 1}}>
                                 <ToastTitle className="font-semibold text-lg">
                                     {title}
                                 </ToastTitle>
                                 {message && (
-                                <ToastDescription>
+                                <ToastDescription className='text-sm'>
                                     {message}
                                 </ToastDescription>
                                 )}
-                            </VStack>
+                            </AnimatedVstack>
                             
                         </HStack>
                     </Toast>
@@ -100,20 +115,24 @@ export const useAwesomeToast = () => {
                         action="warning" 
                         variant="solid"
                         className="rounded-lg"
+                        style={{
+                            maxWidth: '95%', 
+                            alignSelf: 'center',
+                        }}
                     >
                         <HStack className="items-center" space='lg'>
-                            <Icon className='text-background-0' as={AlertTriangle} size='xl'/>
+                            <AnimatedIcon entering={FadeInLeft.delay(300).duration(400).springify()} className='text-background-0' as={AlertTriangle} size='xl'/>
                             
-                            <VStack>
+                            <AnimatedVstack entering={FadeInUp.delay(200).duration(400).springify()} style={{flexShrink: 1}}>
                                 <ToastTitle className="font-semibold text-lg">
                                     {title}
                                 </ToastTitle>
                                 {message && (
-                                <ToastDescription>
+                                <ToastDescription className='text-sm'>
                                     {message}
                                 </ToastDescription>
                                 )}
-                            </VStack>
+                            </AnimatedVstack>
                             
                         </HStack>
                     </Toast>
@@ -124,7 +143,7 @@ export const useAwesomeToast = () => {
 
     function showInfoToast(title: string, message?: string) {
         const toastId = Math.random().toString();
-        
+
         toast.show({
             id: toastId,
             placement: placement,
@@ -136,27 +155,32 @@ export const useAwesomeToast = () => {
                         action="info" 
                         variant="solid"
                         className="rounded-lg"
+                        style={{
+                            maxWidth: '95%', 
+                            alignSelf: 'center',
+                        }}
                     >
                         <HStack className="items-center" space='lg'>
-                            <Icon className='text-background-0' as={Info} size='xl'/>
+                            <AnimatedIcon entering={FadeInLeft.delay(300).duration(400).springify()} className='text-background-0' as={Info} size='xl'/>
                             
-                            <VStack>
-                                <ToastTitle className="font-semibold text-lg">
+                            <AnimatedVstack entering={FadeInUp.delay(200).duration(400).springify()} style={{flexShrink: 1}}>
+                                <ToastTitle className="font-semibold text-lg" >
                                     {title}
                                 </ToastTitle>
                                 {message && (
-                                <ToastDescription>
+                                <ToastDescription className='text-sm'>
                                     {message}
                                 </ToastDescription>
                                 )}
-                            </VStack>
+                            </AnimatedVstack>
                             
                         </HStack>
                     </Toast>
                 );
             },
         });
-    };
+    }
+
 
     return { 
         showSuccessToast, 
