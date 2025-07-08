@@ -15,10 +15,10 @@ export default function Main() {
         return <Redirect href="./sign-in/onboarding/verified"/>
     }
 
-    // return <Redirect href="/home"/>
+    return <Redirect href="/home"/>
 
     // Just temporary for testing
-    return <Redirect href="/sign-in/onboarding/profile-base-completed"/>
+    // return <Redirect href="/sign-in/onboarding/profile-base-completed"/>
 
 
 }

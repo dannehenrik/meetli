@@ -55,6 +55,8 @@ export interface ExtendedUser {
     favorites: Favorite[],
 }
 
+export type User = CoreUser & ExtendedUser
+
 export interface Favorite {
     id: string,
     question: string,
