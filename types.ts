@@ -158,3 +158,65 @@ export const occupationIndustries: OccupationIndustry[] = [
   "preferNotToSay"
 ];
 
+export const prompts = [
+    "friend_description",
+    "two_truths_one_lie",
+    "perfect_date",
+    "life_passion",
+    "partner_trait",
+    "weird_talent",
+    "hot_take",
+    "perfect_day",
+    "guilty_pleasure",
+    "love_about_you",
+    "random_object",
+    "toxic_trait",
+    "way_to_heart",
+    "swipe_right_reason",
+    "biggest_ick",
+    "perfect_weekend",
+    "debate_opinion"
+];
+
+export const favorites = [
+  "favorite_movie",
+  "favorite_tv_show",
+  "favorite_movie_genre",
+  "favorite_actor",
+  "favorite_actress",
+  "favorite_director",
+  "favorite_music_genre",
+  "favorite_song",
+  "favorite_album",
+  "favorite_music_artist",
+  "favorite_video_game",
+  "favorite_book",
+  "favorite_author",
+  "favorite_food",
+  "favorite_cuisine",
+  "favorite_drink",
+  "favorite_dessert",
+  "favorite_snack",
+  "favorite_animal",
+  "favorite_color",
+  "favorite_season",
+  "favorite_holiday",
+  "favorite_place",
+  "favorite_city",
+  "favorite_trip",
+  "favorite_hobby",
+  "favorite_sport",
+  "favorite_athlete",
+  "favorite_outdoor_activity",
+  "favorite_thing_to_collect",
+  "favorite_smell",
+  "favorite_sound",
+  "favorite_feeling",
+  "favorite_quote",
+  "favorite_comedian",
+  "favorite_influencer",
+  "favorite_youtuber",
+  "favorite_podcaster"
+]
+
+

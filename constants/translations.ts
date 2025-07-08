@@ -380,8 +380,176 @@ const englishLanguage = {
                         question: "🤔 One opinion that always starts debates with my friends...",
                         placeholder: `"Croissants are just overrated bread. Sorry, not sorry." 🥐🔥`
                     }
-                }
+                },
+            },
+            profileFavorites: {
+                title: "💖 Your favorites, in three picks",
+                instructions: "Choose up to 3 favorites to share! These little things say a lot about you.",
 
+
+                options: {
+                    // 🎬 Entertainment
+                    favorite_movie: {
+                        question: "🎬 My favorite movie is...",
+                        placeholder: `"The Grand Budapest Hotel" – quirky, colorful, and chaotic. Just like me. 😉`
+                    },
+                    favorite_tv_show: {
+                        question: "📺 My favorite TV show is...",
+                        placeholder: `"The Bear" – intense, heartfelt, and somehow calming amid the chaos."`
+                    },
+                    favorite_movie_genre: {
+                        question: "🍿 My favorite movie genre is...",
+                        placeholder: `"Psychological thrillers – keep me on edge in the best way."`
+                    },
+                    favorite_actor: {
+                        question: "🎭 My favorite actor is...",
+                        placeholder: `"Pedro Pascal – charming, funny, and always steals the scene."`
+                    },
+                    favorite_actress: {
+                        question: "🌟 My favorite actress is...",
+                        placeholder: `"Zendaya – style, talent, and presence. Total icon."`
+                    },
+                    favorite_director: {
+                        question: "🎬 My favorite director is...",
+                        placeholder: `"Greta Gerwig – stories that stick with you." 🎞️`
+                    },
+                    favorite_music_genre: {
+                        question: "🎧 My favorite music genre is...",
+                        placeholder: `"Indie pop with a hint of nostalgia and dancing in the kitchen vibes."`
+                    },
+                    favorite_song: {
+                        question: "🎶 My favorite song is...",
+                        placeholder: `"Electric Feel" by MGMT – instant serotonin boost. ⚡"`
+                    },
+                    favorite_album: {
+                        question: "💿 My favorite album is...",
+                        placeholder: `"Channel Orange" – Frank Ocean is my emotional support artist."`
+                    },
+                    favorite_music_artist: {
+                        question: "🎤 My favorite music artist is...",
+                        placeholder: `"Lana Del Rey. Melancholy but make it glamorous." 💔✨`
+                    },
+                    favorite_video_game: {
+                        question: "🎮 My favorite video game is...",
+                        placeholder: `"Zelda: Breath of the Wild – because who doesn't want to ride horses and fight goblins?"`
+                    },
+                    favorite_book: {
+                        question: "📚 My favorite book is...",
+                        placeholder: `"The Night Circus" – magical, slow-burning, and dreamy." ✨`
+                    },
+                    favorite_author: {
+                        question: "✍️ My favorite author is...",
+                        placeholder: `"Murakami – surreal, weird, and oddly comforting."`
+                    },
+
+                    // 🍔 Lifestyle & Taste
+                    favorite_food: {
+                        question: "🍣 My favorite food is...",
+                        placeholder: `"Sushi. Forever and always. Extra wasabi, please."`
+                    },
+                    favorite_cuisine: {
+                        question: "🌮 My favorite cuisine is...",
+                        placeholder: `"Mexican – spicy, flavorful, and full of soul." 🌶️`
+                    },
+                    favorite_drink: {
+                        question: "🍹 My favorite drink is...",
+                        placeholder: `"Spicy margarita. Sweet, salty, and a little chaotic." 🔥`
+                    },
+                    favorite_dessert: {
+                        question: "🍰 My favorite dessert is...",
+                        placeholder: `"Tiramisu – classy, creamy, and just a bit naughty." 😋`
+                    },
+                    favorite_snack: {
+                        question: "🍿 My favorite snack is...",
+                        placeholder: `"Popcorn with too much butter. Judge me."`
+                    },
+
+                    // 🌍 Personality & Vibes
+                    favorite_animal: {
+                        question: "🦦 My favorite animal is...",
+                        placeholder: `"Otters. They hold hands while sleeping. My emotional blueprint."`
+                    },
+                    favorite_color: {
+                        question: "🎨 My favorite color is...",
+                        placeholder: `"Forest green – earthy, calm, mysterious." 🌲`
+                    },
+                    favorite_season: {
+                        question: "🍂 My favorite season is...",
+                        placeholder: `"Autumn – cozy vibes, crisp air, and golden leaves."`
+                    },
+                    favorite_holiday: {
+                        question: "🎄 My favorite holiday is...",
+                        placeholder: `"Halloween – spooky, fun, and full of candy and creativity!" 🎃`
+                    },
+                    favorite_place: {
+                        question: "🌍 My favorite place on Earth is...",
+                        placeholder: `"Tokyo at night – neon lights, midnight ramen, and quiet chaos."`
+                    },
+                    favorite_city: {
+                        question: "🏙️ My favorite city is...",
+                        placeholder: `"Barcelona – beach by day, tapas by night."`
+                    },
+                    favorite_trip: {
+                        question: "🧳 My favorite trip I’ve taken is...",
+                        placeholder: `"Backpacking through Vietnam. Life-changing views, food, and moments."`
+                    },
+
+                    // ✨ Personal & Fun
+                    favorite_hobby: {
+                        question: "🎨 My favorite hobby is...",
+                        placeholder: `"Watercolor painting on Sundays with jazz in the background." 🎷"`
+                    },
+                    favorite_sport: {
+                        question: "⚽ My favorite sport is...",
+                        placeholder: `"Tennis. I'm not good, but I look great trying." 🎾`
+                    },
+                    favorite_athlete: {
+                        question: "🏅 My favorite athlete is...",
+                        placeholder: `"Serena Williams. Power, grace, and total dominance." 💪`
+                    },
+                    favorite_outdoor_activity: {
+                        question: "⛺ My favorite outdoor activity is...",
+                        placeholder: `"Camping under the stars – smores included." 🌌`
+                    },
+                    favorite_thing_to_collect: {
+                        question: "📦 My favorite thing to collect is...",
+                        placeholder: `"Vintage postcards. I like imagining the stories behind them." ✉️`
+                    },
+                    favorite_smell: {
+                        question: "👃 My favorite smell is...",
+                        placeholder: `"Books, coffee, and the air after it rains." ☕📖🌧️`
+                    },
+                    favorite_sound: {
+                        question: "🔊 My favorite sound is...",
+                        placeholder: `"Waves crashing + someone laughing hard enough to snort." 🌊😂`
+                    },
+                    favorite_feeling: {
+                        question: "💭 My favorite feeling is...",
+                        placeholder: `"That spark when you really *click* with someone." ✨`
+                    },
+                    favorite_quote: {
+                        question: "📝 My favorite quote is...",
+                        placeholder: `"“Be messy and complicated and afraid, and show up anyway.” – Glennon Doyle"`
+                    },
+
+                    // Persons
+                    favorite_comedian: {
+                        question: "🤣 My favorite comedian is...",
+                        placeholder: `"Bo Burnham – clever, awkward, and painfully real."`
+                    },
+                    favorite_influencer: {
+                        question: "📱 My favorite influencer is...",
+                        placeholder: `"Emma Chamberlain. Relatable chaos and aesthetic coffee shots." ☕`
+                    },
+                    favorite_youtuber: {
+                        question: "📹 My favorite YouTuber is...",
+                        placeholder: `"Mark Rober – smart, funny, and builds glitter bombs for justice."`
+                    },
+                    favorite_podcaster: {
+                        question: "🎙️ My favorite podcaster is...",
+                        placeholder: `"Jay Shetty – soft voice, deep thoughts, good vibes."`
+                    },
+                }
 
             }
 

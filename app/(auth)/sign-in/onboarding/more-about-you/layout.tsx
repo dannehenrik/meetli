@@ -28,6 +28,8 @@ export default function layout() {
             <Stack.Screen name="education" />
             <Stack.Screen name="occupation" />
             <Stack.Screen name="profile-prompts" />
+            <Stack.Screen name="favorites" />
+            <Stack.Screen name="done" />
         </Stack>
 
     </>

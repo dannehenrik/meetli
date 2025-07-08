@@ -1,7 +1,7 @@
 
 
 export const ONBOARDING_BASE_PAGES = 7;
-export const ONBOARDING_PAGES = 13;
+export const ONBOARDING_PAGES = 14;
 
 export const MAX_PROFILE_IMAGES_AMOUNT = 6
 export const MAX_INTERESTS_AMOUNT = 6;

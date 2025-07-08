@@ -10,7 +10,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Box } from "@/components/ui/box";
-import { Fab, FabIcon } from "@/components/ui/fab";
 import { Heading } from "@/components/ui/heading";
 import {
     CheckIcon,
@@ -39,7 +38,7 @@ import { useFab } from "@/components/shared/floating-fab/FabContext";
 import { i18n } from "@/app/_layout";
 import { triggerHaptic } from "@/utils/haptics";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
-import { Prompt, prompts } from "@/types";
+import { Favorite, favorites } from "@/types";
 import { supabase } from "@/utils/supabase";
 import { useMutation, UseMutationResult, useQueryClient } from "@tanstack/react-query";
 import { useAwesomeToast } from "@/hooks/toasts";
@@ -56,17 +55,17 @@ const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView)
 
 
 
-export default function profilePrompts() {
+export default function profileFavorites() {
     const { showErrorToast, showInfoToast } = useAwesomeToast();
     const queryClient = useQueryClient();
 
     const {data: user} = useExtendedUser();
 
-    const [userPrompts, setUserPrompts] = useState<Prompt[]>([]);
+    const [userFavorites, setUserFavorites] = useState<Favorite[]>([]);
 
     useEffect(() => {
-        if (user && user.prompts) {
-            setUserPrompts(user.prompts)
+        if (user && user.favorites) {
+            setUserFavorites(user.favorites)
         }
     }, [user])
 
@@ -78,7 +77,7 @@ export default function profilePrompts() {
     }, [missClicks])
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", userPrompts),
+        mutationFn: async () => updateUser(user?.id ?? "", userFavorites),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
@@ -93,11 +92,11 @@ export default function profilePrompts() {
     const pathName = usePathname();
     const { setFabState } = useFab();
     useEffect(() => {
-        if (pathName === "/sign-in/onboarding/more-about-you/profile-prompts") {
+        if (pathName === "/sign-in/onboarding/more-about-you/favorites") {
             setFabState({
                 isDisabled: false,
                 onPress: () => {
-                    router.push("/sign-in/onboarding/more-about-you/favorites");
+                    router.push("/sign-in/onboarding/more-about-you/done");
                     mutation.mutate();        
                 }
             })
@@ -106,7 +105,7 @@ export default function profilePrompts() {
 
     // Utils
     function handleAnswerChange(id: string, newQuestion: string) {
-        setUserPrompts((prev) => {
+        setUserFavorites((prev) => {
             const existing = prev.find((p) => p.id === id);
 
             if (existing) {
@@ -121,7 +120,7 @@ export default function profilePrompts() {
 
 
     function toggleActive(id: string, value?: boolean) {
-        setUserPrompts((prev) => {
+        setUserFavorites((prev) => {
             const updated = [...prev];
             const index = updated.findIndex((p) => p.id === id);
 
@@ -147,7 +146,7 @@ export default function profilePrompts() {
                 const currentlyActive = updated.filter((p) => p.active).length;
 
                 if (currentlyActive >= 3) {
-                    // Do not allow adding a new active prompt
+                    // Do not allow adding a new active favorite
                     triggerHaptic("error")
                     setMissClicks((prev) => prev + 1)
                     return prev;
@@ -161,14 +160,14 @@ export default function profilePrompts() {
         });
     }
 
-    function getPromptValue(id: string): string {
-        const prompt = userPrompts.find((p) => p.id === id);
-        return prompt?.question ?? "";
+    function getFavoriteValue(id: string): string {
+        const favorite = userFavorites.find((p) => p.id === id);
+        return favorite?.question ?? "";
     }
 
-    function isPromptActive(id: string): boolean {
-        const prompt = userPrompts.find((p) => p.id === id);
-        return !!prompt?.active;
+    function isFavoriteActive(id: string): boolean {
+        const favorite = userFavorites.find((p) => p.id === id);
+        return !!favorite?.active;
     }
   
 
@@ -179,28 +178,28 @@ export default function profilePrompts() {
 
                     <AnimatedVstack entering={FadeInDown.delay(100).duration(400).springify()}  className="gap-3">
                         <Heading className="font-roboto font-semibold text-2xl">
-                            {i18n.t("onboarding.moreAboutYou.profilePrompts.title")}
+                            {i18n.t("onboarding.moreAboutYou.profileFavorites.title")}
                         </Heading>
                         <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
-                            {i18n.t("onboarding.moreAboutYou.profilePrompts.instructions")}
+                            {i18n.t("onboarding.moreAboutYou.profileFavorites.instructions")}
                         </Text>
                     </AnimatedVstack>
-                    {/* <AnimatedBox entering={FadeInUp.delay(400).duration(400).springify()}> */}
+                    
                         <AnimatedScrollView 
                         showsVerticalScrollIndicator={false} 
-                        contentContainerStyle={{paddingBottom: 250}}
+                        contentContainerStyle={{paddingBottom: 250 }}
                         entering={FadeInUp.delay(400).duration(400).springify()}
                         >
                             <Pressable>
                                 
                                 <Accordion className="w-full bg-background-0 gap-4 pb-6">
-                                    {prompts.map((promptId, index) => (
-                                        <AnimatedBox key={promptId} entering={FadeInLeft.delay(600 + (100 * index)).duration(400).springify()}>
-                                            <PromptItem 
-                                            promptId={promptId} 
-                                            isActive={isPromptActive(promptId)} 
+                                    {favorites.map((favoriteId, index) => (
+                                        <AnimatedBox key={favoriteId} entering={FadeInLeft.delay(600 + (50 * index)).duration(400).springify()}>
+                                            <FavoriteItem 
+                                            favoriteId={favoriteId} 
+                                            isActive={isFavoriteActive(favoriteId)} 
                                             toggleActive={toggleActive}
-                                            answer={getPromptValue(promptId)}
+                                            answer={getFavoriteValue(favoriteId)}
                                             handleAnswerChange={handleAnswerChange}
                                             mutation={mutation}
                                             />
@@ -210,7 +209,7 @@ export default function profilePrompts() {
                 
                             </Pressable>
                         </AnimatedScrollView>
-                    {/* </AnimatedBox> */}
+                    
                         
                 </VStack>
             </Box>
@@ -218,8 +217,8 @@ export default function profilePrompts() {
     );
 };
 
-interface PromptItemProps {
-    promptId: string, 
+interface FavoriteItemProps {
+    favoriteId: string, 
     isActive: boolean, 
     toggleActive: (id: string, value?: boolean) => void,
     answer: string,
@@ -227,13 +226,13 @@ interface PromptItemProps {
     mutation: UseMutationResult<void, Error, void, unknown>
 }
 
-function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChange, mutation} : PromptItemProps) {
+function FavoriteItem({favoriteId, isActive, toggleActive, answer, handleAnswerChange, mutation} : FavoriteItemProps) {
     const [isEditing, setIsEditing] = useState(false);
     
     return(
     <>
         <AccordionItem
-        value={`item-${promptId}`}
+        value={`item-${favoriteId}`}
         className="rounded-lg bg-background-50"
         isDisabled={!isActive || mutation.isPending}
         >
@@ -262,12 +261,12 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
                             isExpanded ? "text-typography-400" : ""
                             }`}
                         >
-                            {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.question`)}
+                            {i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favoriteId}.question`)}
                         </AccordionTitleText>
 
                         <Checkbox 
                         value=""
-                        onChange={(value) => {toggleActive(promptId, value)}}
+                        onChange={(value) => {toggleActive(favoriteId, value)}}
                         isChecked={isActive}
                         >
                             <CheckboxIndicator>
@@ -282,17 +281,17 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
             </AccordionHeader>
             <AccordionContent>
                 <AccordionContentText onPress={() => setIsEditing(true)} className="font-semibold font-roboto text-2xl text-typography-800 leading-7">
-                    {answer.length === 0 ? i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`) : answer}
+                    {answer.length === 0 ? i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favoriteId}.placeholder`) : answer}
                 </AccordionContentText>
             </AccordionContent>
         </AccordionItem>
 
-        <PromptEditSheet
+        <FavoritesEditSheet
         isOpen={isEditing}
         setIsOpen={() => setIsEditing(false)}
-        promptId={promptId}
+        favoriteId={favoriteId}
         answer={answer}
-        onSave={(value) => handleAnswerChange(promptId, value)}
+        onSave={(value) => handleAnswerChange(favoriteId, value)}
         mutation={mutation}
         />
     </>
@@ -301,17 +300,17 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
 
 
 
-export function PromptEditSheet({
+export function FavoritesEditSheet({
     isOpen,
     setIsOpen,
-    promptId,
+    favoriteId,
     answer,
     onSave,
     mutation,
 }: {
     isOpen: boolean;
     setIsOpen: (newValue: boolean) => void;
-    promptId: string;
+    favoriteId: string;
     answer: string,
     onSave: (newValue: string) => void;
     mutation: UseMutationResult<void, Error, void, unknown>
@@ -358,11 +357,11 @@ export function PromptEditSheet({
                 {/* Question Header */}
 
                     <Heading className="font-semibold text-xl leading-6 text-typography-800">
-                        {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.question`)}
+                        {i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favoriteId}.question`)}
                     </Heading>
                 
                     <BottomSheetTextInput
-                    placeholder={i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`)}
+                    placeholder={i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favoriteId}.placeholder`)}
                     multiline
                     value={value}
                     onChangeText={setValue}
@@ -398,8 +397,8 @@ export function PromptEditSheet({
 }
 
 
-async function updateUser(userId: string, userPrompts: Prompt[]) {
-    const {error} = await supabase.from('user_additional_info').update({prompts: userPrompts}).eq('id', userId);
+async function updateUser(userId: string, userFavorites: Favorite[]) {
+    const {error} = await supabase.from('user_additional_info').update({favorites: userFavorites}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

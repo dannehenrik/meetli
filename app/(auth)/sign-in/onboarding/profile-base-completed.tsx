@@ -49,7 +49,7 @@ export default function ProfileBaseComplete() {
                 isDisabled: false,
                 onPress: () => {
                     // router.push("/sign-in/onboarding/more-about-you/intro");
-                    router.push("/sign-in/onboarding/more-about-you/profile-prompts");
+                    router.push("/sign-in/onboarding/more-about-you/intro");
                     mutation.mutate();
                 }
             })
