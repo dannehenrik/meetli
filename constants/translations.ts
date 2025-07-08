@@ -308,7 +308,7 @@ const englishLanguage = {
                 }
             },
             profilePrompts: {
-                title: "✨ Your personality, in three answers",
+                title: "✨ More about your personality",
                 instructions: "Select 1-3 prompts that excites you from the list below and write your answers!",
                 
                 prompts: {

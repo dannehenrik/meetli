@@ -49,6 +49,9 @@ import Animated, {
     FadeInLeft,
     FadeInUp
 } from 'react-native-reanimated';
+import { Badge, BadgeText } from "@/components/ui/badge";
+import { HStack } from "@/components/ui/hstack";
+import { MAX_FAVORITES } from "@/constants/constants";
 const AnimatedVstack = Animated.createAnimatedComponent(VStack)
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView)
@@ -118,6 +121,9 @@ export default function profileFavorites() {
         });
     }
 
+    function getActiveAmount() {
+        return userFavorites.filter((f) => f.active).length;
+    }
 
     function toggleActive(id: string, value?: boolean) {
         setUserFavorites((prev) => {
@@ -128,7 +134,7 @@ export default function profileFavorites() {
                 const currentlyActive = updated.filter((p) => p.active).length;
                 const willBeActive = typeof value === "boolean" ? value : !updated[index].active;
 
-                if (willBeActive && !updated[index].active && currentlyActive >= 3) {
+                if (willBeActive && !updated[index].active && currentlyActive >= MAX_FAVORITES) {
                     // Do not allow activating more than 3 prompts
                     triggerHaptic("error")
                     setMissClicks((prev) => prev + 1)
@@ -145,7 +151,7 @@ export default function profileFavorites() {
             } else {
                 const currentlyActive = updated.filter((p) => p.active).length;
 
-                if (currentlyActive >= 3) {
+                if (currentlyActive >= MAX_FAVORITES) {
                     // Do not allow adding a new active favorite
                     triggerHaptic("error")
                     setMissClicks((prev) => prev + 1)
@@ -177,9 +183,16 @@ export default function profileFavorites() {
                 <VStack className="gap-[18px] w-full">
 
                     <AnimatedVstack entering={FadeInDown.delay(100).duration(400).springify()}  className="gap-3">
-                        <Heading className="font-roboto font-semibold text-2xl">
-                            {i18n.t("onboarding.moreAboutYou.profileFavorites.title")}
-                        </Heading>
+                        <HStack className="items-center gap-2">
+                            <Heading className="font-roboto font-semibold text-2xl">
+                                {i18n.t("onboarding.moreAboutYou.profileFavorites.title")}
+                            </Heading>
+                            <Badge size="md" className="rounded-md">
+                                <BadgeText>
+                                    {getActiveAmount()}/{MAX_FAVORITES}
+                                </BadgeText>
+                            </Badge>
+                        </HStack>
                         <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
                             {i18n.t("onboarding.moreAboutYou.profileFavorites.instructions")}
                         </Text>

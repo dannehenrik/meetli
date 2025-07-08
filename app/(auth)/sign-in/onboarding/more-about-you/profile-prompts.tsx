@@ -50,6 +50,9 @@ import Animated, {
     FadeInLeft,
     FadeInUp
 } from 'react-native-reanimated';
+import { Badge, BadgeText } from "@/components/ui/badge";
+import { MAX_PROMPTS } from "@/constants/constants";
+import { HStack } from "@/components/ui/hstack";
 const AnimatedVstack = Animated.createAnimatedComponent(VStack)
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView)
@@ -118,7 +121,9 @@ export default function profilePrompts() {
             return [...prev, { id, question: newQuestion, active: false }];
         });
     }
-
+    function getActiveAmount() {
+        return userPrompts.filter((p) => p.active).length;
+    }
 
     function toggleActive(id: string, value?: boolean) {
         setUserPrompts((prev) => {
@@ -129,7 +134,7 @@ export default function profilePrompts() {
                 const currentlyActive = updated.filter((p) => p.active).length;
                 const willBeActive = typeof value === "boolean" ? value : !updated[index].active;
 
-                if (willBeActive && !updated[index].active && currentlyActive >= 3) {
+                if (willBeActive && !updated[index].active && currentlyActive >= MAX_PROMPTS) {
                     // Do not allow activating more than 3 prompts
                     triggerHaptic("error")
                     setMissClicks((prev) => prev + 1)
@@ -146,7 +151,7 @@ export default function profilePrompts() {
             } else {
                 const currentlyActive = updated.filter((p) => p.active).length;
 
-                if (currentlyActive >= 3) {
+                if (currentlyActive >= MAX_PROMPTS) {
                     // Do not allow adding a new active prompt
                     triggerHaptic("error")
                     setMissClicks((prev) => prev + 1)
@@ -178,9 +183,16 @@ export default function profilePrompts() {
                 <VStack className="gap-[18px] w-full">
 
                     <AnimatedVstack entering={FadeInDown.delay(100).duration(400).springify()}  className="gap-3">
-                        <Heading className="font-roboto font-semibold text-2xl">
-                            {i18n.t("onboarding.moreAboutYou.profilePrompts.title")}
-                        </Heading>
+                        <HStack className="gap-2 items-center">
+                            <Heading className="font-roboto font-semibold text-2xl">
+                                {i18n.t("onboarding.moreAboutYou.profilePrompts.title")}
+                            </Heading>
+                            <Badge size="md" className="rounded-md">
+                                <BadgeText>
+                                    {getActiveAmount()}/{MAX_PROMPTS}
+                                </BadgeText>
+                            </Badge>
+                        </HStack>
                         <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
                             {i18n.t("onboarding.moreAboutYou.profilePrompts.instructions")}
                         </Text>
@@ -195,7 +207,7 @@ export default function profilePrompts() {
                                 
                                 <Accordion className="w-full bg-background-0 gap-4 pb-6">
                                     {prompts.map((promptId, index) => (
-                                        <AnimatedBox key={promptId} entering={FadeInLeft.delay(600 + (100 * index)).duration(400).springify()}>
+                                        <AnimatedBox key={promptId} entering={FadeInLeft.delay(600 + (50 * index)).duration(400).springify()}>
                                             <PromptItem 
                                             promptId={promptId} 
                                             isActive={isPromptActive(promptId)} 
