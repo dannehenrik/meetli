@@ -59,13 +59,13 @@ export type User = CoreUser & ExtendedUser
 
 export interface Favorite {
     id: string,
-    question: string,
+    answer: string,
     active: boolean
 }
 
 export interface Prompt {
     id: string,
-    question: string,
+    answer: string,
     active: boolean
 }
 

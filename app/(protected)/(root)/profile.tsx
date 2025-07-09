@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Router } from "expo-router";
+import { router, Router } from "expo-router";
 import { LogoIcon, BoltIcon, HelpCenterIcon } from "@/components/shared/icons";
 import { Heading } from "@/components/ui/heading";
 import { Box } from "@/components/ui/box";
@@ -46,7 +46,7 @@ function ProfileHeader() {
                 className="bg-background-200 data-[active=true]:bg-background-300"
                 size="sm"
                 onPress={() => {
-                // router.push("/edit-profile");
+                    router.push("/edit-profile");
                 }}
             >
                 <ButtonText className="text-typography-950 font-roboto data-[active=true]:text-typography-900">

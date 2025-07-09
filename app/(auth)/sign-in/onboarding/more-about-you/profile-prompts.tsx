@@ -114,11 +114,11 @@ export default function profilePrompts() {
 
             if (existing) {
                 return prev.map((p) =>
-                    p.id === id ? { ...p, question: newQuestion } : p
+                    p.id === id ? { ...p, answer: newQuestion } : p
                 );
             }
 
-            return [...prev, { id, question: newQuestion, active: false }];
+            return [...prev, { id, answer: newQuestion, active: false }];
         });
     }
     function getActiveAmount() {
@@ -160,7 +160,7 @@ export default function profilePrompts() {
                 triggerHaptic("select")
                 return [
                     ...updated,
-                    { id, question: "", active: true },
+                    { id, answer: "", active: true },
                 ];
             }
         });
@@ -168,7 +168,7 @@ export default function profilePrompts() {
 
     function getPromptValue(id: string): string {
         const prompt = userPrompts.find((p) => p.id === id);
-        return prompt?.question ?? "";
+        return prompt?.answer ?? "";
     }
 
     function isPromptActive(id: string): boolean {

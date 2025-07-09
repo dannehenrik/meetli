@@ -113,11 +113,11 @@ export default function profileFavorites() {
 
             if (existing) {
                 return prev.map((p) =>
-                    p.id === id ? { ...p, question: newQuestion } : p
+                    p.id === id ? { ...p, answer: newQuestion } : p
                 );
             }
 
-            return [...prev, { id, question: newQuestion, active: false }];
+            return [...prev, { id, answer: newQuestion, active: false }];
         });
     }
 
@@ -160,7 +160,7 @@ export default function profileFavorites() {
                 triggerHaptic("select")
                 return [
                     ...updated,
-                    { id, question: "", active: true },
+                    { id, answer: "", active: true },
                 ];
             }
         });
@@ -168,7 +168,7 @@ export default function profileFavorites() {
 
     function getFavoriteValue(id: string): string {
         const favorite = userFavorites.find((p) => p.id === id);
-        return favorite?.question ?? "";
+        return favorite?.answer ?? "";
     }
 
     function isFavoriteActive(id: string): boolean {
