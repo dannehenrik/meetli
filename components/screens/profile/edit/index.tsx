@@ -15,6 +15,7 @@ import { Pictures } from "./_components/Pictures";
 import { Spinner } from "@/components/ui/spinner";
 import { InteractionManager } from "react-native";
 import { Interests } from "./_components/Interests";
+import { Intro } from "./_components/IntroEditor";
 
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -54,22 +55,8 @@ export function EditScreen() {
             <Interests />
 
             {/* Profile Description */}
-            <Box className="gap-3">
-                <HStack className="justify-between items-center">
-                    <Text className="text-typography-950 text-base font-medium mb-1">
-                        Profile Description
-                    </Text>
-                    <Button className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto">
-                        <ButtonIcon
-                        as={PenIcon}
-                        className="text-typography-900 data-[active=true]:text-typography-950"
-                        />
-                    </Button>
-                </HStack>
-                <Box className="flex-wrap flex-row gap-2 p-4 bg-background-50 rounded-lg">
-                    <Text className="text-typography-950 text-sm">{user?.intro}</Text>
-                </Box>
-            </Box>
+            <Intro/>
+ 
 
             {/* Prompts */}
             <Box className="gap-3">

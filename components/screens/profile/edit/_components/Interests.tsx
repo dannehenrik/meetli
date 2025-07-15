@@ -40,12 +40,7 @@ import { ChevronDown, ChevronUp, X } from "lucide-react-native";
 import { BottomSheetView, TouchableWithoutFeedback } from "@gorhom/bottom-sheet";
 import { Keyboard, Platform } from "react-native";
 import { useFullUser } from "@/hooks/user/useFullUser";
-
-
-
 const AnimatedBox = Animated.createAnimatedComponent(Box)
-
-// const AnimatedInput = Animated.createAnimatedComponent(Input)
 const AnimatedHstack = Animated.createAnimatedComponent(HStack)
 const AnimatedVstack = Animated.createAnimatedComponent(VStack)
 
@@ -63,7 +58,7 @@ export function Interests() {
         <Box className="gap-3">
             <HStack className="justify-between items-center">
                 <Text className="text-typography-950 text-base font-medium mb-1">
-                    Interests ({user?.interests.length}/10)
+                    Interests ({user?.interests.length}/{MAX_INTERESTS_AMOUNT})
                 </Text>
                 
                 <Button 
@@ -76,11 +71,13 @@ export function Interests() {
                     />
                 </Button>
             </HStack>
-            <Box className="flex-wrap flex-row gap-2 p-4 border border-background-100 rounded-lg">
-                {user?.interests.map((interest) => (
-                    <InterestBadge key={interest.interest} interest={interest.interest} isSelected={true} onToggle={() => {}}/>
-                ))}
-            </Box>
+            <Pressable onPress={() => setIsEditing(true)}>
+                <Box className="flex-wrap flex-row gap-2 p-4 border border-background-100 rounded-lg">
+                    {user?.interests.map((interest) => (
+                        <InterestBadge key={interest.interest} interest={interest.interest} isSelected={true} onToggle={() => setIsEditing(true)}/>
+                    ))}
+                </Box>
+            </Pressable>
         </Box>
         
         <EditInterestsSheet isOpen={isEditing} setIsOpen={setIsEditing} />
@@ -91,7 +88,7 @@ export function Interests() {
 
 
 function EditInterestsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boolean) => void}) {
-    const {showErrorToast, showWarningToast, showInfoToast} = useAwesomeToast();
+    const {showErrorToast, showSuccessToast} = useAwesomeToast();
     const queryClient = useQueryClient();
 
     const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -119,6 +116,7 @@ function EditInterestsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (v
                     interests: selectedInterests.map((interest) => ({ interest: interest })),
                 };
             });
+            showSuccessToast(i18n.t("messages.success.dataUpdated"))
             queryClient.invalidateQueries({queryKey: ['user', 'full']})
         }
     })
@@ -135,8 +133,7 @@ function EditInterestsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (v
         keyboardBehavior="extend"
         index={0}
         onClose={() => {
-            if (mutation.isPending) return
-
+            if (mutation.isPending || !isOpen) return
             setIsOpen(false); // close the sheet first
             
             const isDirty = JSON.stringify(user.interests.map(i => i.interest)) !== JSON.stringify(selectedInterests);
@@ -220,7 +217,7 @@ export default function InterestsEdit( {selectedInterests, setSelectedInterests}
     
         <VStack space="sm">
 
-                <AnimatedBox entering={FadeInDown.delay(100).duration(400).springify()} className="gap-3">
+                <Box className="gap-3">
                     <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
                         <VStack className="gap-3">
                             <Box className="flex-row items-center gap-2" >
@@ -238,7 +235,7 @@ export default function InterestsEdit( {selectedInterests, setSelectedInterests}
                             </Text>
                         </VStack>
                     </TouchableWithoutFeedback>
-                </AnimatedBox>
+                </Box>
             {/* </TouchableWithoutFeedback> */}
             
             
@@ -246,20 +243,19 @@ export default function InterestsEdit( {selectedInterests, setSelectedInterests}
             <SelectedInterests selectedInterests={selectedInterests} onToggle={toggleInterest} />
 
             {/* Input */}
-            <AnimatedHstack 
-            entering={FadeInUp.delay(600).duration(400).springify()}
-            className="w-full px-4 py-2 bg-background-50 h-10 rounded-md border border-background-200 items-center" space="xs"
+            <HStack 
+            className="w-full px-4 py-2 bg-background-50 rounded-md border border-background-200 items-center"
+            space="xs"
             >
                 <Icon as={SearchIcon} className="text-typography-400 w-4 h-4" />
-                
                 <BottomSheetTextInput
                     placeholder={i18n.t("onboarding.moreAboutYou.interests.placeholder")}
                     value={searchQuery}
                     onChangeText={setSearchQuery}
-                    className="flex-1 text-md text-typography-900 placeholder-text-typography-400 bg-transparent"
+                    className="flex-1 text-md py-1 text-typography-900 placeholder-text-typography-400 bg-transparent"
                     
                 />
-            </AnimatedHstack>
+            </HStack>
 
             
         </VStack>
@@ -327,14 +323,11 @@ function SelectedInterests({selectedInterests, onToggle} : {selectedInterests: s
     if (selectedInterests.length === 0) return null
 
     return (
-        <AnimatedBox 
-        className="flex-wrap flex-row gap-2 p-4 border border-background-100 rounded-lg mb-8"
-        entering={FadeInDown.delay(400).duration(400).springify()}
-        >
+        <Box className="flex-wrap flex-row gap-2 p-4 border border-background-100 rounded-lg mb-8">
             {selectedInterests.map((interest) => (
                 <InterestBadge key={interest} withRemoveButton={true} interest={interest} isSelected={true} onToggle={onToggle}/>
             ))}
-        </AnimatedBox>
+        </Box>
     )
 }
 // 🧱 Reusable badge component
@@ -383,11 +376,7 @@ const InterestGroup = ({
     const visibleItems = expanded ? interests : interests.slice(0, 6);
 
     return (
-        <AnimatedVstack 
-        key={group} 
-        className="gap-4"
-        entering={FadeInLeft.delay(600).duration(400).springify()}
-        >
+        <VStack key={group} className="gap-4">
             <Text className="font-roboto font-medium text-lg text-typography-800">
                 {i18n.t(`interests.groups.${group}`)}
             </Text>
@@ -419,7 +408,7 @@ const InterestGroup = ({
                     </HStack>
                 </Pressable>
             )}
-        </AnimatedVstack>
+        </VStack>
     );
 };
 

@@ -556,6 +556,12 @@ const englishLanguage = {
 
         }
     },
+    editProfile: {
+        emptyMessages: {
+            emptyInterests: "You haven't chosen any interests yet", 
+            emptyIntro: "You haven't written your cool intro yet..."
+        }
+    },
     interests: {
         groups: {
             sports_fitness: "🏃 Sports & Fitness",
