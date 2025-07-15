@@ -31,7 +31,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Button, ButtonIcon } from "@/components/ui/button";
 import { PenIcon } from "@/components/shared/icons";
-import { Save } from "lucide-react-native";
+import { Save, SquarePen } from "lucide-react-native";
 import { Spinner } from "@/components/ui/spinner";
 const AnimatedHeading = Animated.createAnimatedComponent(Heading)
 const AnimatedBox = Animated.createAnimatedComponent(Box)
@@ -120,7 +120,7 @@ export function Intro() {
                 ) : (
                      <Button onPress={() => setIsEditing(true)} className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto">
                         <ButtonIcon
-                        as={PenIcon}
+                        as={SquarePen}
                         className="text-typography-900 data-[active=true]:text-typography-950"
                         />
                     </Button>

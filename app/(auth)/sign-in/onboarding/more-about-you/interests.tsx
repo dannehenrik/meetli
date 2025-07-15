@@ -232,7 +232,7 @@ const InterestBadge = ({
 }) => (
     <Pressable
     onPress={() => onToggle(interest)}
-    className={`bg-background-50 py-1 px-3 rounded-3xl border border-background-100 active:bg-background-100 ${
+    className={`bg-background-50 py-1 px-3 rounded-3xl ${isSelected ? "active:bg-primary-800/80" :"active:bg-background-100"} ${
     isSelected ? "border-primary-800/10 bg-primary-700/80" : ""
     }`}
     >

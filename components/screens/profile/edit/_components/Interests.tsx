@@ -7,7 +7,8 @@ import {
     BottomSheetScrollView,
     BottomSheetTextInput
 } from "@/components/shared/bottom-sheet";
-import { PenIcon } from "@/components/shared/icons";
+// import { PenIcon } from "@/components/shared/icons";
+import { PenIcon, SquarePen} from "lucide-react-native";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
@@ -62,17 +63,17 @@ export function Interests() {
                 </Text>
                 
                 <Button 
-                className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto"
+                className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto text-black"
                 onPress={() => setIsEditing(true)}
                 >
                     <ButtonIcon
-                    as={PenIcon}
+                    as={SquarePen}
                     className="text-typography-900 data-[active=true]:text-typography-950"
                     />
                 </Button>
             </HStack>
             <Pressable onPress={() => setIsEditing(true)}>
-                <Box className="flex-wrap flex-row gap-2 p-4 border border-background-100 rounded-lg">
+                <Box className="flex-wrap flex-row gap-2 p-4  rounded-lg bg-background-50">
                     {user?.interests.map((interest) => (
                         <InterestBadge key={interest.interest} interest={interest.interest} isSelected={true} onToggle={() => setIsEditing(true)}/>
                     ))}
@@ -217,26 +218,25 @@ export default function InterestsEdit( {selectedInterests, setSelectedInterests}
     
         <VStack space="sm">
 
-                <Box className="gap-3">
-                    <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
-                        <VStack className="gap-3">
-                            <Box className="flex-row items-center gap-2" >
-                                <Heading className="font-roboto font-semibold text-2xl">
-                                    {i18n.t("onboarding.moreAboutYou.interests.title")}
-                                </Heading>
-                                <Badge size="md" className="rounded-md">
-                                    <BadgeText>
-                                        {selectedInterests.length}/{MAX_INTERESTS_AMOUNT}
-                                    </BadgeText>
-                                </Badge>
-                            </Box>
-                            <Text className="font-normal font-roboto text-typography-400" >
-                                {i18n.t("onboarding.moreAboutYou.interests.instructions")}
-                            </Text>
-                        </VStack>
-                    </TouchableWithoutFeedback>
-                </Box>
-            {/* </TouchableWithoutFeedback> */}
+            <Box className="gap-3">
+                <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>
+                    <VStack className="gap-3">
+                        <Box className="flex-row items-center gap-2" >
+                            <Heading className="font-roboto font-semibold text-2xl">
+                                {i18n.t("onboarding.moreAboutYou.interests.title")}
+                            </Heading>
+                            <Badge size="md" className="rounded-md">
+                                <BadgeText>
+                                    {selectedInterests.length}/{MAX_INTERESTS_AMOUNT}
+                                </BadgeText>
+                            </Badge>
+                        </Box>
+                        <Text className="font-normal font-roboto text-typography-400" >
+                            {i18n.t("onboarding.moreAboutYou.interests.instructions")}
+                        </Text>
+                    </VStack>
+                </TouchableWithoutFeedback>
+            </Box>
             
             
 
@@ -244,7 +244,7 @@ export default function InterestsEdit( {selectedInterests, setSelectedInterests}
 
             {/* Input */}
             <HStack 
-            className="w-full px-4 py-2 bg-background-50 rounded-md border border-background-200 items-center"
+            className="w-full px-4 py-2 bg-background-50 rounded-md items-center"
             space="xs"
             >
                 <Icon as={SearchIcon} className="text-typography-400 w-4 h-4" />
@@ -323,7 +323,7 @@ function SelectedInterests({selectedInterests, onToggle} : {selectedInterests: s
     if (selectedInterests.length === 0) return null
 
     return (
-        <Box className="flex-wrap flex-row gap-2 p-4 border border-background-100 rounded-lg mb-8">
+        <Box className="flex-wrap flex-row gap-2 p-4 bg-background-50 rounded-lg mb-8">
             {selectedInterests.map((interest) => (
                 <InterestBadge key={interest} withRemoveButton={true} interest={interest} isSelected={true} onToggle={onToggle}/>
             ))}
@@ -344,7 +344,7 @@ const InterestBadge = ({
 }) => (
     <Pressable
     onPress={() => onToggle(interest)}
-    className={`bg-background-50 py-1 px-3 rounded-3xl border border-background-100 active:bg-background-100 ${
+    className={`bg-background-50 py-1 px-3 rounded-3xl ${isSelected ? "active:bg-primary-800/80" :"active:bg-background-100"} ${
     isSelected ? "border-primary-800/10 bg-primary-700/80" : ""
     }`}
     >
