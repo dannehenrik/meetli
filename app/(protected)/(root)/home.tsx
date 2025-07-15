@@ -41,11 +41,11 @@ function FilterLayout() {
       >
         <Icon as={FilterIcon} className="w-4 h-4" />
       </Pressable>
-      <FilterBottomSheet
+      {/* <FilterBottomSheet
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         {...defaultOpenProp}
-      />
+      /> */}
       <ScrollView
         horizontal
         bounces={false}
