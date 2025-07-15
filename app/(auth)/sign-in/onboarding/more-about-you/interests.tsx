@@ -25,7 +25,7 @@ import { i18n } from "@/app/_layout";
 import { triggerHaptic } from "@/utils/haptics";
 import { supabase } from "@/utils/supabase";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAwesomeToast } from "@/hooks/toasts";
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedVstack = Animated.createAnimatedComponent(VStack)
@@ -34,7 +34,7 @@ const AnimatedInput = Animated.createAnimatedComponent(Input)
 
 export default function Interests() {
     const {showErrorToast, showWarningToast, showInfoToast} = useAwesomeToast();
-    
+    const queryClient = useQueryClient();
 
     const {data: user} = useExtendedUser();
 
@@ -54,6 +54,9 @@ export default function Interests() {
             showErrorToast(i18n.t("messages.error.somethingWentWrong"));
             router.back();
         },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['user', 'extended']})
+        }
     })
 
 
@@ -128,10 +131,10 @@ export default function Interests() {
                 <AnimatedInput 
                 className="border-typography-200 rounded-lg" 
                 size="md"
-                entering={FadeInDown.delay(400).duration(400).springify()} 
+                entering={FadeInDown.delay(400).duration(400).springify()}
                 >
                     <InputField
-                    placeholder="Search your interests"
+                    placeholder={i18n.t("onboarding.moreAboutYou.interests.placeholder")}
                     className="font-normal font-roboto py-2"
                     value={searchQuery}
                     onChangeText={setSearchQuery}

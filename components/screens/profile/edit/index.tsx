@@ -11,9 +11,10 @@ import { VStack } from "@/components/ui/vstack";
 import Animated, { SlideInLeft, SlideOutLeft } from "react-native-reanimated";
 import { useFullUser } from "@/hooks/user/useFullUser";
 import { i18n } from "@/app/_layout";
-import { Pictures } from "./Pictures";
+import { Pictures } from "./_components/Pictures";
 import { Spinner } from "@/components/ui/spinner";
 import { InteractionManager } from "react-native";
+import { Interests } from "./_components/Interests";
 
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -21,7 +22,6 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export function EditScreen() {
     
-//   const user = users[2];
     const {data: user} = useFullUser();
 
     const [picturesReady, setPicturesReady] = useState(false);
@@ -34,7 +34,7 @@ export function EditScreen() {
         return () => clearTimeout(timeout);
     }, []);
 
-    
+    if (!user) return <Spinner/>
 
     return (
         <AnimatedBox
@@ -43,34 +43,15 @@ export function EditScreen() {
         exiting={SlideOutLeft}
         >
             {/* My photos & videos */}
-            <Box className="gap-3">
+            {/* <Box className="gap-3">
                 <Text className="text-typography-950 text-base font-medium mb-1">
                 My Photos & Videos
                 </Text>
                 {picturesReady ? <Pictures/> : <Spinner/>}
-            </Box>
+            </Box> */}
 
             {/* Interests */}
-            <Box className="gap-3">
-                <HStack className="justify-between items-center">
-                    <Text className="text-typography-950 text-base font-medium mb-1">
-                        Interests ({user?.interests.length}/10)
-                    </Text>
-                    <Button className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto">
-                        <ButtonIcon
-                        as={PenIcon}
-                        className="text-typography-900 data-[active=true]:text-typography-950"
-                        />
-                    </Button>
-                </HStack>
-                <Box className="flex-wrap flex-row gap-2 p-4 border border-background-100 rounded-lg">
-                    {user?.interests.map((interest) => (
-                        <Box key={interest.interest} className="bg-background-100 px-4 py-2 rounded-full">
-                            <Text className="text-typography-950 text-xs">{i18n.t(`interests.interests.${interest.interest}`)}</Text>
-                        </Box>
-                    ))}
-                </Box>
-            </Box>
+            <Interests />
 
             {/* Profile Description */}
             <Box className="gap-3">

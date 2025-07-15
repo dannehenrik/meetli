@@ -153,6 +153,7 @@ const englishLanguage = {
             interests: {
                 title: "🏀 What are your interests?",
                 instructions: "Choose up to 6 different interests so you can find like-minded people.",
+                placeholder: "Search your interests",
                 requestInterestPrompt: "Didn’t find your interests here? Request it here!",
                 request: "Request"
             },

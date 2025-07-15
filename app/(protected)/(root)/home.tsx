@@ -6,7 +6,6 @@ import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { ChevronDownIcon, Icon } from "@/components/ui/icon";
 import { ScrollView } from "@/components/ui/scroll-view";
-// import { FilterBottomSheet } from "@/components/screens/home/filter";
 import Animated, { FadeInRight } from "react-native-reanimated";
 // import SwipeScreen from "@/components/screens/home/swipe-screen";
 
@@ -42,11 +41,11 @@ function FilterLayout() {
       >
         <Icon as={FilterIcon} className="w-4 h-4" />
       </Pressable>
-      {/* <FilterBottomSheet
+      <FilterBottomSheet
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         {...defaultOpenProp}
-      /> */}
+      />
       <ScrollView
         horizontal
         bounces={false}
