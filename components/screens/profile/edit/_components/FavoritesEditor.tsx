@@ -59,17 +59,17 @@ import { useMutation, useQueryClient, UseMutationResult } from "@tanstack/react-
 import { supabase } from "@/utils/supabase";
 import { triggerHaptic } from "@/utils/haptics";
 
-import { Prompt, prompts } from "@/types";
+import { Favorite, favorites } from "@/types";
 
-import { MAX_PROMPTS } from "@/constants/constants";
-
+import { MAX_FAVORITES } from "@/constants/constants";
+import { ScrollView } from "react-native-gesture-handler";
 
 const AnimatedVstack = Animated.createAnimatedComponent(VStack)
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedScrollView = Animated.createAnimatedComponent(BottomSheetScrollView)
 
 
-export function Prompts() {
+export function Favorites() {
     const {data: user} = useFullUser();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -78,7 +78,7 @@ export function Prompts() {
         <Box className="gap-3">
             <HStack className="justify-between items-center">
                 <Text className="text-typography-950 text-base font-medium mb-1">
-                    Prompts
+                    Favorites
                 </Text>
                 
                 <Button 
@@ -86,7 +86,6 @@ export function Prompts() {
                 onPress={() => {
                     triggerHaptic('buttonLight')
                     setIsOpen(true)
-                    // router.push("/edit-profile/edit-prompts")
                 }}
                 >
                     <ButtonIcon
@@ -95,46 +94,46 @@ export function Prompts() {
                     />
                 </Button>
             </HStack>
-            {user?.prompts?.some((prompt) => prompt.active === true) ? (
+            {user?.favorites?.some((favorite) => favorite.active === true) ? (
             <>
-                {user?.prompts.map((prompt) => 
-                    <Item key={prompt.id} prompt={prompt}/>
+                {user?.favorites?.map((favorite) => 
+                    <Item key={favorite.id} favorite={favorite}/>
                 )}
             </>
             ) : (
-                <Text className="text-typography-500 text-sm">{i18n.t("editProfile.emptyMessages.emptyPrompts")}</Text>
+                <Text className="text-typography-500 text-sm">{i18n.t("editProfile.emptyMessages.emptyFavorites")}</Text>
             )}
         </Box>
-        <EditPromptsSheet isOpen={isOpen} setIsOpen={setIsOpen} />
+        <EditFavoritesSheet isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
     )
 }
 
-function Item({prompt} : {prompt: Prompt}) {
+function Item({favorite} : {favorite: Favorite}) {
     const [isOpen, setIsOpen] = useState(false);
 
-    if (!prompt.active) return null
+    if (!favorite.active) return null
     return(
     <>
         <Pressable onPress={() => setIsOpen(true)}>
             <VStack className="gap-4 p-4 mb-1 bg-background-50 rounded-lg">
-                <Text className="text-typography-600 text-sm">{i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${prompt.id}.question`)}</Text>
-                <Text className="text-typography-950">{prompt.answer}</Text>
+                <Text className="text-typography-600 text-sm">{i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favorite.id}.question`)}</Text>
+                <Text className="text-typography-950">{favorite.answer}</Text>
             </VStack>
         </Pressable>
-        <PromptEditSheet isOpen={isOpen} setIsOpen={setIsOpen} prompt={prompt} />
+        <FavoriteEditSheet isOpen={isOpen} setIsOpen={setIsOpen} favorite={favorite} />
     </>
     )
 }
 
-export function PromptEditSheet({
+export function FavoriteEditSheet({
     isOpen,
     setIsOpen,
-    prompt,
+    favorite,
 }: {
     isOpen: boolean;
     setIsOpen: (newValue: boolean) => void;
-    prompt: Prompt,
+    favorite: Favorite,
 }) {
     const { showSuccessToast, showErrorToast } = useAwesomeToast();
     const queryClient = useQueryClient();
@@ -145,19 +144,19 @@ export function PromptEditSheet({
     useEffect(() => {
         // Reset on open
         if (isOpen) {
-            setValue(prompt.answer);
+            setValue(favorite.answer);
         }
-    }, [isOpen, prompt]);
+    }, [isOpen, favorite]);
 
     const mutation = useMutation({
-        mutationFn: async (newPrompts: Prompt[]) => updateUser(user?.id ?? "", newPrompts),
+        mutationFn: async (newFavorites: Favorite[]) => updateUser(user?.id ?? "", newFavorites),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
             router.back();
         },
         onSuccess: (variables) => {
-            queryClient.setQueryData(['user', 'full'], {...user, prompts: variables})
+            queryClient.setQueryData(['user', 'full'], {...user, favorites: variables})
             showSuccessToast(i18n.t("messages.success.dataUpdated"))
             queryClient.invalidateQueries({ queryKey: ['user', 'full']})
         }
@@ -196,11 +195,11 @@ export function PromptEditSheet({
                 {/* Question Header */}
 
                     <Heading className="font-semibold text-xl leading-6 text-typography-800">
-                        {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${prompt.id}.question`)}
+                        {i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favorite.id}.question`)}
                     </Heading>
                 
                     <BottomSheetTextInput
-                    placeholder={i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${prompt.id}.placeholder`)}
+                    placeholder={i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favorite.id}.placeholder`)}
                     multiline
                     value={value}
                     onChangeText={setValue}
@@ -213,12 +212,12 @@ export function PromptEditSheet({
                     <Button
                     className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
                     onPress={() => {
-                        if (!user?.prompts || mutation.isPending || !isOpen) return;
+                        if (!user?.favorites || mutation.isPending || !isOpen) return;
 
-                        const newPrompts = user.prompts.map((p) =>
-                            p.id === prompt.id ? { ...prompt, answer: value } : p
+                        const newFavorites = user.favorites.map((f) =>
+                            f.id === favorite.id ? { ...favorite, answer: value } : f
                         );
-                        mutation.mutate(newPrompts);
+                        mutation.mutate(newFavorites);
                     }}
 
                     disabled={value.trim().length === 0}
@@ -241,17 +240,17 @@ export function PromptEditSheet({
 
 
 
-function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boolean) => void}) {
+function EditFavoritesSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boolean) => void}) {
     const { showErrorToast, showInfoToast, showSuccessToast } = useAwesomeToast();
     const queryClient = useQueryClient();
 
     const {data: user} = useFullUser();
 
-    const [userPrompts, setUserPrompts] = useState<Prompt[]>([]);
+    const [userFavorites, setUserFavorites] = useState<Favorite[]>([]);
 
     useEffect(() => {
-        if (user && user.prompts) {
-            setUserPrompts(user.prompts)
+        if (user && user.favorites) {
+            setUserFavorites(user.favorites)
         }
     }, [user])
 
@@ -263,14 +262,14 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
     }, [missClicks])
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", userPrompts),
+        mutationFn: async () => updateUser(user?.id ?? "", userFavorites),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {
-            queryClient.setQueryData(['user', 'full'], {...user, prompts: userPrompts})
+            queryClient.setQueryData(['user', 'full'], {...user, favorites: userFavorites})
             showSuccessToast(i18n.t("messages.success.dataUpdated"))
             queryClient.invalidateQueries({ queryKey: ['user', 'full']})
         }
@@ -278,12 +277,12 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
 
     // Utils
     function handleAnswerChange(id: string, newQuestion: string) {
-        setUserPrompts((prev) => {
-            const existing = prev.find((p) => p.id === id);
+        setUserFavorites((prev) => {
+            const existing = prev.find((f) => f.id === id);
 
             if (existing) {
-                return prev.map((p) =>
-                    p.id === id ? { ...p, answer: newQuestion } : p
+                return prev.map((f) =>
+                    f.id === id ? { ...f, answer: newQuestion } : f
                 );
             }
 
@@ -291,19 +290,19 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
         });
     }
     function getActiveAmount() {
-        return userPrompts.filter((p) => p.active).length;
+        return userFavorites.filter((f) => f.active).length;
     }
 
     function toggleActive(id: string, value?: boolean) {
-        setUserPrompts((prev) => {
+        setUserFavorites((prev) => {
             const updated = [...prev];
-            const index = updated.findIndex((p) => p.id === id);
+            const index = updated.findIndex((f) => f.id === id);
 
             if (index !== -1) {
-                const currentlyActive = updated.filter((p) => p.active).length;
+                const currentlyActive = updated.filter((f) => f.active).length;
                 const willBeActive = typeof value === "boolean" ? value : !updated[index].active;
 
-                if (willBeActive && !updated[index].active && currentlyActive >= MAX_PROMPTS) {
+                if (willBeActive && !updated[index].active && currentlyActive >= MAX_FAVORITES) {
                     // Do not allow activating more than 3 prompts
                     triggerHaptic("error")
                     setMissClicks((prev) => prev + 1)
@@ -318,9 +317,9 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
                 triggerHaptic("select")
                 return updated;
             } else {
-                const currentlyActive = updated.filter((p) => p.active).length;
+                const currentlyActive = updated.filter((f) => f.active).length;
 
-                if (currentlyActive >= MAX_PROMPTS) {
+                if (currentlyActive >= MAX_FAVORITES) {
                     // Do not allow adding a new active prompt
                     triggerHaptic("error")
                     setMissClicks((prev) => prev + 1)
@@ -335,14 +334,14 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
         });
     }
 
-    function getPromptValue(id: string): string {
-        const prompt = userPrompts.find((p) => p.id === id);
-        return prompt?.answer ?? "";
+    function getFavoriteValue(id: string): string {
+        const favorite = userFavorites.find((f) => f.id === id);
+        return favorite?.answer ?? "";
     }
 
-    function isPromptActive(id: string): boolean {
-        const prompt = userPrompts.find((p) => p.id === id);
-        return !!prompt?.active;
+    function isFavoriteActive(id: string): boolean {
+        const favorite = userFavorites.find((f) => f.id === id);
+        return !!favorite?.active;
     }
 
     if (!user) return null
@@ -360,7 +359,7 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
             if (mutation.isPending || !isOpen) return
             setIsOpen(false); // close the sheet first
             
-            const isDirty = JSON.stringify(user.prompts) !== JSON.stringify(userPrompts);
+            const isDirty = JSON.stringify(user.favorites) !== JSON.stringify(userFavorites);
             if (isDirty) {
                 mutation.mutate();
             }
@@ -389,46 +388,44 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
                     <Box className="flex-1 justify-start items-start px-5 w-[100%]">
                         <VStack className="gap-[18px] w-full">
 
-                            <AnimatedVstack entering={FadeInDown.delay(100).duration(400).springify()}  className="gap-3">
+                            <VStack className="gap-3">
                                 <HStack className="gap-2 items-center">
                                     <Heading className="font-roboto font-semibold text-2xl">
-                                        {i18n.t("onboarding.moreAboutYou.profilePrompts.title")}
+                                        {i18n.t("onboarding.moreAboutYou.profileFavorites.title")}
                                     </Heading>
                                     <Badge size="md" className="rounded-md">
                                         <BadgeText>
-                                            {getActiveAmount()}/{MAX_PROMPTS}
+                                            {getActiveAmount()}/{MAX_FAVORITES}
                                         </BadgeText>
                                     </Badge>
                                 </HStack>
                                 <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
-                                    {i18n.t("onboarding.moreAboutYou.profilePrompts.instructions")}
+                                    {i18n.t("onboarding.moreAboutYou.profileFavorites.instructions")}
                                 </Text>
-                            </AnimatedVstack>
+                            </VStack>
                             {/* <AnimatedBox entering={FadeInUp.delay(400).duration(400).springify()}> */}
-                                <AnimatedScrollView 
+                                <BottomSheetScrollView 
                                 showsVerticalScrollIndicator={false} 
                                 contentContainerStyle={{paddingBottom: 150}}
-                                entering={FadeInUp.delay(400).duration(400).springify()}
                                 >
                                     <Pressable>
                                         
                                         <Accordion className="w-full bg-background-0 gap-4 pb-6">
-                                            {prompts.map((promptId, index) => (
-                                                <AnimatedBox key={promptId} entering={FadeInLeft.delay(600 + (50 * index)).duration(400).springify()}>
-                                                    <PromptItem 
-                                                    promptId={promptId} 
-                                                    isActive={isPromptActive(promptId)} 
+                                            {favorites.map((favoriteId) => (
+                                                    <FavoriteItem 
+                                                    key={favoriteId}
+                                                    favoriteId={favoriteId} 
+                                                    isActive={isFavoriteActive(favoriteId)} 
                                                     toggleActive={toggleActive}
-                                                    answer={getPromptValue(promptId)}
+                                                    answer={getFavoriteValue(favoriteId)}
                                                     handleAnswerChange={handleAnswerChange}
                                                     mutation={mutation}
                                                     />
-                                                </AnimatedBox>
                                             ))}
                                         </Accordion>
                         
                                     </Pressable>
-                                </AnimatedScrollView>
+                                </BottomSheetScrollView>
                             {/* </AnimatedBox> */}
                                 
                         </VStack>
@@ -444,8 +441,8 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
 
 
 
-interface PromptItemProps {
-    promptId: string, 
+interface FavoriteItemProps {
+    favoriteId: string, 
     isActive: boolean, 
     toggleActive: (id: string, value?: boolean) => void,
     answer: string,
@@ -453,11 +450,11 @@ interface PromptItemProps {
     mutation: UseMutationResult<void, Error, void, unknown>
 }
 
-function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChange, mutation} : PromptItemProps) {
+function FavoriteItem({favoriteId, isActive, toggleActive, answer, handleAnswerChange, mutation} : FavoriteItemProps) {
     
     return(
         <AccordionItem
-        value={`item-${promptId}`}
+        value={`item-${favoriteId}`}
         className="rounded-lg bg-background-50"
         isDisabled={!isActive || mutation.isPending}
         >
@@ -486,12 +483,12 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
                             isExpanded ? "text-typography-400" : ""
                             }`}
                         >
-                            {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.question`)}
+                            {i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favoriteId}.question`)}
                         </AccordionTitleText>
 
                         <Checkbox 
                         value=""
-                        onChange={(value) => {toggleActive(promptId, value)}}
+                        onChange={(value) => {toggleActive(favoriteId, value)}}
                         isChecked={isActive}
                         >
                             <CheckboxIndicator>
@@ -508,10 +505,10 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
                 <VStack className="gap-6 w-full">
                 
                     <BottomSheetTextInput
-                    placeholder={i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`)}
+                    placeholder={i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favoriteId}.placeholder`)}
                     multiline
                     value={answer}
-                    onChangeText={(value) => handleAnswerChange(promptId, value)}
+                    onChangeText={(value) => handleAnswerChange(favoriteId, value)}
                     style={{ minHeight: 120, maxHeight: 200, textAlignVertical: "top" }}
                     className="text-base font-roboto text-typography-800 w-full"
                     />
@@ -524,8 +521,8 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
 
 
 
-async function updateUser(userId: string, userPrompts: Prompt[]) {
-    const {error} = await supabase.from('user_additional_info').update({prompts: userPrompts}).eq('id', userId);
+async function updateUser(userId: string, userFavorites: Favorite[]) {
+    const {error} = await supabase.from('user_additional_info').update({favorites: userFavorites}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

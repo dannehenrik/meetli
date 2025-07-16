@@ -17,6 +17,7 @@ import { InteractionManager } from "react-native";
 import { Interests } from "./_components/Interests";
 import { Intro } from "./_components/IntroEditor";
 import { Prompts } from "./_components/PromptEditor";
+import { Favorites } from "./_components/FavoritesEditor";
 
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -62,6 +63,8 @@ export function EditScreen() {
             {/* Prompts */}
            
             <Prompts/>
+
+            <Favorites/>
             
         </AnimatedBox>
     );
