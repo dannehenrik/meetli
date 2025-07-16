@@ -311,6 +311,7 @@ const englishLanguage = {
             profilePrompts: {
                 title: "✨ More about your personality",
                 instructions: "Select 1-3 prompts that excites you from the list below and write your answers!",
+                saveAnswer: "Save answer",
                 
                 prompts: {
                     friend_description: {
@@ -386,7 +387,7 @@ const englishLanguage = {
             profileFavorites: {
                 title: "💖 Your favorites, in three picks",
                 instructions: "Choose up to 3 favorites to share! These little things say a lot about you.",
-
+                saveAnswer: "Save answer",
 
                 options: {
                     // 🎬 Entertainment
@@ -562,6 +563,13 @@ const englishLanguage = {
             emptyIntro: "You haven't written your cool intro yet...",
             emptyPrompts: "You haven't chosen any prompts yet...",
             emptyFavorites: "You haven't chosen any favorites yet..."
+        },
+        titles: {
+            pictures: "My Photos & Videos",
+            favorites: "My favorite x is...",
+            prompts: "Prompts",
+            interests: "My interests",
+            intro: "Profile description"
         }
     },
     interests: {

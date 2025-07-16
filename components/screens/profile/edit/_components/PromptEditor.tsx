@@ -78,7 +78,7 @@ export function Prompts() {
         <Box className="gap-3">
             <HStack className="justify-between items-center">
                 <Text className="text-typography-950 text-base font-medium mb-1">
-                    Prompts
+                    {i18n.t("editProfile.titles.prompts")}
                 </Text>
                 
                 <Button 
@@ -116,7 +116,12 @@ function Item({prompt} : {prompt: Prompt}) {
     if (!prompt.active) return null
     return(
     <>
-        <Pressable onPress={() => setIsOpen(true)}>
+        <Pressable 
+        onPress={() => {
+            triggerHaptic("buttonLight")
+            setIsOpen(true)
+        }}
+        >
             <VStack className="gap-4 p-4 mb-1 bg-background-50 rounded-lg">
                 <Text className="text-typography-600 text-sm">{i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${prompt.id}.question`)}</Text>
                 <Text className="text-typography-950">{prompt.answer}</Text>
@@ -141,6 +146,8 @@ export function PromptEditSheet({
 
     const {data: user} = useFullUser();
     const [value, setValue] = useState("");
+
+   
 
     useEffect(() => {
         // Reset on open
@@ -214,6 +221,7 @@ export function PromptEditSheet({
                     className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
                     onPress={() => {
                         if (!user?.prompts || mutation.isPending || !isOpen) return;
+                        triggerHaptic("button")
 
                         const newPrompts = user.prompts.map((p) =>
                             p.id === prompt.id ? { ...prompt, answer: value } : p
@@ -227,7 +235,7 @@ export function PromptEditSheet({
                             <Spinner/>
                         ) : (
                         <ButtonText>
-                            Save Answer
+                            {i18n.t("onboarding.moreAboutYou.profilePrompts.saveAnswer")}
                         </ButtonText>
                         )}
                     </Button>
@@ -387,9 +395,9 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
             <BottomSheetContent className="border-primary-0 bg-background-0 px-5 flex-1 h-full" >
                 <Box className="flex-1 bg-background-0 gap-4 justify-start items-center">
                     <Box className="flex-1 justify-start items-start px-5 w-[100%]">
+                        
                         <VStack className="gap-[18px] w-full">
-
-                            <AnimatedVstack entering={FadeInDown.delay(100).duration(400).springify()}  className="gap-3">
+                            <VStack className="gap-3">
                                 <HStack className="gap-2 items-center">
                                     <Heading className="font-roboto font-semibold text-2xl">
                                         {i18n.t("onboarding.moreAboutYou.profilePrompts.title")}
@@ -403,9 +411,9 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
                                 <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
                                     {i18n.t("onboarding.moreAboutYou.profilePrompts.instructions")}
                                 </Text>
-                            </AnimatedVstack>
+                            </VStack>
                             {/* <AnimatedBox entering={FadeInUp.delay(400).duration(400).springify()}> */}
-                                <AnimatedScrollView 
+                                <BottomSheetScrollView 
                                 showsVerticalScrollIndicator={false} 
                                 contentContainerStyle={{paddingBottom: 150}}
                                 entering={FadeInUp.delay(400).duration(400).springify()}
@@ -428,7 +436,7 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
                                         </Accordion>
                         
                                     </Pressable>
-                                </AnimatedScrollView>
+                                </BottomSheetScrollView>
                             {/* </AnimatedBox> */}
                                 
                         </VStack>

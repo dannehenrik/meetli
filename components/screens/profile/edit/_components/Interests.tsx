@@ -60,7 +60,7 @@ export function Interests() {
         <Box className="gap-3">
             <HStack className="justify-between items-center">
                 <Text className="text-typography-950 text-base font-medium mb-1">
-                    Interests ({user?.interests.length}/{MAX_INTERESTS_AMOUNT})
+                    {i18n.t("editProfile.titles.interests")} ({user?.interests.length}/{MAX_INTERESTS_AMOUNT})
                 </Text>
                 
                 <Button 
@@ -76,13 +76,26 @@ export function Interests() {
                     />
                 </Button>
             </HStack>
-            <Pressable onPress={() => setIsEditing(true)}>
+            <Pressable 
+            onPress={() => {
+                triggerHaptic("buttonLight")
+                setIsEditing(true)
+            }}
+            >
                 
                 <Box className="flex-wrap flex-row gap-2 p-4 rounded-lg bg-background-50">
                     {user.interests.length > 0 ? (
                     <>
                     {user?.interests.map((interest) => (
-                        <InterestBadge key={interest.interest} interest={interest.interest} isSelected={true} onToggle={() => setIsEditing(true)}/>
+                        <InterestBadge 
+                        key={interest.interest} 
+                        interest={interest.interest} 
+                        isSelected={true} 
+                        onToggle={() => {
+                            triggerHaptic("buttonLight")
+                            setIsEditing(true)
+                        }}
+                        />
                     ))}
                     </>
                     ) : (

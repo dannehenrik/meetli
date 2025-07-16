@@ -387,6 +387,7 @@ export function PromptEditSheet({
                     <Button
                     className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
                     onPress={() => {
+                        triggerHaptic("button")
                         onSave(value);
                         mutation.mutate(undefined, {onSuccess: () => {
                             showSuccessToast(i18n.t("messages.success.dataUpdated"))
@@ -399,7 +400,7 @@ export function PromptEditSheet({
                             <Spinner/>
                         ) : (
                         <ButtonText>
-                            Save Answer
+                            {i18n.t("onboarding.moreAboutYou.profilePrompts.saveAnswer")}
                         </ButtonText>
                         )}
                     </Button>

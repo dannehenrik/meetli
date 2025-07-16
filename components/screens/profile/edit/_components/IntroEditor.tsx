@@ -90,7 +90,7 @@ export function Intro() {
         <Box className="gap-3">
             <HStack className="justify-between items-center">
                 <Text className="text-typography-950 text-base font-medium mb-1">
-                    Profile Description
+                    {i18n.t("editProfile.titles.intro")}
                 </Text>
                 {mutation.isPending ? (
                     <Button 
@@ -159,7 +159,12 @@ export function Intro() {
                     </FormControlHelper>
                 </FormControl>
             ) : (
-                <Pressable onPress={() => setIsEditing(true)}>
+                <Pressable 
+                onPress={() => {
+                    triggerHaptic("buttonLight")
+                    setIsEditing(true)
+                }}
+                >
                     <Box className="flex-wrap flex-row gap-2 p-4 bg-background-50 rounded-lg">
                         {(user?.intro ?? "").length > 0 ? (
                             <Text className="text-typography-950 text-sm">{user?.intro}</Text>

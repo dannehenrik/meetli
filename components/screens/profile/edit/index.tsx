@@ -48,7 +48,7 @@ export function EditScreen() {
             {/* My photos & videos */}
             {/* <Box className="gap-3">
                 <Text className="text-typography-950 text-base font-medium mb-1">
-                My Photos & Videos
+                {i18n.t("editProfile.titles.pictures")}
                 </Text>
                 {picturesReady ? <Pictures/> : <Spinner/>}
             </Box> */}

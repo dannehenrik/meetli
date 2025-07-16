@@ -78,7 +78,7 @@ export function Favorites() {
         <Box className="gap-3">
             <HStack className="justify-between items-center">
                 <Text className="text-typography-950 text-base font-medium mb-1">
-                    Favorites
+                    {i18n.t("editProfile.titles.favorites")}
                 </Text>
                 
                 <Button 
@@ -115,7 +115,12 @@ function Item({favorite} : {favorite: Favorite}) {
     if (!favorite.active) return null
     return(
     <>
-        <Pressable onPress={() => setIsOpen(true)}>
+        <Pressable 
+        onPress={() => {
+            triggerHaptic("buttonLight")
+            setIsOpen(true)
+        }}
+        >
             <VStack className="gap-4 p-4 mb-1 bg-background-50 rounded-lg">
                 <Text className="text-typography-600 text-sm">{i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favorite.id}.question`)}</Text>
                 <Text className="text-typography-950">{favorite.answer}</Text>
@@ -213,6 +218,7 @@ export function FavoriteEditSheet({
                     className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
                     onPress={() => {
                         if (!user?.favorites || mutation.isPending || !isOpen) return;
+                        triggerHaptic("button")
 
                         const newFavorites = user.favorites.map((f) =>
                             f.id === favorite.id ? { ...favorite, answer: value } : f
@@ -226,7 +232,7 @@ export function FavoriteEditSheet({
                             <Spinner/>
                         ) : (
                         <ButtonText>
-                            Save Answer
+                            {i18n.t("onboarding.moreAboutYou.profileFavorites.saveAnswer")}
                         </ButtonText>
                         )}
                     </Button>
