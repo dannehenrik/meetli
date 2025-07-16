@@ -90,8 +90,14 @@ export function Prompts() {
                     />
                 </Button>
             </HStack>
-            {user?.prompts.map((prompt) => 
-                <PromptItem1 key={prompt.id} prompt={prompt}/>
+            {user.prompts.some((prompt) => prompt.active === true) ? (
+            <>
+                {user?.prompts.map((prompt) => 
+                    <Item key={prompt.id} prompt={prompt}/>
+                )}
+            </>
+            ) : (
+                <Text className="text-typography-500 text-sm">{i18n.t("editProfile.emptyMessages.emptyPrompts")}</Text>
             )}
         </Box>
         <EditPromptsSheet isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -99,7 +105,7 @@ export function Prompts() {
     )
 }
 
-function PromptItem1({prompt} : {prompt: Prompt}) {
+function Item({prompt} : {prompt: Prompt}) {
     const [isOpen, setIsOpen] = useState(false);
 
     if (!prompt.active) return null

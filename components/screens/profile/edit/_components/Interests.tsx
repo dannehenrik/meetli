@@ -53,6 +53,7 @@ export function Interests() {
     const {data: user} = useFullUser();
     if (!user) return null
      
+
     return(
     <>
         {/* Interests */} 
@@ -76,11 +77,19 @@ export function Interests() {
                 </Button>
             </HStack>
             <Pressable onPress={() => setIsEditing(true)}>
-                <Box className="flex-wrap flex-row gap-2 p-4  rounded-lg bg-background-50">
+                
+                <Box className="flex-wrap flex-row gap-2 p-4 rounded-lg bg-background-50">
+                    {user.interests.length > 0 ? (
+                    <>
                     {user?.interests.map((interest) => (
                         <InterestBadge key={interest.interest} interest={interest.interest} isSelected={true} onToggle={() => setIsEditing(true)}/>
                     ))}
+                    </>
+                    ) : (
+                        <Text className="text-typography-500 text-sm">{i18n.t("editProfile.emptyMessages.emptyInterests")}</Text>
+                    )}
                 </Box>
+        
             </Pressable>
         </Box>
         

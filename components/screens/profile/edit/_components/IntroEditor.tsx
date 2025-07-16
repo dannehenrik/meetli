@@ -164,7 +164,7 @@ export function Intro() {
                         {(user?.intro ?? "").length > 0 ? (
                             <Text className="text-typography-950 text-sm">{user?.intro}</Text>
                         ) : (
-                            <Text className="text-typography-600 text-sm">{i18n.t("editProfile.emptyMessages.emptyIntro")}</Text>
+                            <Text className="text-typography-500 text-sm">{i18n.t("editProfile.emptyMessages.emptyIntro")}</Text>
                         )}
                 
                     </Box>

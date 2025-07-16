@@ -558,8 +558,9 @@ const englishLanguage = {
     },
     editProfile: {
         emptyMessages: {
-            emptyInterests: "You haven't chosen any interests yet", 
-            emptyIntro: "You haven't written your cool intro yet..."
+            emptyInterests: "You haven't chosen any interests yet...", 
+            emptyIntro: "You haven't written your cool intro yet...",
+            emptyPrompts: "You haven't chosen any prompts yet..."
         }
     },
     interests: {
