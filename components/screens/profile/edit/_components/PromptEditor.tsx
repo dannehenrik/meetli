@@ -28,13 +28,48 @@ import { router } from "expo-router";
 import { triggerHaptic } from "@/utils/haptics";
 import { Spinner } from "@/components/ui/spinner";
 import { Heading } from "@/components/ui/heading";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionContentText,
+  AccordionHeader,
+  AccordionIcon,
+  AccordionItem,
+  AccordionTitleText,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+    CheckIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+} from "@/components/ui/icon";
+import { ScrollView } from "@/components/ui/scroll-view";
+import { Checkbox, CheckboxIcon, CheckboxIndicator } from "@/components/ui/checkbox";
+import {TextInput } from "react-native";
+import { prompts } from "@/types";
+import { UseMutationResult } from "@tanstack/react-query";
+import Animated, {
+    FadeIn,
+    FadeInDown,
+    FadeInLeft,
+    FadeInUp
+} from 'react-native-reanimated';
+import { Badge, BadgeText } from "@/components/ui/badge";
+import { MAX_PROMPTS } from "@/constants/constants";
+import { ChevronLeftIcon } from "lucide-react-native";
+const AnimatedVstack = Animated.createAnimatedComponent(VStack)
+const AnimatedBox = Animated.createAnimatedComponent(Box)
+const AnimatedScrollView = Animated.createAnimatedComponent(BottomSheetScrollView)
 
 
 export function Prompts() {
     const {data: user} = useFullUser();
+    const [isOpen, setIsOpen] = useState(false);
 
     if (!user?.prompts) return null
     return(
+    <>
         <Box className="gap-3">
             <HStack className="justify-between items-center">
                 <Text className="text-typography-950 text-base font-medium mb-1">
@@ -45,7 +80,8 @@ export function Prompts() {
                 className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto text-black"
                 onPress={() => {
                     triggerHaptic('buttonLight')
-                    router.push("/edit-profile/edit-prompts")
+                    setIsOpen(true)
+                    // router.push("/edit-profile/edit-prompts")
                 }}
                 >
                     <ButtonIcon
@@ -55,13 +91,15 @@ export function Prompts() {
                 </Button>
             </HStack>
             {user?.prompts.map((prompt) => 
-                <PromptItem key={prompt.id} prompt={prompt}/>
+                <PromptItem1 key={prompt.id} prompt={prompt}/>
             )}
         </Box>
+        <EditPromptsSheet isOpen={isOpen} setIsOpen={setIsOpen} />
+    </>
     )
 }
 
-function PromptItem({prompt} : {prompt: Prompt}) {
+function PromptItem1({prompt} : {prompt: Prompt}) {
     const [isOpen, setIsOpen] = useState(false);
 
     if (!prompt.active) return null
@@ -77,8 +115,6 @@ function PromptItem({prompt} : {prompt: Prompt}) {
     </>
     )
 }
-
-
 
 export function PromptEditSheet({
     isOpen,
@@ -189,6 +225,292 @@ export function PromptEditSheet({
         </BottomSheet>
     );
 }
+
+
+
+
+
+function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boolean) => void}) {
+    const { showErrorToast, showInfoToast, showSuccessToast } = useAwesomeToast();
+    const queryClient = useQueryClient();
+
+    const {data: user} = useFullUser();
+
+    const [userPrompts, setUserPrompts] = useState<Prompt[]>([]);
+
+    useEffect(() => {
+        if (user && user.prompts) {
+            setUserPrompts(user.prompts)
+        }
+    }, [user])
+
+    const [missClicks, setMissClicks] = useState(0);
+    useEffect(() => {
+        if (missClicks > 0 && missClicks % 3 === 0) {
+            showInfoToast(i18n.t("messages.info.onlyThree"), i18n.t("messages.info.unselect"))
+        }
+    }, [missClicks])
+
+    const mutation = useMutation({
+        mutationFn: async () => updateUser(user?.id ?? "", userPrompts),
+        onError: (error) => {
+            console.error(error.message)
+            showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
+            router.back();
+        },
+        onSuccess: () => {
+            queryClient.setQueryData(['user', 'full'], {...user, prompts: userPrompts})
+            showSuccessToast(i18n.t("messages.success.dataUpdated"))
+            queryClient.invalidateQueries({ queryKey: ['user', 'full']})
+        }
+    })
+
+    // Utils
+    function handleAnswerChange(id: string, newQuestion: string) {
+        setUserPrompts((prev) => {
+            const existing = prev.find((p) => p.id === id);
+
+            if (existing) {
+                return prev.map((p) =>
+                    p.id === id ? { ...p, answer: newQuestion } : p
+                );
+            }
+
+            return [...prev, { id, answer: newQuestion, active: false }];
+        });
+    }
+    function getActiveAmount() {
+        return userPrompts.filter((p) => p.active).length;
+    }
+
+    function toggleActive(id: string, value?: boolean) {
+        setUserPrompts((prev) => {
+            const updated = [...prev];
+            const index = updated.findIndex((p) => p.id === id);
+
+            if (index !== -1) {
+                const currentlyActive = updated.filter((p) => p.active).length;
+                const willBeActive = typeof value === "boolean" ? value : !updated[index].active;
+
+                if (willBeActive && !updated[index].active && currentlyActive >= MAX_PROMPTS) {
+                    // Do not allow activating more than 3 prompts
+                    triggerHaptic("error")
+                    setMissClicks((prev) => prev + 1)
+                    return prev;
+                }
+
+                updated[index] = {
+                    ...updated[index],
+                    active: willBeActive,
+                };
+
+                triggerHaptic("select")
+                return updated;
+            } else {
+                const currentlyActive = updated.filter((p) => p.active).length;
+
+                if (currentlyActive >= MAX_PROMPTS) {
+                    // Do not allow adding a new active prompt
+                    triggerHaptic("error")
+                    setMissClicks((prev) => prev + 1)
+                    return prev;
+                }
+                triggerHaptic("select")
+                return [
+                    ...updated,
+                    { id, answer: "", active: true },
+                ];
+            }
+        });
+    }
+
+    function getPromptValue(id: string): string {
+        const prompt = userPrompts.find((p) => p.id === id);
+        return prompt?.answer ?? "";
+    }
+
+    function isPromptActive(id: string): boolean {
+        const prompt = userPrompts.find((p) => p.id === id);
+        return !!prompt?.active;
+    }
+
+    if (!user) return null
+
+    return (
+        <BottomSheet
+        isOpen={isOpen}
+        snapPoints={["60%", "90%"]}
+        enablePanDownToClose={true}
+        enableDynamicSizing={false}
+        enableOverDrag={false}
+        keyboardBehavior="extend"
+        index={0}
+        onClose={() => {
+            if (mutation.isPending || !isOpen) return
+            setIsOpen(false); // close the sheet first
+            
+            const isDirty = JSON.stringify(user.prompts) !== JSON.stringify(userPrompts);
+            if (isDirty) {
+                mutation.mutate();
+            }
+        }}
+
+   
+        backdropComponent={BottomSheetBackdrop}
+        handleComponent={() => {
+            return (
+                <BottomSheetDragIndicator
+                className="border-background-0 bg-background-0 rounded-t-xl"
+                indicatorStyle={{
+                    backgroundColor: "gray",
+                    width: 64,
+                    height: 4,
+                    marginTop: 15,
+                    marginBottom: 50,
+                }}
+                />
+            );
+        }}
+        >
+        
+            <BottomSheetContent className="border-primary-0 bg-background-0 px-5 flex-1 h-full" >
+                <Box className="flex-1 bg-background-0 gap-4 justify-start items-center">
+                    <Box className="flex-1 justify-start items-start px-5 w-[100%]">
+                        <VStack className="gap-[18px] w-full">
+
+                            <AnimatedVstack entering={FadeInDown.delay(100).duration(400).springify()}  className="gap-3">
+                                <HStack className="gap-2 items-center">
+                                    <Heading className="font-roboto font-semibold text-2xl">
+                                        {i18n.t("onboarding.moreAboutYou.profilePrompts.title")}
+                                    </Heading>
+                                    <Badge size="md" className="rounded-md">
+                                        <BadgeText>
+                                            {getActiveAmount()}/{MAX_PROMPTS}
+                                        </BadgeText>
+                                    </Badge>
+                                </HStack>
+                                <Text className="font-roboto font-normal text-base text-typography-400 leading-6">
+                                    {i18n.t("onboarding.moreAboutYou.profilePrompts.instructions")}
+                                </Text>
+                            </AnimatedVstack>
+                            {/* <AnimatedBox entering={FadeInUp.delay(400).duration(400).springify()}> */}
+                                <AnimatedScrollView 
+                                showsVerticalScrollIndicator={false} 
+                                contentContainerStyle={{paddingBottom: 150}}
+                                entering={FadeInUp.delay(400).duration(400).springify()}
+                                >
+                                    <Pressable>
+                                        
+                                        <Accordion className="w-full bg-background-0 gap-4 pb-6">
+                                            {prompts.map((promptId, index) => (
+                                                <AnimatedBox key={promptId} entering={FadeInLeft.delay(600 + (50 * index)).duration(400).springify()}>
+                                                    <PromptItem 
+                                                    promptId={promptId} 
+                                                    isActive={isPromptActive(promptId)} 
+                                                    toggleActive={toggleActive}
+                                                    answer={getPromptValue(promptId)}
+                                                    handleAnswerChange={handleAnswerChange}
+                                                    mutation={mutation}
+                                                    />
+                                                </AnimatedBox>
+                                            ))}
+                                        </Accordion>
+                        
+                                    </Pressable>
+                                </AnimatedScrollView>
+                            {/* </AnimatedBox> */}
+                                
+                        </VStack>
+                    </Box>
+                </Box>
+            </BottomSheetContent>
+        </BottomSheet>
+    );
+};
+
+
+
+
+
+
+interface PromptItemProps {
+    promptId: string, 
+    isActive: boolean, 
+    toggleActive: (id: string, value?: boolean) => void,
+    answer: string,
+    handleAnswerChange: (id: string, newValue: string) => void,
+    mutation: UseMutationResult<void, Error, void, unknown>
+}
+
+function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChange, mutation} : PromptItemProps) {
+    
+    return(
+        <AccordionItem
+        value={`item-${promptId}`}
+        className="rounded-lg bg-background-50"
+        isDisabled={!isActive || mutation.isPending}
+        >
+            <AccordionHeader>
+                <AccordionTrigger className="focus:web:rounded-lg">
+                    {({ isExpanded } : {isExpanded: boolean}) => {
+                    return (
+                        <>
+                        <Box className="pr-3">
+                            {isExpanded ? (
+                            <AccordionIcon
+                            as={ChevronUpIcon}
+                            className="py-3 pr-4 text-background-400"
+                            size="md"
+                            />
+                        ) : (
+                            <AccordionIcon
+                            as={ChevronDownIcon}
+                            className="py-3 pr-4 text-background-400"
+                            size="md"
+                            />
+                        )}
+                        </Box>
+                        <AccordionTitleText
+                            className={`font-roboto font-medium text-sm leading-4 ${
+                            isExpanded ? "text-typography-400" : ""
+                            }`}
+                        >
+                            {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.question`)}
+                        </AccordionTitleText>
+
+                        <Checkbox 
+                        value=""
+                        onChange={(value) => {toggleActive(promptId, value)}}
+                        isChecked={isActive}
+                        >
+                            <CheckboxIndicator>
+                                <CheckboxIcon as={CheckIcon} />
+                            </CheckboxIndicator>
+                        </Checkbox>
+                        
+                        </>
+                    );
+                    }}
+                </AccordionTrigger>
+            </AccordionHeader>
+            <AccordionContent>
+                <VStack className="gap-6 w-full">
+                
+                    <BottomSheetTextInput
+                    placeholder={i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`)}
+                    multiline
+                    value={answer}
+                    onChangeText={(value) => handleAnswerChange(promptId, value)}
+                    style={{ minHeight: 120, maxHeight: 200, textAlignVertical: "top" }}
+                    className="text-base font-roboto text-typography-800 w-full"
+                    />
+                </VStack>
+            </AccordionContent>
+        </AccordionItem>
+    )
+}
+
+
 
 
 async function updateUser(userId: string, userPrompts: Prompt[]) {

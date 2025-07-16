@@ -26,7 +26,7 @@ import { router, usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Checkbox, CheckboxIcon, CheckboxIndicator } from "@/components/ui/checkbox";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
-import { Pressable } from "react-native";
+import { Pressable, TextInput } from "react-native";
 import {
   BottomSheet,
   BottomSheetBackdrop,
@@ -251,10 +251,8 @@ interface PromptItemProps {
 }
 
 function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChange, mutation} : PromptItemProps) {
-    const [isEditing, setIsEditing] = useState(false);
     
     return(
-    <>
         <AccordionItem
         value={`item-${promptId}`}
         className="rounded-lg bg-background-50"
@@ -304,117 +302,22 @@ function PromptItem({promptId, isActive, toggleActive, answer, handleAnswerChang
                 </AccordionTrigger>
             </AccordionHeader>
             <AccordionContent>
-                <AccordionContentText onPress={() => setIsEditing(true)} className="font-semibold font-roboto text-2xl text-typography-800 leading-7">
-                    {answer.length === 0 ? i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`) : answer}
-                </AccordionContentText>
-            </AccordionContent>
-        </AccordionItem>
-
-        <PromptEditSheet
-        isOpen={isEditing}
-        setIsOpen={() => setIsEditing(false)}
-        promptId={promptId}
-        answer={answer}
-        onSave={(value) => handleAnswerChange(promptId, value)}
-        mutation={mutation}
-        />
-    </>
-    )
-}
-
-
-
-export function PromptEditSheet({
-    isOpen,
-    setIsOpen,
-    promptId,
-    answer,
-    onSave,
-    mutation,
-}: {
-    isOpen: boolean;
-    setIsOpen: (newValue: boolean) => void;
-    promptId: string;
-    answer: string,
-    onSave: (newValue: string) => void;
-    mutation: UseMutationResult<void, Error, void, unknown>
-}) {
-    const [value, setValue] = useState("");
-
-    useEffect(() => {
-        // Reset on open
-        if (isOpen) {
-            setValue(answer);
-        }
-    }, [isOpen, answer]);
-
-    useEffect(() => {
-        if (mutation.isSuccess) {
-            setIsOpen(false);
-        }
-    }, [mutation.isSuccess])
-
-    return (
-        <BottomSheet
-        isOpen={isOpen}
-        index={0}
-        enableDynamicSizing
-        enableOverDrag
-        onClose={() => setIsOpen(false)}
-        backdropComponent={BottomSheetBackdrop}
-        keyboardBehavior="interactive"
-        handleComponent={() => (
-            <BottomSheetDragIndicator
-            className="border-background-0 bg-background-0 rounded-t-xl"
-            indicatorStyle={{
-                backgroundColor: "gray",
-                width: 64,
-                height: 4,
-                marginTop: 10,
-            }}
-            />
-        )}
-        >
-            <BottomSheetContent className="border-primary-0 bg-background-0 px-5 pb-8 pt-4">
                 <VStack className="gap-6 w-full">
-                {/* Question Header */}
-
-                    <Heading className="font-semibold text-xl leading-6 text-typography-800">
-                        {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.question`)}
-                    </Heading>
                 
-                    <BottomSheetTextInput
+                    <TextInput
                     placeholder={i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${promptId}.placeholder`)}
                     multiline
-                    value={value}
-                    onChangeText={setValue}
+                    value={answer}
+                    onChangeText={(value) => handleAnswerChange(promptId, value)}
                     style={{ minHeight: 120, maxHeight: 200, textAlignVertical: "top" }}
                     className="text-base font-roboto text-typography-800 w-full"
                     />
-                
-
-                    {/* Save Button */}
-                    <Button
-                    className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
-                    onPress={() => {
-                        onSave(value);
-                        mutation.mutate()
-                    }}
-                    disabled={value.trim().length === 0}
-                    >
-                        {mutation.isPending ? (
-                            <Spinner/>
-                        ) : (
-                        <ButtonText>
-                            Save Answer
-                        </ButtonText>
-                        )}
-                    </Button>
                 </VStack>
-            </BottomSheetContent>
-        </BottomSheet>
-    );
+            </AccordionContent>
+        </AccordionItem>
+    )
 }
+
 
 
 async function updateUser(userId: string, userPrompts: Prompt[]) {
