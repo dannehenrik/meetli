@@ -24,21 +24,29 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
 import { Prompt } from "@/types";
+import { router } from "expo-router";
+import { triggerHaptic } from "@/utils/haptics";
+import { Spinner } from "@/components/ui/spinner";
+import { Heading } from "@/components/ui/heading";
 
 
 export function Prompts() {
-    const [isEditing, setIsEditing] = useState(false);
     const {data: user} = useFullUser();
 
-    <Box className="gap-3">
-       <HStack className="justify-between items-center">
+    if (!user?.prompts) return null
+    return(
+        <Box className="gap-3">
+            <HStack className="justify-between items-center">
                 <Text className="text-typography-950 text-base font-medium mb-1">
                     Prompts
                 </Text>
                 
                 <Button 
                 className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto text-black"
-                onPress={() => setIsEditing(true)}
+                onPress={() => {
+                    triggerHaptic('buttonLight')
+                    router.push("/edit-profile/edit-prompts")
+                }}
                 >
                     <ButtonIcon
                     as={SquarePen}
@@ -46,111 +54,145 @@ export function Prompts() {
                     />
                 </Button>
             </HStack>
+            {user?.prompts.map((prompt) => 
+                <PromptItem key={prompt.id} prompt={prompt}/>
+            )}
+        </Box>
+    )
+}
 
-        {user?.prompts.map(({ answer, id, active }, index) => {
-            if (!active) return null
-            return(
-                <VStack className="gap-4 p-4 mb-1 bg-background-50 rounded-lg" key={index}>
-                    <HStack className="justify-between items-center">
-                        <Text className="text-typography-600 text-sm">{i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${id}.question`)}</Text>
-                        <Button className="p-1.5 bg-background-400 data-[active=true]:bg-background-500 h-auto">
-                            <ButtonIcon
-                            as={PenIcon}
-                            className="text-typography-900 data-[active=true]:text-typography-950"
-                            />
-                        </Button>
-                    </HStack>
-                    <Text className="text-typography-950">{answer}</Text>
-                </VStack>
-            )
-        })}
-    </Box>
+function PromptItem({prompt} : {prompt: Prompt}) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    if (!prompt.active) return null
+    return(
+    <>
+        <Pressable onPress={() => setIsOpen(true)}>
+            <VStack className="gap-4 p-4 mb-1 bg-background-50 rounded-lg">
+                <Text className="text-typography-600 text-sm">{i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${prompt.id}.question`)}</Text>
+                <Text className="text-typography-950">{prompt.answer}</Text>
+            </VStack>
+        </Pressable>
+        <PromptEditSheet isOpen={isOpen} setIsOpen={setIsOpen} prompt={prompt} />
+    </>
+    )
 }
 
 
-function EditPrompts({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boolean) => void}) {
-    const {showErrorToast, showSuccessToast} = useAwesomeToast();
+
+export function PromptEditSheet({
+    isOpen,
+    setIsOpen,
+    prompt,
+}: {
+    isOpen: boolean;
+    setIsOpen: (newValue: boolean) => void;
+    prompt: Prompt,
+}) {
+    const { showSuccessToast, showErrorToast } = useAwesomeToast();
     const queryClient = useQueryClient();
 
     const {data: user} = useFullUser();
-    const [userPrompts, setUserPrompts] = useState<Prompt[]>([]);
-    useEffect(() => {
-        if (user && user.prompts) {
-            setUserPrompts(user.prompts)
-        }
-    }, [user])
+    const [value, setValue] = useState("");
 
+    useEffect(() => {
+        // Reset on open
+        if (isOpen) {
+            setValue(prompt.answer);
+        }
+    }, [isOpen, prompt]);
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id, selectedInterests),
+        mutationFn: async (newPrompts: Prompt[]) => updateUser(user?.id ?? "", newPrompts),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
+            router.back();
         },
-        onSuccess: () => {
-            queryClient.setQueryData(['user', 'full'], (oldUserData: User | undefined) => {
-                if (!oldUserData) return oldUserData;
-
-                return {
-                    ...oldUserData,
-                    prompts: [...userPrompts],
-                };
-            });
+        onSuccess: (variables) => {
+            queryClient.setQueryData(['user', 'full'], {...user, prompts: variables})
             showSuccessToast(i18n.t("messages.success.dataUpdated"))
-            queryClient.invalidateQueries({queryKey: ['user', 'full']})
+            queryClient.invalidateQueries({ queryKey: ['user', 'full']})
         }
     })
 
-    if (!user) return null
+
+    useEffect(() => {
+        if (mutation.isSuccess) {
+            setIsOpen(false);
+        }
+    }, [mutation.isSuccess])
 
     return (
         <BottomSheet
         isOpen={isOpen}
-        snapPoints={["60%", "90%"]}
-        enablePanDownToClose={true}
-        enableDynamicSizing={false}
-        enableOverDrag={false}
-        keyboardBehavior="extend"
         index={0}
-        onClose={() => {
-            if (mutation.isPending || !isOpen) return
-            setIsOpen(false); // close the sheet first
-            
-            const isDirty = JSON.stringify(user.interests.map(i => i.interest)) !== JSON.stringify(selectedInterests);
-            if (isDirty) {
-                mutation.mutate();
-            }
-        }}
-
-   
+        enableDynamicSizing
+        enableOverDrag
+        onClose={() => setIsOpen(false)}
         backdropComponent={BottomSheetBackdrop}
-        handleComponent={() => {
-            return (
-                <BottomSheetDragIndicator
-                className="border-background-0 bg-background-0 rounded-t-xl"
-                indicatorStyle={{
-                    backgroundColor: "gray",
-                    width: 64,
-                    height: 4,
-                    marginTop: 15,
-                    marginBottom: 50,
-                }}
-                />
-            );
-        }}
-       >
-        
-            <BottomSheetContent className="border-primary-0 bg-background-0 px-5 flex-1 h-full" >
-                <InterestsEdit selectedInterests={selectedInterests} setSelectedInterests={setSelectedInterests} />
-            
+        keyboardBehavior="interactive"
+        handleComponent={() => (
+            <BottomSheetDragIndicator
+            className="border-background-0 bg-background-0 rounded-t-xl"
+            indicatorStyle={{
+                backgroundColor: "gray",
+                width: 64,
+                height: 4,
+                marginTop: 10,
+            }}
+            />
+        )}
+        >
+            <BottomSheetContent className="border-primary-0 bg-background-0 px-5 pb-8 pt-4">
+                <VStack className="gap-6 w-full">
+                {/* Question Header */}
+
+                    <Heading className="font-semibold text-xl leading-6 text-typography-800">
+                        {i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${prompt.id}.question`)}
+                    </Heading>
+                
+                    <BottomSheetTextInput
+                    placeholder={i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${prompt.id}.placeholder`)}
+                    multiline
+                    value={value}
+                    onChangeText={setValue}
+                    style={{ minHeight: 120, maxHeight: 200, textAlignVertical: "top" }}
+                    className="text-base font-roboto text-typography-800 w-full"
+                    />
+                
+
+                    {/* Save Button */}
+                    <Button
+                    className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
+                    onPress={() => {
+                        if (!user?.prompts || mutation.isPending || !isOpen) return;
+
+                        const newPrompts = user.prompts.map((p) =>
+                            p.id === prompt.id ? { ...prompt, answer: value } : p
+                        );
+                        mutation.mutate(newPrompts);
+                    }}
+
+                    disabled={value.trim().length === 0}
+                    >
+                        {mutation.isPending ? (
+                            <Spinner/>
+                        ) : (
+                        <ButtonText>
+                            Save Answer
+                        </ButtonText>
+                        )}
+                    </Button>
+                </VStack>
             </BottomSheetContent>
         </BottomSheet>
     );
-};
+}
 
 
+async function updateUser(userId: string, userPrompts: Prompt[]) {
+    const {error} = await supabase.from('user_additional_info').update({prompts: userPrompts}).eq('id', userId);
 
-async function updateUser(userId: string, prompts: string) {
-    const {error} = await supabase.from('user_additional_info').upsert({prompts: prompts}).eq('id', userId)
-    if (error) throw new Error("Something went wrong when updating the user: " + error.message);
+    if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

@@ -17,7 +17,7 @@ import { useWindowDimensions } from "react-native";
 import { useFullUser } from "@/hooks/user/useFullUser";
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
-function Header() {
+export function Header() {
     const router = useRouter();
 
     const {data: user} = useFullUser();

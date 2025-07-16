@@ -105,6 +105,7 @@ export function Intro() {
                     <Button 
                     className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto"
                     onPress={() => {
+                        triggerHaptic('buttonLight')
                         if (user?.intro !== textValue) {
                             mutation.mutate();
                         } else {
@@ -118,7 +119,13 @@ export function Intro() {
                         />
                     </Button>
                 ) : (
-                     <Button onPress={() => setIsEditing(true)} className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto">
+                     <Button 
+                     className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto"
+                     onPress={() => {
+                        triggerHaptic('buttonLight')
+                        setIsEditing(true)
+                    }}
+                    >
                         <ButtonIcon
                         as={SquarePen}
                         className="text-typography-900 data-[active=true]:text-typography-950"

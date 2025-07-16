@@ -64,7 +64,10 @@ export function Interests() {
                 
                 <Button 
                 className="p-1.5 bg-background-100 data-[active=true]:bg-background-200 h-auto text-black"
-                onPress={() => setIsEditing(true)}
+                onPress={() => {
+                    triggerHaptic('buttonLight')
+                    setIsEditing(true)
+                }}
                 >
                     <ButtonIcon
                     as={SquarePen}

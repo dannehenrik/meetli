@@ -16,6 +16,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { InteractionManager } from "react-native";
 import { Interests } from "./_components/Interests";
 import { Intro } from "./_components/IntroEditor";
+import { Prompts } from "./_components/PromptEditor";
 
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -59,34 +60,8 @@ export function EditScreen() {
  
 
             {/* Prompts */}
-            <Box className="gap-3">
-                <Text className="text-typography-950 text-base font-medium mb-1">
-                Prompts
-                </Text>
-
-                <Pressable className="flex-row gap-2 py-2.5 px-4 self-center mb-1">
-                    <Text className="text-typography-950 text-sm">Add New Prompt</Text>
-                    <Icon as={AddIcon} />
-                </Pressable>
-
-                {user?.prompts.map(({ answer, id, active }, index) => {
-                    if (!active) return null
-                    return(
-                        <VStack className="gap-4 p-4 mb-1 bg-background-50 rounded-lg" key={index}>
-                            <HStack className="justify-between items-center">
-                                <Text className="text-typography-600 text-sm">{i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${id}.question`)}</Text>
-                                <Button className="p-1.5 bg-background-400 data-[active=true]:bg-background-500 h-auto">
-                                    <ButtonIcon
-                                    as={PenIcon}
-                                    className="text-typography-900 data-[active=true]:text-typography-950"
-                                    />
-                                </Button>
-                            </HStack>
-                            <Text className="text-typography-950">{answer}</Text>
-                        </VStack>
-                    )
-                })}
-            </Box>
+           
+            <Prompts/>
             
         </AnimatedBox>
     );
