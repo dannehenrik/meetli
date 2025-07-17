@@ -154,7 +154,7 @@ export function PromptEditSheet({
         if (isOpen) {
             setValue(prompt.answer);
         }
-    }, [isOpen, prompt]);
+    }, [isOpen]);
 
     const mutation = useMutation({
         mutationFn: async (newPrompts: Prompt[]) => updateUser(user?.id ?? "", newPrompts),
@@ -219,6 +219,7 @@ export function PromptEditSheet({
                     {/* Save Button */}
                     <Button
                     className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
+                    isDisabled={value === prompt.answer}
                     onPress={() => {
                         if (!user?.prompts || mutation.isPending || !isOpen) return;
                         triggerHaptic("button")
@@ -412,32 +413,29 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
                                     {i18n.t("onboarding.moreAboutYou.profilePrompts.instructions")}
                                 </Text>
                             </VStack>
-                            {/* <AnimatedBox entering={FadeInUp.delay(400).duration(400).springify()}> */}
-                                <BottomSheetScrollView 
-                                showsVerticalScrollIndicator={false} 
-                                contentContainerStyle={{paddingBottom: 150}}
-                                entering={FadeInUp.delay(400).duration(400).springify()}
-                                >
-                                    <Pressable>
-                                        
-                                        <Accordion className="w-full bg-background-0 gap-4 pb-6">
-                                            {prompts.map((promptId, index) => (
-                                                <AnimatedBox key={promptId} entering={FadeInLeft.delay(600 + (50 * index)).duration(400).springify()}>
-                                                    <PromptItem 
-                                                    promptId={promptId} 
-                                                    isActive={isPromptActive(promptId)} 
-                                                    toggleActive={toggleActive}
-                                                    answer={getPromptValue(promptId)}
-                                                    handleAnswerChange={handleAnswerChange}
-                                                    mutation={mutation}
-                                                    />
-                                                </AnimatedBox>
-                                            ))}
-                                        </Accordion>
-                        
-                                    </Pressable>
-                                </BottomSheetScrollView>
-                            {/* </AnimatedBox> */}
+                            <BottomSheetScrollView 
+                            showsVerticalScrollIndicator={false} 
+                            contentContainerStyle={{paddingBottom: 150}}
+                            entering={FadeInUp.delay(400).duration(400).springify()}
+                            >
+                                <Pressable>
+                                    
+                                    <Accordion className="w-full bg-background-0 gap-4 pb-6">
+                                        {prompts.map((promptId) => (
+                                            <PromptItem 
+                                            key={promptId}
+                                            promptId={promptId} 
+                                            isActive={isPromptActive(promptId)} 
+                                            toggleActive={toggleActive}
+                                            answer={getPromptValue(promptId)}
+                                            handleAnswerChange={handleAnswerChange}
+                                            mutation={mutation}
+                                            />
+                                        ))}
+                                    </Accordion>
+                    
+                                </Pressable>
+                            </BottomSheetScrollView>
                                 
                         </VStack>
                     </Box>

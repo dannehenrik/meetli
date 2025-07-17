@@ -151,7 +151,7 @@ export function FavoriteEditSheet({
         if (isOpen) {
             setValue(favorite.answer);
         }
-    }, [isOpen, favorite]);
+    }, [isOpen]);
 
     const mutation = useMutation({
         mutationFn: async (newFavorites: Favorite[]) => updateUser(user?.id ?? "", newFavorites),
@@ -216,6 +216,7 @@ export function FavoriteEditSheet({
                     {/* Save Button */}
                     <Button
                     className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
+                    isDisabled={value === favorite.answer}
                     onPress={() => {
                         if (!user?.favorites || mutation.isPending || !isOpen) return;
                         triggerHaptic("button")

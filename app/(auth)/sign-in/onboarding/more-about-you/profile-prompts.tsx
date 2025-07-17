@@ -336,7 +336,7 @@ export function PromptEditSheet({
         if (isOpen) {
             setValue(answer);
         }
-    }, [isOpen, answer]);
+    }, [isOpen]);
 
     useEffect(() => {
         if (mutation.isSuccess) {
@@ -386,13 +386,13 @@ export function PromptEditSheet({
                     {/* Save Button */}
                     <Button
                     className="w-full rounded-lg bg-primary-700 data-[active=true]:bg-primary-800"
+                    isDisabled={value === answer}
                     onPress={() => {
                         triggerHaptic("button")
                         onSave(value);
                         mutation.mutate(undefined, {onSuccess: () => {
                             showSuccessToast(i18n.t("messages.success.dataUpdated"))
                         }})
-                        // setIsOpen(false);
                     }}
                     disabled={value.trim().length === 0}
                     >

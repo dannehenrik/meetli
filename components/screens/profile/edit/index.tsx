@@ -46,12 +46,12 @@ export function EditScreen() {
         exiting={SlideOutLeft}
         >
             {/* My photos & videos */}
-            {/* <Box className="gap-3">
+            <Box className="gap-3">
                 <Text className="text-typography-950 text-base font-medium mb-1">
                 {i18n.t("editProfile.titles.pictures")}
                 </Text>
                 {picturesReady ? <Pictures/> : <Spinner/>}
-            </Box> */}
+            </Box>
 
             {/* Interests */}
             <Interests />
