@@ -14,7 +14,7 @@ import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { SmokingHabits, smokingHabitsOptions, User } from "@/types";
+import { DrinkingHabits, drinkingHabitsOptions } from "@/types";
 import { triggerHaptic } from "@/utils/haptics";
 import React, { useEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -45,12 +45,12 @@ const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
 const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
 
-export function SmokingSection() {
+export function DrinkingSection() {
     const [isOpen, setIsOpen] = useState(false);
 
     const { data: user } = useFullUser();
-    if (!user) return null;
 
+    if (!user) return null;
 
     return(
     <>
@@ -61,8 +61,8 @@ export function SmokingSection() {
         }}
         >
             <VStack className="gap-4 p-4 mb-1 bg-background-50 rounded-lg">
-                <Text className="text-typography-600 text-sm">{i18n.t("onboarding.moreAboutYou.smoking.title")}</Text>
-                <Text className="text-typography-950">{i18n.t(`onboarding.moreAboutYou.smoking.options.${user.smoking_habits}`)}</Text>
+                <Text className="text-typography-600 text-sm">{i18n.t("onboarding.moreAboutYou.drinking.title")}</Text>
+                <Text className="text-typography-950">{i18n.t(`onboarding.moreAboutYou.drinking.options.${user.drinking_habits}`)}</Text>
             </VStack>
         </Pressable>
         <EditSheet isOpen={isOpen} setIsOpen={setIsOpen}/>
@@ -77,26 +77,26 @@ function EditSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boo
     const queryClient = useQueryClient();
     const {showErrorToast, showSuccessToast} = useAwesomeToast();
 
-    const [smokingHabit, setSmokingHabit] = useState('');
+    const [value, setValue] = useState('');
 
     const {data: user} = useFullUser()
 
     // Set initial values when user data is loaded
     useEffect(() => {
-        if (user && user.smoking_habits) {
-            setSmokingHabit(user.smoking_habits);
+        if (user && user.drinking_habits) {
+            setValue(user.drinking_habits);
         }
     }, [user]);
 
     const mutation = useMutation({
-        mutationFn: async () => updateUser(user?.id ?? "", smokingHabit as SmokingHabits),
+        mutationFn: async () => updateUser(user?.id ?? "", value),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"),i18n.t("messages.error.updateProfileError"));
             router.back();
         },
         onSuccess: () => {
-            queryClient.setQueryData(['user', 'full'], {...user, smoking_habits: smokingHabit})
+            queryClient.setQueryData(['user', 'full'], {...user, drinking_habits: value})
             showSuccessToast(i18n.t("messages.success.dataUpdated"))
             queryClient.invalidateQueries({ queryKey: ['user', 'full']})
         }
@@ -119,7 +119,7 @@ function EditSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boo
             if (mutation.isPending || !isOpen) return
             setIsOpen(false); // close the sheet first
             
-            const isDirty = user.smoking_habits !== smokingHabit;
+            const isDirty = user.drinking_habits !== value;
             if (isDirty) {
                 mutation.mutate();
             }
@@ -150,7 +150,7 @@ function EditSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boo
                     className="font-roboto font-semibold text-2xl"
                     entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
                     >
-                        {i18n.t("onboarding.moreAboutYou.smoking.title")}
+                        {i18n.t("onboarding.moreAboutYou.drinking.title")}
                     </AnimatedHeader>
                     <BottomSheetScrollView 
                     showsVerticalScrollIndicator={false} 
@@ -159,13 +159,13 @@ function EditSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boo
                         <AnimatedRadioGroup 
                         className="gap-3" 
                         entering={FadeInUp.delay(400).duration(400).springify()}
-                        value={smokingHabit} 
+                        value={value} 
                         onChange={(value) => {
                             triggerHaptic("select")
-                            setSmokingHabit(value)
+                            setValue(value)
                         }}
                         >
-                            {smokingHabitsOptions.map((option, index) => 
+                            {drinkingHabitsOptions.map((option, index) => 
                                 <Radio
                                 value={option}
                                 size="md"
@@ -177,7 +177,7 @@ function EditSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boo
                                     className="font-roboto font-medium text-typography-950 flex-1" 
                                     entering={FadeInLeft.delay(600 + (index * 100)).duration(500).springify()}
                                     >
-                                        {i18n.t(`onboarding.moreAboutYou.smoking.options.${option}`)}
+                                        {i18n.t(`onboarding.moreAboutYou.drinking.options.${option}`)}
                                     </AnimatedRadioLabel>
                                     <AnimatedRadioIndicator entering={FadeInLeft.delay(500 + (index * 100)).duration(500).springify()}>
                                         <RadioIcon as={CircleIcon} />
@@ -193,8 +193,8 @@ function EditSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boo
     );
 };
 
-async function updateUser(userId: string, smokingHabit: SmokingHabits) {
-    const {error} = await supabase.from('user_additional_info').update({smoking_habits: smokingHabit}).eq('id', userId);
+async function updateUser(userId: string, value: string) {
+    const {error} = await supabase.from('user_additional_info').update({drinking_habits: value}).eq('id', userId);
 
     if (error) throw new Error("Something went wrong when updating the user: " + error.message)
 }

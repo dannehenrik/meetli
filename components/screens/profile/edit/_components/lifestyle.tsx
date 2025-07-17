@@ -4,6 +4,7 @@ import { Box } from "@/components/ui/box";
 
 import { Text } from "@/components/ui/text";
 import { SmokingSection } from "./_sections/smoking";
+import { DrinkingSection } from "./_sections/drinking";
 
 
 export function LifestyleSections() {
@@ -15,6 +16,7 @@ export function LifestyleSections() {
             </Text>
 
             <SmokingSection/>
+            <DrinkingSection/>
 
         </Box>
     );
