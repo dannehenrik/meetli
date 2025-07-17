@@ -12,6 +12,7 @@ import { PoliticsSection } from "./_sections/politics";
 import { ChildrenSection } from "./_sections/children";
 import { PetsSection } from "./_sections/pets";
 import { EducationSection } from "./_sections/education";
+import { OccupationSection } from "./_sections/occupation";
 
 
 export function LifestyleSections() {
@@ -26,12 +27,7 @@ export function LifestyleSections() {
             <DrinkingSection/>
             <TrainingSection/>
             <FoodSection/>
-            <ReligionSection/>
-            <PoliticsSection/>
-            <ChildrenSection/>
-            <PetsSection/>
-            <EducationSection/>
-
+   
         </Box>
     );
 }

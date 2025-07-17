@@ -30,6 +30,7 @@ const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
 const AnimatedText = Animated.createAnimatedComponent(Text)
 const AnimatedInput = Animated.createAnimatedComponent(Input)
+
 import { occupationIndustries, OccupationIndustry } from "@/types";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 import { ScrollView } from "react-native-gesture-handler";

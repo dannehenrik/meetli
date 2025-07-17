@@ -1,6 +1,5 @@
 // Set the key-value pairs for the different languages you want to support.
 
-import lookingFor from "@/app/(auth)/sign-in/onboarding/looking-for";
 
 const englishLanguage = {
     cancel: "Cancel",
@@ -86,21 +85,21 @@ const englishLanguage = {
         },
         gender: {
             howDoYouIdentify: "🌈 How do you identify yourself?",
-            woman: "👩 Woman",
-            male: "👨 Man",
-            nonBinary: "⚧️ Nonbinary",
+            woman: "Woman 👩",
+            male: "Man 👨",
+            nonBinary: "Nonbinary ⚧️",
             genderInterestInfo: "❤️ I would like to meet",
         },
         lookingFor: {
             lookingForInstruction: "🎯 What are you looking for on Meetli?",
             lookingForClarification: "This will help us match you to people who align to what you are looking for",
             options: {
-                serious: "💍 Serious",
-                seriousCasual: "🌹 Serious, but open to casual",
-                casualSerious: "🍹 Casual, but open to a serious relationship",
-                casual: "🔥 Casual",
-                notSure: "🤷‍♂️ Not sure",
-                friends: "🤝 Friends"
+                serious: "Serious 💍",
+                seriousCasual: "Serious, but open to casual 🌹",
+                casualSerious: "Casual, but open to a serious relationship 🍹",
+                casual: "Casual 🔥",
+                notSure: "Not sure 🤷‍♂️",
+                friends: "Friends 🤝"
             }
         },
         location: {
@@ -160,28 +159,27 @@ const englishLanguage = {
             training: {
                 title: "💪 How often do you work out?",
                 options: {
-                    serious: "🔥 I'm very serious about my training",
-                    regularly: "🏋️‍♂️ Regularly (4+ times a week)",
-                    occasionally: "🏃‍♀️ Occasionally (1–3 times a week)",
-                    everydayActive: "🚶‍♂️ Active in daily life (walking, moving)",
-                    whenMotivated: "😅 I work out from time to time",
-                    notMyThing: "🍿 Working out? (never)",
+                    serious: "I'm very serious about my training 🔥",
+                    regularly: "Regularly (4+ times a week) 🏋️‍♂️",
+                    occasionally: "Occasionally (1–3 times a week) 🏃‍♀️",
+                    everydayActive: "Active in daily life (walking, moving) 🚶‍♂️",
+                    whenMotivated: "I work out from time to time 😅",
+                    notMyThing: "Working out? (never) 🍿",
                 }
-
             },
             foodChoice: {
                 title: "🍽️ How would you describe your eating habits?",
                 options: {
                     everything: "Eat everything – no restrictions 🍕",
-                    healthy: "🥗 Mostly healthy",
-                    vegetarian: "🥦 Vegetarian",
-                    vegan: "🌱 Vegan",
-                    picky: "🙈 Picky eater",
-                    allergies: "🤧 Dietary restrictions (allergies etc...)",
-                    fitnessFocused: "🍗 Fitness-focused",
-                    halal: "🕌 Halal",
-                    kosher: "✡️ Kosher",
-                    other: "🍽️ Other"
+                    healthy: "Mostly healthy 🥗",
+                    vegetarian: "Vegetarian 🥦",
+                    vegan: "Vegan 🌱",
+                    picky: "Picky eater 🙈",
+                    allergies: "Dietary restrictions (allergies etc...) 🤧",
+                    fitnessFocused: "Fitness-focused 🍗",
+                    halal: "Halal 🕌",
+                    kosher: "Kosher ✡️",
+                    other: "Other 🍽️"
                 }
             },
             smoking: {
@@ -194,73 +192,72 @@ const englishLanguage = {
                     tryingToQuit: "Trying to quit 🛑",
                     preferNotToSay: "Prefer not to say 🙊"
                 }
-
             },
             drinking: {
                 title: "🍷 Do you drink alcohol?",
                 options: {
-                    no: "🚫 Never",
-                    socially: "🥂 Socially",
-                    occasionally: "🍸 Occasionally",
-                    regularly: "🍻 Regularly",
-                    sober: "🧘 I'm sober",
-                    preferNotToSay: "🙊 Prefer not to say"
+                    no: "Never 🚫",
+                    socially: "Socially 🥂",
+                    occasionally: "Occasionally 🍸",
+                    regularly: "Regularly 🍻",
+                    sober: "I'm sober 🧘",
+                    preferNotToSay: "Prefer not to say 🙊"
                 }
             },
             religion: {
                 title: "🙏 Do you identify with a religion?",
                 options: {
-                    none: "🚫 Not religious",
-                    spiritual: "🌌 Spiritual but not religious",
-                    christianity: "✝️ Christianity",
-                    islam: "🕌 Islam",
-                    judaism: "✡️ Judaism",
-                    hinduism: "🕉️ Hinduism",
-                    buddhism: "☸️ Buddhism",
-                    other: "🔎 Other religion",
-                    preferNotToSay: "🙊 Prefer not to say"
+                    none: "Not religious 🚫",
+                    spiritual: "Spiritual but not religious 🌌",
+                    christianity: "Christianity ✝️",
+                    islam: "Islam 🕌",
+                    judaism: "Judaism ✡️",
+                    hinduism: "Hinduism 🕉️",
+                    buddhism: "Buddhism ☸️",
+                    other: "Other religion 🔎",
+                    preferNotToSay: "Prefer not to say 🙊"
                 }
             },
             politicalView: {
                 title: "🗳️ How would you describe your political views?",
                 options: {
-                    apolitical: "🙅 Not into politics",
-                    moderate: "⚖️ Moderate",
-                    left: "🌹 Left-leaning",
-                    right: "🦅 Right-leaning",
-                    progressive: "🌈 Progressive",
-                    conservative: "🏛️ Conservative",
-                    other: "🧭 Other",
-                    preferNotToSay: "🙊 Prefer not to say"
+                    apolitical: "Not into politics 🙅",
+                    moderate: "Moderate ⚖️",
+                    left: "Left-leaning 🌹",
+                    right: "Right-leaning 🦅",
+                    progressive: "Progressive 🌈",
+                    conservative: "Conservative 🏛️",
+                    other: "Other 🧭",
+                    preferNotToSay: "Prefer not to say 🙊"
                 }
             },
             children: {
                 title: "👶 Do you want children?",
                 options: {
-                    no: "🚫 No",
-                    yes: "✅ Yes",
-                    many: "🎉 Many kids!",
-                    haveMore: "👨‍👩‍👧 Have kids & want more",
-                    haveNoMore: "👨‍👩‍👧 Have kids & don’t want more",
-                    undecided: "🤔 Not decided yet"
+                    no: "No 🚫",
+                    yes: "Yes ✅",
+                    many: "Many kids! 🎉",
+                    haveMore: "Have kids & want more 👨‍👩‍👧",
+                    haveNoMore: "Have kids & don’t want more 👨‍👩‍👧",
+                    undecided: "Not decided yet 🤔"
                 }
             },
             pets: {
                 title: "🐾 Do you have any pets?",
                 options: {
-                    no: "🚫 No pets",
-                    dog: "🐶 Dog",
-                    cat: "🐱 Cat",
-                    reptile: "🦎 Reptile",
-                    amphibian: "🐸 Amphibian",
-                    bird: "🐦 Bird",
-                    fish: "🐠 Fish",
-                    hamster: "🐹 Hamster",
-                    rabbit: "🐰 Rabbit",
-                    want: "❤️ Want pets",
-                    dontWant: "🙅 No pets for me",
-                    multiple: "🐕🐈 Multiple pets",
-                    allergic: "🤧 Allergic to pets"
+                    no: "No pets 🚫",
+                    dog: "Dog 🐶",
+                    cat: "Cat 🐱",
+                    reptile: "Reptile 🦎",
+                    amphibian: "Amphibian 🐸",
+                    bird: "Bird 🐦",
+                    fish: "Fish 🐠",
+                    hamster: "Hamster 🐹",
+                    rabbit: "Rabbit 🐰",
+                    want: "Want pets ❤️",
+                    dontWant: "No pets for me 🙅",
+                    multiple: "Multiple pets 🐕🐈",
+                    allergic: "Allergic to pets 🤧"
                 }
             },
             occupation: {
@@ -268,45 +265,45 @@ const englishLanguage = {
                 description: "Tell us your job title first, then choose the industry that best describes your field.",
                 placeholder: "Jobtitle",
                 options: {
-                    technology: "💻 Technology",
-                    healthcare: "🏥 Healthcare",
-                    education: "📚 Education",
-                    finance: "💰 Finance",
-                    artsEntertainment: "🎨 Arts & Entertainment",
-                    business: "👔 Business & Management",
-                    salesMarketing: "📈 Sales & Marketing",
-                    scienceEngineering: "🔬 Science & Engineering",
-                    legal: "⚖️ Legal",
-                    hospitality: "🍽️ Hospitality",
-                    realEstate: "🏢 Real Estate",
-                    manufacturing: "🏭 Manufacturing",
-                    retail: "🛒 Retail",
-                    transportation: "✈️ Transportation",
-                    agriculture: "🌱 Agriculture",
-                    government: "🏛️ Government",
-                    nonProfit: "❤️ Non-Profit",
-                    media: "🎥 Media & Communications",
-                    sportsFitness: "⚽ Sports & Fitness",
-                    student: "🎓 Student",
-                    creative: "🎭 Creative Arts",
-                    military: "🎖️ Military",
-                    notEmployed: "🏠 Not Employed",
-                    retired: "🌴 Retired",
-                    other: "🧩 Other",
-                    preferNotToSay: "🙊 Prefer not to say"
+                    technology: "Technology 💻",
+                    healthcare: "Healthcare 🏥",
+                    education: "Education 📚",
+                    finance: "Finance 💰",
+                    artsEntertainment: "Arts & Entertainment 🎨",
+                    business: "Business & Management 👔",
+                    salesMarketing: "Sales & Marketing 📈",
+                    scienceEngineering: "Science & Engineering 🔬",
+                    legal: "Legal ⚖️",
+                    hospitality: "Hospitality 🍽️",
+                    realEstate: "Real Estate 🏢",
+                    manufacturing: "Manufacturing 🏭",
+                    retail: "Retail 🛒",
+                    transportation: "Transportation ✈️",
+                    agriculture: "Agriculture 🌱",
+                    government: "Government 🏛️",
+                    nonProfit: "Non-Profit ❤️",
+                    media: "Media & Communications 🎥",
+                    sportsFitness: "Sports & Fitness ⚽",
+                    student: "Student 🎓",
+                    creative: "Creative Arts 🎭",
+                    military: "Military 🎖️",
+                    notEmployed: "Not Employed 🏠",
+                    retired: "Retired 🌴",
+                    other: "Other 🧩",
+                    preferNotToSay: "Prefer not to say 🙊"
                 },
                 instruction: "You choose an industry to enable filtering!"
             },
             education: {
                 title: "🎓 What is your highest level of education?",
                 options: {
-                    highSchool: "🏫 High school",
-                    college: "📘 College / University",
-                    bachelors: "🎓 Bachelor's degree",
-                    masters: "🎓 Master's degree",
-                    phd: "📚 PhD or Doctorate",
-                    other: "🧠 Other",
-                    preferNotToSay: "🙊 Prefer not to say"
+                    highSchool: "High school 🏫",
+                    college: "College / University 📘",
+                    bachelors: "Bachelor's degree 🎓",
+                    masters: "Master's degree 🎓",
+                    phd: "PhD or Doctorate 📚",
+                    other: "Other 🧠",
+                    preferNotToSay: "Prefer not to say 🙊"
                 }
             },
             profilePrompts: {
@@ -566,13 +563,17 @@ const englishLanguage = {
             emptyFavorites: "You haven't chosen any favorites yet..."
         },
         titles: {
-            pictures: "My Photos & Videos",
-            favorites: "My favorite x is...",
-            prompts: "Prompts",
-            interests: "My interests",
-            intro: "Profile description",
-            lifestyle: "Lifestyle"
+            pictures: "📸 My Photos & Videos",
+            favorites: "💖 My favorite x is...",
+            prompts: "✨ Prompts",
+            interests: "🏀 My interests",
+            intro: "💬 Profile description",
+            lifestyle: "🌿 Lifestyle",
+            beliefsAndValues: "🧠 Beliefs & Values",
+            family: "👨‍👩‍👧‍👦 Family",
+            career: "💼 Career",
         }
+
     },
     interests: {
         groups: {

@@ -12,6 +12,9 @@ import { Intro } from "./_components/IntroEditor";
 import { Prompts } from "./_components/PromptEditor";
 import { Favorites } from "./_components/FavoritesEditor";
 import { LifestyleSections } from "./_components/lifestyle";
+import { BeliefsAndValuesSections } from "./_components/beliefsAndValues";
+import { FamilySections } from "./_components/family";
+import { CareerSections } from "./_components/career";
 
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -61,6 +64,12 @@ export function EditScreen() {
             <Favorites/>
 
             <LifestyleSections/>
+
+            <BeliefsAndValuesSections/>
+
+            <FamilySections/>
+
+            <CareerSections/>
             
         </AnimatedBox>
     );

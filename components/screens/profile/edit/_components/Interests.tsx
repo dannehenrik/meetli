@@ -269,15 +269,15 @@ export default function InterestsEdit( {selectedInterests, setSelectedInterests}
 
             {/* Input */}
             <HStack 
-            className="w-full px-4 py-2 bg-background-50 rounded-md items-center"
+            className="w-full px-4 bg-background-50 rounded-md items-center"
             space="xs"
             >
-                <Icon as={SearchIcon} className="text-typography-400 w-4 h-4" />
+                <Icon as={SearchIcon} className="text-typography-400 w-4 h-4 py-4" />
                 <BottomSheetTextInput
                     placeholder={i18n.t("onboarding.moreAboutYou.interests.placeholder")}
                     value={searchQuery}
                     onChangeText={setSearchQuery}
-                    className="flex-1 text-md py-1 text-typography-900 placeholder-text-typography-400 bg-transparent"
+                    className="flex-1 text-md py-4 text-typography-900 placeholder-text-typography-400 bg-transparent"
                     
                 />
             </HStack>
