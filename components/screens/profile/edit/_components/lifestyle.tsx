@@ -5,6 +5,10 @@ import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
 import { SmokingSection } from "./_sections/smoking";
 import { DrinkingSection } from "./_sections/drinking";
+import { TrainingSection } from "./_sections/training";
+import { FoodSection } from "./_sections/food";
+import { ReligionSection } from "./_sections/religion";
+import { PoliticsSection } from "./_sections/politics";
 
 
 export function LifestyleSections() {
@@ -17,6 +21,10 @@ export function LifestyleSections() {
 
             <SmokingSection/>
             <DrinkingSection/>
+            <TrainingSection/>
+            <FoodSection/>
+            <ReligionSection/>
+            <PoliticsSection/>
 
         </Box>
     );
