@@ -1,23 +1,17 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@/components/ui/box";
-import { HStack } from "@/components/ui/hstack";
-import { AddIcon, Icon, InfoIcon, RemoveIcon } from "@/components/ui/icon";
-import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { PenIcon } from "@/components/shared/icons";
-import { Pressable } from "@/components/ui/pressable";
-import { VStack } from "@/components/ui/vstack";
+
 import Animated, { SlideInLeft, SlideOutLeft } from "react-native-reanimated";
 import { useFullUser } from "@/hooks/user/useFullUser";
 import { i18n } from "@/app/_layout";
 import { Pictures } from "./_components/Pictures";
 import { Spinner } from "@/components/ui/spinner";
-import { InteractionManager } from "react-native";
 import { Interests } from "./_components/Interests";
 import { Intro } from "./_components/IntroEditor";
 import { Prompts } from "./_components/PromptEditor";
 import { Favorites } from "./_components/FavoritesEditor";
+import { LifestyleSections } from "./_components/lifestyle";
 
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -65,6 +59,8 @@ export function EditScreen() {
             <Prompts/>
 
             <Favorites/>
+
+            <LifestyleSections/>
             
         </AnimatedBox>
     );

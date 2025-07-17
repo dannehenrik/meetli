@@ -172,7 +172,7 @@ const englishLanguage = {
             foodChoice: {
                 title: "🍽️ How would you describe your eating habits?",
                 options: {
-                    everything: "🍕 Eat everything – no restrictions",
+                    everything: "Eat everything – no restrictions 🍕",
                     healthy: "🥗 Mostly healthy",
                     vegetarian: "🥦 Vegetarian",
                     vegan: "🌱 Vegan",
@@ -187,13 +187,14 @@ const englishLanguage = {
             smoking: {
                 title: "🚬 Do you smoke?",
                 options: {
-                    no: "❌ No",
-                    socially: "🍷 Only socially",
-                    occasionally: "🚬 Occasionally",
-                    regularly: "💨 Regularly",
-                    tryingToQuit: "🛑 Trying to quit",
-                    preferNotToSay: "🙊 Prefer not to say"
+                    no: "No ❌",
+                    socially: "Only socially 🍷",
+                    occasionally: "Occasionally 🚬",
+                    regularly: "Regularly 💨",
+                    tryingToQuit: "Trying to quit 🛑",
+                    preferNotToSay: "Prefer not to say 🙊"
                 }
+
             },
             drinking: {
                 title: "🍷 Do you drink alcohol?",
@@ -569,7 +570,8 @@ const englishLanguage = {
             favorites: "My favorite x is...",
             prompts: "Prompts",
             interests: "My interests",
-            intro: "Profile description"
+            intro: "Profile description",
+            lifestyle: "Lifestyle"
         }
     },
     interests: {
