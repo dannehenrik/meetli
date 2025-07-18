@@ -88,6 +88,7 @@ function ProfileProgress({user} : {user: User}) {
                 <Box className="aspect-square w-24">
                 <Image
                 source={user.images[0]?.url ?? ""}
+                cachePolicy="memory-disk"
                 alt="profile"
                 style={{
                     width: '100%',
