@@ -11,8 +11,8 @@ import {
   SettingsIcon,
 } from "@/components/ui/icon";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { Image } from "@/components/ui/image";
-// import { Image } from "expo-image";
+// import { Image } from "@/components/ui/image";
+import { Image } from "expo-image";
 import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 // import { profile } from "@/data/data";
@@ -85,11 +85,17 @@ function ProfileProgress({user} : {user: User}) {
     return (
         <Box className="h-[176px] flex flex-col items-center justify-center bg-background-50 rounded-lg mt-6 gap-5 p-3">
             <Box className="flex-row gap-x-5 w-full">
+                <Box className="aspect-square w-24">
                 <Image
                 source={user.images[0]?.url ?? ""}
-                className="aspect-square w-24 rounded-full"
                 alt="profile"
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: 50,    // adjust for how rounded you want it
+                }}
                 />
+                </Box>
                 <Box className="flex-col flex-1">
                 <Box className="flex-row gap-x-2 items-center">
                     <Text className="font-roboto text-secondary-500 flex-wrap text-sm font-semibold">
