@@ -86,7 +86,6 @@ export function Prompts() {
                 onPress={() => {
                     triggerHaptic('buttonLight')
                     setIsOpen(true)
-                    // router.push("/edit-profile/edit-prompts")
                 }}
                 >
                     <ButtonIcon

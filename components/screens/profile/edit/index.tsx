@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
+import React, { useEffect, useState } from "react";
 
-import Animated, { SlideInLeft, SlideOutLeft } from "react-native-reanimated";
-import { useFullUser } from "@/hooks/user/useFullUser";
 import { i18n } from "@/app/_layout";
-import { Pictures } from "./_components/Pictures";
 import { Spinner } from "@/components/ui/spinner";
+import { useFullUser } from "@/hooks/user/useFullUser";
+import Animated, { SlideInLeft, SlideOutLeft } from "react-native-reanimated";
+import { BeliefsAndValuesSections } from "./_components/beliefsAndValues";
+import { CareerSections } from "./_components/career";
+import { FamilySections } from "./_components/family";
+import { Favorites } from "./_components/FavoritesEditor";
 import { Interests } from "./_components/Interests";
 import { Intro } from "./_components/IntroEditor";
-import { Prompts } from "./_components/PromptEditor";
-import { Favorites } from "./_components/FavoritesEditor";
 import { LifestyleSections } from "./_components/lifestyle";
-import { BeliefsAndValuesSections } from "./_components/beliefsAndValues";
-import { FamilySections } from "./_components/family";
-import { CareerSections } from "./_components/career";
+import { Pictures } from "./_components/Pictures";
+import { Prompts } from "./_components/PromptEditor";
 
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -50,12 +50,12 @@ export function EditScreen() {
                 {picturesReady ? <Pictures/> : <Spinner/>}
             </Box>
 
+            {/* Profile Description */}
+            <Intro/>
+
             {/* Interests */}
             <Interests />
 
-            {/* Profile Description */}
-            <Intro/>
- 
 
             {/* Prompts */}
            

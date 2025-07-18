@@ -24,7 +24,6 @@ export default function ChatLayout() {
             screenLayout={({ children }) => <RootLayout>{children}</RootLayout>}
             >
                 <Stack.Screen name="edit-profile" />
-                <Stack.Screen name="edit-profile/edit-prompts" />
                 <Stack.Screen name="messages/[id]" />
                 
             </Stack>

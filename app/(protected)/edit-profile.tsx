@@ -15,6 +15,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useWindowDimensions } from "react-native";
 import { useFullUser } from "@/hooks/user/useFullUser";
+import { triggerHaptic } from "@/utils/haptics";
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export function Header() {
@@ -22,6 +23,7 @@ export function Header() {
 
     const {data: user} = useFullUser();
     function handleDone() {
+        triggerHaptic("buttonLight")
         router.back();
     };
 

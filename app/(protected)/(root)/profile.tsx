@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { router, Router } from "expo-router";
 import { LogoIcon, BoltIcon, HelpCenterIcon } from "@/components/shared/icons";
+import { Headset,  } from "lucide-react-native";
 import { Heading } from "@/components/ui/heading";
 import { Box } from "@/components/ui/box";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/icon";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
+// import { Image } from "expo-image";
 import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 // import { profile } from "@/data/data";
@@ -20,6 +22,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { calculateAge } from "@/utils/calculateAge";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 import { useFullUser } from "@/hooks/user/useFullUser";
+import { User } from "@/types";
+import { triggerHaptic } from "@/utils/haptics";
 
 function Header() {
     return (
@@ -32,10 +36,8 @@ function Header() {
     );
 }
 
-function ProfileHeader() {
-    const {data: user} = useFullUser();
-
-    if (!user) return <Spinner/>
+function ProfileHeader({user} : {user: User}) {
+    
 
     return (
         <Box className="items-center flex-row justify-between">
@@ -46,6 +48,7 @@ function ProfileHeader() {
                 className="bg-background-200 data-[active=true]:bg-background-300"
                 size="sm"
                 onPress={() => {
+                    triggerHaptic("button")
                     router.push("/edit-profile");
                 }}
             >
@@ -61,9 +64,7 @@ function ProfileHeader() {
     );
 }
 
-function ProfileProgress() {
-
-    const {data: user} = useFullUser();
+function ProfileProgress({user} : {user: User}) {
 
     const [number, setNumber] = useState(0);
     const targetNumber = 67;
@@ -81,40 +82,39 @@ function ProfileProgress() {
         };
     });
 
-    if (!user) return <Spinner/>
     return (
         <Box className="h-[176px] flex flex-col items-center justify-center bg-background-50 rounded-lg mt-6 gap-5 p-3">
-        <Box className="flex-row gap-x-5 w-full">
-            <Image
-            source={user.images[0]?.url ?? ""}
-            className="aspect-square w-24 rounded-full"
-            alt="profile"
-            />
-            <Box className="flex-col flex-1">
-            <Box className="flex-row gap-x-2 items-center">
-                <Text className="font-roboto text-secondary-500 flex-wrap text-sm font-semibold">
-                {number}%
-                </Text>
-                <Box className="flex-1 flex-row h-1 bg-background-300 rounded-full">
-                <Animated.View
-                    style={animatedStyle}
-                    className="bg-secondary-500 h-full rounded-full"
+            <Box className="flex-row gap-x-5 w-full">
+                <Image
+                source={user.images[0]?.url ?? ""}
+                className="aspect-square w-24 rounded-full"
+                alt="profile"
                 />
+                <Box className="flex-col flex-1">
+                <Box className="flex-row gap-x-2 items-center">
+                    <Text className="font-roboto text-secondary-500 flex-wrap text-sm font-semibold">
+                    {number}%
+                    </Text>
+                    <Box className="flex-1 flex-row h-1 bg-background-300 rounded-full">
+                    <Animated.View
+                        style={animatedStyle}
+                        className="bg-secondary-500 h-full rounded-full"
+                    />
+                    </Box>
+                </Box>
+                <Text className="font-roboto text-typography-500 flex-wrap text-sm">
+                    {user.intro}
+                </Text>
                 </Box>
             </Box>
-            <Text className="font-roboto text-typography-500 flex-wrap text-sm">
-                {user.intro}
-            </Text>
-            </Box>
-        </Box>
-        <Button
-            size="sm"
-            className="bg-background-950 data-[active=true]:bg-background-800 self-end"
-        >
-            <ButtonText className="text-typography-0 font-roboto data-[active=true]:text-typography-50">
-            Add More Details
-            </ButtonText>
-        </Button>
+            <Button
+                size="sm"
+                className="bg-background-950 data-[active=true]:bg-background-800 self-end"
+            >
+                <ButtonText className="text-typography-0 font-roboto data-[active=true]:text-typography-50">
+                Add More Details
+                </ButtonText>
+            </Button>
         </Box>
     );
 }
@@ -122,8 +122,7 @@ function ProfileProgress() {
 function ProfileOptions() {
     return (
         <Box className="flex-col gap-y-2 mt-4 py-2">
-            <Box className="flex-row gap-3 bg-primary-800 rounded-lg p-2 ">
-                {/* <Box className="bg-background-50 p-2.5 rounded-lg h-10 w-10 flex items-center justify-center"> */}
+            {/* <Box className="flex-row gap-3 bg-primary-800 rounded-lg p-2 ">
                 <Box className="bg-primary-900 p-2.5 rounded-lg h-10 w-10 flex items-center justify-center">
                     <Icon className="w-5 h-5" as={BoltIcon} />
                 </Box>
@@ -139,7 +138,7 @@ function ProfileOptions() {
                 <Pressable className="p-1">
                     <Icon as={ChevronRightIcon} className="w-4 h-4" />
                 </Pressable>
-            </Box>
+            </Box> */}
             <Pressable className="flex-row gap-x-2 items-center w-full gap-3 data-[active=true]:bg-background-50/50 rounded-lg py-3 mt-2 px-2">
                 <Box className="bg-background-50 rounded-lg h-8 w-8 flex items-center justify-center">
                 <Icon as={SettingsIcon} className="w-4 h-4" />
@@ -151,7 +150,7 @@ function ProfileOptions() {
             </Pressable>
             <Pressable className="flex-row gap-x-2 items-center w-full gap-3 data-[active=true]:bg-background-50/50 rounded-lg py-3 px-2">
                 <Box className="bg-background-50 rounded-lg h-8 w-8 flex items-center justify-center">
-                    <Icon as={HelpCenterIcon} className="text-typography-950 w-4 h-4" />
+                    <Icon as={Headset} className="text-typography-950 w-4 h-4" />
                 </Box>
                 <Text className="font-roboto text-typography-950 font-medium flex-1">
                 Help Center
@@ -163,14 +162,22 @@ function ProfileOptions() {
 }
 
 export default function Index() {
-  return (
-    <>
-      <Header />
-      <Box className="px-4">
-        <ProfileHeader />
-        <ProfileProgress />
-        <ProfileOptions />
-      </Box>
-    </>
-  );
+    const {data: user} = useFullUser();
+
+    return (
+        <>
+        <Header/>
+        <Box className="px-4">
+            {user ? (
+            <>
+                <ProfileHeader user={user}/>
+                <ProfileProgress user={user}/>
+                <ProfileOptions/>
+            </>
+            ) : (
+                <Spinner/>
+            )}
+        </Box>
+        </>
+    );
 }

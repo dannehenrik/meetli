@@ -12,6 +12,7 @@ import {
 } from "../icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Text } from "@/components/ui/text";
+import { triggerHaptic } from "@/utils/haptics";
 
 const tabBarData = [
     {
@@ -51,6 +52,7 @@ export const CustomTabBar = (props: BottomTabBarProps) => {
                 <Button
                     key={route.route}
                     onPress={() => {
+                        triggerHaptic("button")
                         props.navigation.navigate(route.route);
                     }}
                     className="relative flex flex-row items-center justify-center gap-2 text-center px-auto flex-1 h-auto py-5 max-w-32"
