@@ -10,18 +10,21 @@ import { ImageBackground } from "@/components/ui/image-background";
 import { LinearGradient } from "expo-linear-gradient";
 import { LocationBadge, LoveBadge } from "../../shared/badge";
 import { Text } from "@/components/ui/text";
-import { QACard } from "./qa-card";
+import { QACard } from "./_components/qa-card";
 // import { InstaCard } from "../../shared/instagram-card";
 import Animated, { SlideInRight, SlideOutRight } from "react-native-reanimated";
 import { useFullUser } from "@/hooks/user/useFullUser";
 import { Spinner } from "@/components/ui/spinner";
 import { i18n } from "@/app/_layout";
+import { calculateAge } from "@/utils/calculateAge";
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export const ProfileScreen = () => {
   const {data: user} = useFullUser();
 
+  
   if (!user) return <Spinner/>
+
   return (
     <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
       <AnimatedBox
@@ -32,7 +35,7 @@ export const ProfileScreen = () => {
       >
         <HStack className="w-full items-center justify-between gap-3">
           <Heading size="3xl" className="font-roboto">
-            {user.first_name}, {user.age}
+            {user.first_name}, {calculateAge(user.dob)}
           </Heading>
           {user && (
             <Badge
@@ -51,7 +54,8 @@ export const ProfileScreen = () => {
           </Button>
         </HStack>
         <ImageBackground
-          source={user.images[0]?.url ?? ""}
+          source={user.images[0]?.url ? { uri: user.images[0].url } : undefined}
+
           className="w-full rounded-lg aspect-[0.8] justify-end overflow-hidden"
         >
           <LinearGradient
@@ -83,13 +87,15 @@ export const ProfileScreen = () => {
         </Box>
         <Text size="sm">{user.intro}</Text>
         <ImageBackground
-          source={user.images[1]?.url ?? ""}
+          source={user.images[1]?.url ? { uri: user.images[1].url } : undefined}
+
           className="w-full rounded-lg aspect-square overflow-hidden"
         />
-        {/* <QACard
-          question={user.qa[0].question}
-          answer={user.qa[0].answer}
+         <QACard
+          question={i18n.t(`onboarding.moreAboutYou.profilePrompts.prompts.${user.prompts[0]?.id}.question`)}
+          answer={user.prompts[0].answer}
         />
+        {/*
         <ImageBackground
           source={user.images[2]}
           className="w-full rounded-lg aspect-square overflow-hidden"
