@@ -17,6 +17,7 @@ import { useFullUser } from "@/hooks/user/useFullUser";
 import { Spinner } from "@/components/ui/spinner";
 import { i18n } from "@/app/_layout";
 import { calculateAge } from "@/utils/calculateAge";
+import ImageCarousel from "./_components/imageCarousel";
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export const ProfileScreen = () => {
@@ -53,19 +54,8 @@ export const ProfileScreen = () => {
             />
           </Button>
         </HStack>
-        <ImageBackground
-          source={user.images[0]?.url ? { uri: user.images[0].url } : undefined}
-
-          className="w-full rounded-lg aspect-[0.8] justify-end overflow-hidden"
-        >
-          <LinearGradient
-            colors={["#12121200", "#121212bb"]}
-            className="flex-row w-full justify-between p-4"
-          >
-            <LoveBadge lovePercentage={60} size="lg" />
-            <LocationBadge distance={50} size="lg" />
-          </LinearGradient>
-        </ImageBackground>
+ 
+        <ImageCarousel shouldLoad />
         <Box>
           <ScrollView
             horizontal

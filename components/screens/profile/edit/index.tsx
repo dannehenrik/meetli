@@ -29,7 +29,7 @@ export function EditScreen() {
     useEffect(() => {
         const timeout = setTimeout(() => {
             setPicturesReady(true);
-        }, 1000); // simulate a delay for loading or animation
+        }, 500); // simulate a delay for loading or animation
 
         return () => clearTimeout(timeout);
     }, []);
