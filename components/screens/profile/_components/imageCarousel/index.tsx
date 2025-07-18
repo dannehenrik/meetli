@@ -1,7 +1,9 @@
 import { Spinner } from "@/components/ui/spinner";
 import { useFullUser } from "@/hooks/user/useFullUser";
+import { User } from "@/types";
 import { Image } from "expo-image";
-import * as React from "react";
+import { useEffect, useRef, useState } from "react";
+
 import { Dimensions, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, {
@@ -11,21 +13,21 @@ import Carousel, {
 
 const screenWidth = Dimensions.get("window").width;
 
-export default function ImageCarousel({ shouldLoad }: { shouldLoad?: boolean }) {
-  const [picturesReady, setPicturesReady] = React.useState(false);
+export default function ImageCarousel({user, shouldLoad }: {user: User, shouldLoad?: boolean }) {
+  const [picturesReady, setPicturesReady] = useState(false);
+  useEffect(() => {
+    if (shouldLoad) {
+        const timeout = setTimeout(() => {
+            setPicturesReady(true);
+        }, 500); // simulate a delay for loading or animation
+        
 
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      setPicturesReady(true);
-    }, 500); // simulate a delay for loading or animation
+        return () => clearTimeout(timeout);
+    }
+  }, [shouldLoad]);
 
-    return () => clearTimeout(timeout);
-  }, []);
 
-  const { data: user } = useFullUser();
-  const data = user?.images.slice(0, 3) ?? [];
-
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
 
   const onPressPagination = (index: number) => {
@@ -37,6 +39,8 @@ export default function ImageCarousel({ shouldLoad }: { shouldLoad?: boolean }) 
 
   const horizontalPadding = 16;
   const carouselWidth = screenWidth - horizontalPadding * 2;
+
+  const data = user?.images.slice(0, 3) ?? [];
 
   if (!user || (shouldLoad && !picturesReady)) return <Spinner />;
 
@@ -68,26 +72,18 @@ export default function ImageCarousel({ shouldLoad }: { shouldLoad?: boolean }) 
 
         {/* Overlayed pagination at bottom center */}
         <View
-        //   style={{
-        //     position: "absolute",
-        //     bottom: 12,
-        //     left: 0,
-        //     right: 0,
-        //     alignItems: "center",
-        //     justifyContent: "center",
-        //   }}
         style={{
-    position: "absolute",
-    bottom: 12,
-    left: 0,
-    right: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 4,
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
-    borderRadius: 12,
-    marginHorizontal: 150,
-  }}
+            position: "absolute",
+            bottom: 12,
+            left: 0,
+            right: 0,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingVertical: 4,
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
+            borderRadius: 12,
+            marginHorizontal: 150,
+        }}
         >
           <Pagination.Basic
             progress={progress}
