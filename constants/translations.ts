@@ -1,5 +1,6 @@
 // Set the key-value pairs for the different languages you want to support.
 
+import lookingFor from "@/app/(auth)/sign-in/onboarding/looking-for";
 
 const englishLanguage = {
     cancel: "Cancel",
@@ -157,6 +158,7 @@ const englishLanguage = {
                 request: "Request"
             },
             training: {
+                // title: "💪 How often do you work out?",
                 title: "💪 How often do you work out?",
                 options: {
                     serious: "I'm very serious about my training 🔥",
@@ -168,7 +170,7 @@ const englishLanguage = {
                 }
             },
             foodChoice: {
-                title: "🍽️ How would you describe your eating habits?",
+                title: "🍽️ What's your eating habits?",
                 options: {
                     everything: "Eat everything – no restrictions 🍕",
                     healthy: "Mostly healthy 🥗",
@@ -219,7 +221,7 @@ const englishLanguage = {
                 }
             },
             politicalView: {
-                title: "🗳️ How would you describe your political views?",
+                title: "🗳️ What's your political views?",
                 options: {
                     apolitical: "Not into politics 🙅",
                     moderate: "Moderate ⚖️",
@@ -563,15 +565,16 @@ const englishLanguage = {
             emptyFavorites: "You haven't chosen any favorites yet..."
         },
         titles: {
-            pictures: "📸 My Photos & Videos",
-            favorites: "💖 My favorite x is...",
-            prompts: "✨ Prompts",
-            interests: "🏀 My interests",
-            intro: "💬 Profile description",
-            lifestyle: "🌿 Lifestyle",
-            beliefsAndValues: "🧠 Beliefs & Values",
-            family: "👨‍👩‍👧‍👦 Family",
-            career: "💼 Career",
+            pictures: "Photos",
+            favorites: "My favorites",
+            prompts: "Prompts",
+            interests: "Interests",
+            intro: "Profile description",
+            lifestyle: "Lifestyle",
+            beliefsAndValues: "Beliefs & Values",
+            family: "Family",
+            career: "Career",
+            aboutMe: "About me"
         }
 
     },

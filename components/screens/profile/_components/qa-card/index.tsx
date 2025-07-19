@@ -4,6 +4,7 @@ import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { User } from "@/types";
 import { i18n } from "@/app/_layout";
+import { Divider } from "@/components/ui/divider";
 
 export const PromptCard = ({user, order}: {user: User, order: number}) => {
     const prompt = getActivePromptByOrder(user, order);
@@ -37,8 +38,11 @@ export const FavoriteCard = ({user, order}: {user: User, order: number}) => {
     if (!favorite) return null 
     const question = i18n.t(`onboarding.moreAboutYou.profileFavorites.options.${favorite.id}.question`)
     const answer = favorite.answer
+
+    const nextQuestionExist = order === 3 ? false : getActiveFavoriteByOrder(user, order + 1)
     
     return (
+    <>
         <Box className="bg-background-50 rounded-lg px-5 py-11 gap-4">
             <Text className="font-roboto font-medium text-typography-500 leading-[18.75px]">
                 {question}
@@ -47,6 +51,10 @@ export const FavoriteCard = ({user, order}: {user: User, order: number}) => {
                 {answer}
             </Heading>
         </Box>
+        {nextQuestionExist && (
+        <Divider className="my-3" />
+        )}
+    </>
     );
 };
 

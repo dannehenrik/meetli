@@ -15,8 +15,10 @@ export default function ProfileImage({user, order} : {user: User, order: number}
         return () => clearTimeout(timeout);
     
       }, []);
+
+    const image = user.images[order - 1]
     
-    if (!user.images[order]) return null
+    if (!image) return null
 
     if (!pictureReady) return <Spinner/>
 
@@ -27,7 +29,7 @@ export default function ProfileImage({user, order} : {user: User, order: number}
             alt="profile-image-4"
             contentFit="cover"
             cachePolicy="memory"
-            source={user.images[order].url}
+            source={image.url}
                 style={{
                 width: "100%",
                 height: "100%",
