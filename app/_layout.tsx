@@ -5,8 +5,6 @@ import NetInfo from '@react-native-community/netinfo'
 import { onlineManager, focusManager, useQuery } from '@tanstack/react-query'
 import type { AppStateStatus } from 'react-native'
 import { SplashScreen } from '@/components/shared/splash-screen'
-import { StatusBar } from 'react-native'
-import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetModalProvider } from "@/components/shared/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -15,17 +13,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 const queryClient = new QueryClient()
 
 
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import { useFonts } from 'expo-font';
 import { Slot, Stack } from 'expo-router';
 import 'react-native-reanimated';
 
-
-import { useColorScheme } from '@/hooks/useColorScheme';
 import * as SplashScreenExpo from "expo-splash-screen";
-import { supabase } from "@/utils/supabase";
 
 
 // Translation
@@ -33,7 +25,7 @@ import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { translations } from '@/constants/translations'
 import { fetchUserStatus } from "@/server/auth/fetchUserStatus";
-import { View } from "lucide-react-native";
+import { fetchFullUser, useFullUser } from "@/hooks/user/useFullUser";
 export const i18n = new I18n(translations);
 
 // Set the locale once at the beginning of your app.
@@ -74,14 +66,21 @@ export default function RootLayout() {
     useEffect(() => {
         async function prepareApp() {
             try {
-                // Hide native splash screen
-                await SplashScreenExpo.hideAsync();
 
                 // 🔑 Fetch user manually
-                const user = await fetchUserStatus();
+                const userStatus = await fetchUserStatus();
+                
+
+                if (userStatus?.onboarding_completed) {
+                    queryClient.setQueryData(['user', 'full'], await fetchFullUser())
+                }
 
                 // ✅ Pre-populate user data into TanStack cache
-                queryClient.setQueryData(['user', 'status'], user);
+                queryClient.setQueryData(['user', 'status'], userStatus);
+
+                 // Hide native splash screen
+                await SplashScreenExpo.hideAsync();
+
 
                 // Optional: Simulate some delay
                 await new Promise(res => setTimeout(res, 1500));

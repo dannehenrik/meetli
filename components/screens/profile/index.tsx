@@ -184,7 +184,7 @@ export function ProfileScreen({user} : {user: User}) {
                     </Button>
                 </HStack>
                 
-                <ImageCarousel user={user} />
+                <ImageCarousel shouldLoad user={user} />
 
                 {user.intro && (
                     <View className="bg-background-50 rounded-lg p-5">

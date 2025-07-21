@@ -1,5 +1,6 @@
 import { Redirect } from "expo-router";
 import { useUserStatus } from "@/hooks/user/useUserStatus";
+import { useFullUser } from "@/hooks/user/useFullUser";
 
 export default function Main() {
 

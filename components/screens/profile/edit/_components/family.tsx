@@ -15,8 +15,8 @@ export function FamilySections() {
                 {i18n.t("editProfile.titles.family")}
             </Text>
 
-            <ChildrenSection/>
-            <PetsSection/>
+            {/* <ChildrenSection/> */}
+            {/* <PetsSection/> */}
    
         </Box>
     );

@@ -1,6 +1,7 @@
 import { Spinner } from "@/components/ui/spinner";
 import { User } from "@/types";
 import { Image } from "expo-image";
+import { Box } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
@@ -37,7 +38,58 @@ export default function ImageCarousel({user, shouldLoad }: {user: User, shouldLo
   const carouselWidth = screenWidth - horizontalPadding * 2;
   const data = user?.images.slice(0, 3) ?? [];
 
-  if (!user || (shouldLoad && !picturesReady)) return <Spinner />;
+  if (!user || (shouldLoad && !picturesReady)) return (
+  <View
+    style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: horizontalPadding,
+    }}
+  >
+    <View
+      style={{
+        width: carouselWidth,
+        height: carouselWidth,
+        position: 'relative',
+      }}
+    >
+      {/* <Image
+        source={user.images[0]?.url}
+        alt="profile-carousel"
+        contentFit="cover"
+        cachePolicy="memory"
+        blurRadius={20}
+        style={{
+          width: '100%',
+          height: '100%',
+          borderRadius: 20,
+        }}
+      /> */}
+
+      {/* Overlay */}
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          // backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          borderRadius: 20,
+          zIndex: 10,
+        }}
+      >
+        <Spinner />
+      </View>
+    </View>
+  </View>
+);
+
+
+  
 
   return (
     <View style={{ 
@@ -55,12 +107,17 @@ export default function ImageCarousel({user, shouldLoad }: {user: User, shouldLo
           ref={ref}
           width={carouselWidth}
           height={carouselWidth}
+          
           data={data}
           onProgressChange={progress}
           loop={true}
+          style={{borderRadius: 20}}
           renderItem={({ item }) => (
             <Image
               source={item.url ?? undefined}
+              placeholder={require("@/assets/images/placeholder-image.webp")}
+              placeholderContentFit="cover"
+              allowDownscaling
               alt="profile-carousel"
               contentFit="cover"
               cachePolicy="memory"
@@ -74,32 +131,33 @@ export default function ImageCarousel({user, shouldLoad }: {user: User, shouldLo
         />
         {/* Overlayed pagination at bottom center */}
         <View
-          style={{
-            position: "absolute",
-            bottom: 12,
-            left: "50%", // Center horizontally
-            transform: [{ translateX: -50 }], // Adjust for true centering
-            alignItems: "center",
-            justifyContent: "center",
-            paddingVertical: 4,
-            paddingHorizontal: 12,
-            backgroundColor: "rgba(0, 0, 0, 0.2)",
-            borderRadius: 12,
-          }}
-        >
-          <Pagination.Basic
-            progress={progress}
-            data={data}
-            dotStyle={{
-              backgroundColor: "rgba(255, 255, 255, 0.85)",
-              width: 8,
-              height: 8,
-              borderRadius: 4,
-            }}
-            containerStyle={{ gap: 6 }}
-            onPress={onPressPagination}
-          />
-        </View>
+  style={{
+    position: "absolute",
+    bottom: 12,
+    left: 150,
+    right: 150,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    borderRadius: 12,
+  }}
+>
+  <Pagination.Basic
+    progress={progress}
+    data={data}
+    dotStyle={{
+      backgroundColor: "rgba(255, 255, 255, 0.85)",
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+    }}
+    containerStyle={{ gap: 6 }}
+    onPress={onPressPagination}
+  />
+</View>
+
       </View>
     </View>
   );
