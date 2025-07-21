@@ -16,6 +16,8 @@ import Animated, {
 import { useWindowDimensions } from "react-native";
 import { useFullUser } from "@/hooks/user/useFullUser";
 import { triggerHaptic } from "@/utils/haptics";
+import { Spinner } from "@/components/ui/spinner";
+import { i18n } from "../_layout";
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export function Header() {
@@ -70,6 +72,10 @@ export default function EditProfile() {
         };
     }, []);
 
+    const {data: user} = useFullUser();
+
+    if (!user) return <Spinner/>
+
     return (
         <Box className="flex-1">
             <Header />
@@ -82,7 +88,7 @@ export default function EditProfile() {
                 className="flex-1 bg-transparent  rounded-none data-[active=true]:bg-transparent"
                 >
                     <ButtonText className="text-typography-950 data-[active=true]:text-typography-950">
-                        Edit
+                        {i18n.t("editProfilePage.edit")}
                     </ButtonText>
                 </Button>
                 <Button
@@ -93,13 +99,13 @@ export default function EditProfile() {
                 }}
                 >
                     <ButtonText className="text-typography-950 data-[active=true]:text-typography-950">
-                        Preview
+                        {i18n.t("editProfilePage.preview")}
                     </ButtonText>
                 </Button>
             </ButtonGroup>
             <AnimatedBox className="w-1/2 border-b-2 border-primary-500 mb-6" style={animatedStyle}/>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {isEditing ? <EditScreen /> : <ProfileScreen />}
+                {isEditing ? <EditScreen /> : <ProfileScreen user={user}/>}
             </ScrollView>
         </Box>
     );

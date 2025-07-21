@@ -158,11 +158,11 @@ import ImageCarousel from "./_components/imageCarousel";
 import { View } from "react-native";
 import ProfileImage from "./_components/profileImage";
 import { Divider } from "@/components/ui/divider";
+import { User } from "@/types";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
-export function ProfileScreen() {
-    const {data: user} = useFullUser();
+export function ProfileScreen({user} : {user: User}) {
     
     if (!user) return <Spinner/>
 
@@ -184,7 +184,7 @@ export function ProfileScreen() {
                     </Button>
                 </HStack>
                 
-                <ImageCarousel user={user} shouldLoad />
+                <ImageCarousel user={user} />
 
                 {user.intro && (
                     <View className="bg-background-50 rounded-lg p-5">
@@ -294,7 +294,6 @@ export function ProfileScreen() {
     );
 };
 
-// ... (keep your existing ProfileInfoItem and OccupationInfoItem components)
 
 
 export const ProfileInfoItem = ({tKey, value}: {tKey: string, value: string}) => {

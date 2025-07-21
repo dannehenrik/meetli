@@ -1,9 +1,7 @@
 import { Spinner } from "@/components/ui/spinner";
-import { useFullUser } from "@/hooks/user/useFullUser";
 import { User } from "@/types";
 import { Image } from "expo-image";
 import { useEffect, useRef, useState } from "react";
-
 import { Dimensions, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, {
@@ -15,21 +13,19 @@ const screenWidth = Dimensions.get("window").width;
 
 export default function ImageCarousel({user, shouldLoad }: {user: User, shouldLoad?: boolean }) {
   const [picturesReady, setPicturesReady] = useState(false);
+  
   useEffect(() => {
     if (shouldLoad) {
-        const timeout = setTimeout(() => {
-            setPicturesReady(true);
-        }, 500); // simulate a delay for loading or animation
-        
-
-        return () => clearTimeout(timeout);
+      const timeout = setTimeout(() => {
+        setPicturesReady(true);
+      }, 500); // simulate a delay for loading or animation
+      return () => clearTimeout(timeout);
     }
   }, [shouldLoad]);
 
-
   const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
-
+  
   const onPressPagination = (index: number) => {
     ref.current?.scrollTo({
       count: index - progress.value,
@@ -39,15 +35,22 @@ export default function ImageCarousel({user, shouldLoad }: {user: User, shouldLo
 
   const horizontalPadding = 16;
   const carouselWidth = screenWidth - horizontalPadding * 2;
-
   const data = user?.images.slice(0, 3) ?? [];
 
   if (!user || (shouldLoad && !picturesReady)) return <Spinner />;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ 
+      flex: 1, 
+      alignItems: 'center', // Center the carousel container
+      paddingHorizontal: horizontalPadding // Apply padding to the parent
+    }}>
       {/* Carousel with overlayed pagination */}
-      <View style={{ width: carouselWidth, height: carouselWidth, position: "relative" }}>
+      <View style={{ 
+        width: carouselWidth, 
+        height: carouselWidth, 
+        position: "relative" 
+      }}>
         <Carousel
           ref={ref}
           width={carouselWidth}
@@ -69,21 +72,20 @@ export default function ImageCarousel({user, shouldLoad }: {user: User, shouldLo
             />
           )}
         />
-
         {/* Overlayed pagination at bottom center */}
         <View
-        style={{
+          style={{
             position: "absolute",
             bottom: 12,
-            left: 0,
-            right: 0,
+            left: "50%", // Center horizontally
+            transform: [{ translateX: -50 }], // Adjust for true centering
             alignItems: "center",
             justifyContent: "center",
             paddingVertical: 4,
+            paddingHorizontal: 12,
             backgroundColor: "rgba(0, 0, 0, 0.2)",
             borderRadius: 12,
-            marginHorizontal: 150,
-        }}
+          }}
         >
           <Pagination.Basic
             progress={progress}

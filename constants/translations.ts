@@ -31,6 +31,10 @@ const englishLanguage = {
             unselect: "You will need to unselect one before selecting a new."
         }
     },
+    editProfilePage: {
+        edit: "Edit",
+        preview: "Preview",
+    },
     onboarding: {
         or: "or",
         changeInformationLaterInfo: "You can change these details after onboarding as well!",
