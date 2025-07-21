@@ -26,8 +26,8 @@ export const PromptCard = ({user, order}: {user: User, order: number}) => {
 
 
 function getActivePromptByOrder(user: User, order: number) {
-    const activePrompts = user.prompts.filter(prompt => prompt.active);
-    return activePrompts[order - 1] ?? null;
+    const activePrompts = user.prompts?.filter(prompt => prompt.active);
+    return activePrompts?.[order - 1] ?? null;
 }
 
 
@@ -59,6 +59,6 @@ export const FavoriteCard = ({user, order}: {user: User, order: number}) => {
 };
 
 function getActiveFavoriteByOrder(user: User, order: number) {
-    const activeFavorites = user.favorites.filter(favorite => favorite.active);
-    return activeFavorites[order - 1] ?? null;
+    const activeFavorites = user.favorites?.filter(favorite => favorite.active);
+    return activeFavorites?.[order - 1] ?? null;
 }

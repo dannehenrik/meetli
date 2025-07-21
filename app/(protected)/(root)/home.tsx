@@ -97,7 +97,7 @@ function ExploreLayout({ user }: { user: User }) {
 
     return (
     <>
-        <SwipeScreen user={user} setSwipeFunctions={handleSetSwipeFunctions} />
+        <SwipeScreen setSwipeFunctions={handleSetSwipeFunctions} />
     </>
     );
 }
