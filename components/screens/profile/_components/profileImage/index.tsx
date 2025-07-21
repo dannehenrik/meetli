@@ -20,22 +20,25 @@ export default function ProfileImage({user, order} : {user: User, order: number}
     
     if (!image) return null
 
-    if (!pictureReady) return <Spinner/>
-
-
     return (
         <Box className="w-full rounded-lg aspect-square overflow-hidden">
-            <Image
-            alt="profile-image-4"
-            contentFit="cover"
-            cachePolicy="memory"
-            source={image.url}
-                style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: 20,
-            }}
-            />
+            {pictureReady ? (
+                <Image
+                alt="profile-image-4"
+                contentFit="cover"
+                cachePolicy="memory"
+                source={image.url}
+                    style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 20,
+                }}
+                />
+            ) : (
+                <Box className="absolute inset-0 items-center justify-center rounded-lg">
+                    <Spinner />
+                </Box>
+            )}
         </Box>
     )
 }
