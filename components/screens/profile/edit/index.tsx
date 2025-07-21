@@ -21,11 +21,7 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 
 export function EditScreen() {
-    
     const {data: user} = useFullUser();
-    useEffect(() => {
-        console.log("User: ", user?.email);
-    }, [user])
 
     const [picturesReady, setPicturesReady] = useState(false);
 

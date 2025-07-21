@@ -95,11 +95,11 @@ function ExploreLayout({ user }: { user: User }) {
         []
     );
 
-  return (
+    return (
     <>
-      <SwipeScreen user={user} setSwipeFunctions={handleSetSwipeFunctions} />
+        <SwipeScreen user={user} setSwipeFunctions={handleSetSwipeFunctions} />
     </>
-  );
+    );
 }
 
 export default function Index() {

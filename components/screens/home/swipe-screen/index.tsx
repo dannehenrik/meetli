@@ -189,6 +189,7 @@ function ChooseButtonLayout({
 }
 
 export default function SwipeScreen({user, setSwipeFunctions}: {user: User, setSwipeFunctions?: SwipeCardProps["setSwipeFunctions"]}) {
+    
     const users = [user, user, user];
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isEndReached, setIsEndReached] = useState(false);

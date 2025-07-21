@@ -47,7 +47,12 @@ export default function Email() {
         },
         onSuccess: () => {
             showSuccessToast(i18n.t("messages.success.emailSent"))
-            router.push("/sign-in/onboarding/otp");
+            // router.push("/sign-in/onboarding/otp");
+            router.push({
+                pathname: "/sign-in/onboarding/otp",
+                params: { email: email },
+            });
+
         }
     })
 

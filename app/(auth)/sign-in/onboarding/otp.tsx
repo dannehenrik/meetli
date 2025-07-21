@@ -7,7 +7,7 @@ import { useAwesomeToast } from "@/hooks/toasts";
 import { fetchUserFromId } from "@/server/auth/fetchUserFromId";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePathname, useRouter } from "expo-router";
+import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import Animated, {
     FadeInDown,
@@ -16,6 +16,8 @@ import Animated, {
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 
 export default function Otp() {
+    const { email } = useLocalSearchParams<{email: string}>();
+
     const { showErrorToast } = useAwesomeToast();
     const queryClient = useQueryClient();
     const [otpValue, setOtpValue] = useState("");
@@ -27,7 +29,7 @@ export default function Otp() {
 
 
     const mutation = useMutation({
-        mutationFn: async () => handleOtpVerification("dannehenrik2@gmail.com", otpValue),
+        mutationFn: async () => handleOtpVerification(email, otpValue),
         onError: (error) => { 
             console.error("OTP not correct: ", error.message)
             showErrorToast(i18n.t("messages.error.otpError"));
@@ -81,6 +83,7 @@ export default function Otp() {
 }
 
 async function handleOtpVerification(email: string, otp: string) {
+    console.log("Emaaail: ", email);
     const { data, error} = await supabase
     .auth
     .verifyOtp({
