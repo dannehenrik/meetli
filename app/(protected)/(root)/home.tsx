@@ -109,7 +109,7 @@ export default function Index() {
     <>
         <Header />
         <Box className="pt-2 pb-4 flex-col flex-1">
-            <FilterLayout />
+            {/* <FilterLayout /> */}
             <ExploreLayout user={user} />
         </Box>
     </>

@@ -40,6 +40,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { i18n } from "@/app/_layout";
 import { handleSwipeUpload } from "./handleSwipeUpload";
+import { triggerHaptic } from "@/utils/haptics";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -417,6 +418,7 @@ export default function SwipeScreen({ setSwipeFunctions }: { setSwipeFunctions?:
             }, 100);
         },
         onSuccess: () => {
+            
             // Only advance on successful upload
             setTimeout(() => {
                 advanceToNextCard()
@@ -428,6 +430,7 @@ export default function SwipeScreen({ setSwipeFunctions }: { setSwipeFunctions?:
         if (swipeMutation.isPending || !currentUser?.id) return;
         
         showActionFeedback('pass');
+        triggerHaptic("buttonImportant")
         currentCardRef.current?.triggerDislike();
         swipeMutation.mutate({ userId: currentUser.id, type: "pass" });
     }, [currentUser?.id, swipeMutation.isPending, swipeMutation.mutate, showActionFeedback]);
@@ -436,6 +439,7 @@ export default function SwipeScreen({ setSwipeFunctions }: { setSwipeFunctions?:
         if (swipeMutation.isPending || !currentUser?.id) return;
         
         showActionFeedback('like');
+        triggerHaptic("success")
         currentCardRef.current?.triggerLike();
         swipeMutation.mutate({ userId: currentUser.id, type: "like" });
     }, [currentUser?.id, swipeMutation.isPending, swipeMutation.mutate, showActionFeedback]);
