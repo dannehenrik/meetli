@@ -302,7 +302,7 @@ export const ProfileInfoItem = ({tKey, value}: {tKey: string, value: string}) =>
     return (
         <View className="py-2">
             <Text className="text-typography-400 font-medium mb-1">
-                {i18n.t(`onboarding.moreAboutYou.${tKey}.title`)}
+                {i18n.t(`profilePreviewTitles.${tKey}`)}
             </Text>
             <Text 
                 className="text-typography-950 font-medium" 

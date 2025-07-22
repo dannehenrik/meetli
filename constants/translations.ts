@@ -580,7 +580,19 @@ const englishLanguage = {
             career: "Career",
             aboutMe: "About me"
         }
+    },
 
+    profilePreviewTitles: {
+        training: "💪 Training",
+        foodChoice: "🍽️ Eating Habits",
+        smoking: "🚬 Smoking",
+        drinking: "🍷 Drinking",
+        religion: "🙏 Religion",
+        politicalView: "🗳️ Politics",
+        children: "👶 Kids",
+        pets: "🐾 Pets",
+        occupation: "💼 Occupation",
+        education: "🎓 Education"
     },
     interests: {
         groups: {
