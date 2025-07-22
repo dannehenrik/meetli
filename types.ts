@@ -1,5 +1,7 @@
 import { InterestType } from "./constants/interests"
 
+export type SwipeType = "like" | "pass"
+
 export interface CoreUser {
     id: string,
     onboarding_completed: boolean,
