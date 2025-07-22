@@ -44,6 +44,7 @@ import { Input, InputField } from "@/components/ui/input";
 import { HStack } from "@/components/ui/hstack";
 import { Badge, BadgeText } from "@/components/ui/badge";
 const AnimatedHeader = Animated.createAnimatedComponent(Heading)
+const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedRadioLabel = Animated.createAnimatedComponent(RadioLabel)
 const AnimatedRadioIndicator = Animated.createAnimatedComponent(RadioIndicator)
 const AnimatedRadioGroup = Animated.createAnimatedComponent(RadioGroup)
@@ -168,33 +169,26 @@ function EditSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (value: boo
         
             <BottomSheetContent className="border-primary-0 bg-background-0 px-5 flex-1 h-full" >
                 <FormControl className="w-full gap-6">
-                    <VStack className="gap-3">
-                        <AnimatedHeader 
-                        className="font-roboto font-semibold text-2xl"
-                        entering={FadeInDown.delay(100).duration(600).springify().delay(100)} 
-                        >
-                            {i18n.t("onboarding.moreAboutYou.occupation.title")}
-                        </AnimatedHeader>
-                        <AnimatedText 
-                        entering={FadeInDown.delay(400).duration(500).springify()} 
-                        className="font-normal font-roboto text-typography-400"
-                        >
-                        {i18n.t("onboarding.moreAboutYou.occupation.description")}
-                        </AnimatedText>
-                    </VStack>
+                    <AnimatedBox entering={FadeInDown.delay(100).duration(600).springify().delay(100)} >
+                        <VStack className="gap-3">
+                            <Heading className="font-roboto font-semibold text-2xl">
+                                {i18n.t("onboarding.moreAboutYou.occupation.title")}
+                            </Heading>
+                            <Text className="font-normal font-roboto text-typography-400">
+                                {i18n.t("onboarding.moreAboutYou.occupation.description")}
+                            </Text>
+                        </VStack>
 
 
-                    <AnimatedHstack 
-                    className="w-full px-4 bg-background-50 rounded-md items-center"
-                    entering={FadeInUp.delay(300).duration(600).springify()}
-                    >
-                        <BottomSheetTextInput
-                            placeholder={i18n.t("onboarding.moreAboutYou.occupation.placeholder")}
-                            value={jobTitle}
-                            onChangeText={setJobTitle}
-                            className="flex-1 text-md py-4 text-typography-900 placeholder-text-typography-400 bg-transparent"
-                        />
-                    </AnimatedHstack>
+                        <HStack className="w-full px-4 bg-background-50 rounded-md items-center">
+                            <BottomSheetTextInput
+                                placeholder={i18n.t("onboarding.moreAboutYou.occupation.placeholder")}
+                                value={jobTitle}
+                                onChangeText={setJobTitle}
+                                className="flex-1 text-md py-4 text-typography-900 placeholder-text-typography-400 bg-transparent"
+                            />
+                        </HStack>
+                    </AnimatedBox>
 
 
 

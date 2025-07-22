@@ -241,7 +241,7 @@ export default function InterestsEdit( {selectedInterests, setSelectedInterests}
     return (
     <>
     
-        <VStack space="sm">
+        <VStack space="sm" className="pb-3">
 
             <Box className="gap-3">
                 <TouchableWithoutFeedback onPress={handleKeyboardDismiss}>

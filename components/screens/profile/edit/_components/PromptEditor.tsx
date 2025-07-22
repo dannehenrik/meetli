@@ -353,6 +353,21 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
         return !!prompt?.active;
     }
 
+
+    const [isReady, setIsReady] = useState(false);
+    
+    useEffect(() => {
+        if (!isOpen) return
+        const timeout = setTimeout(() => {
+            setIsReady(true);
+        }, 300);
+
+        return () => {
+            setIsReady(false);
+            clearTimeout(timeout);
+        }
+    }, [isOpen]);
+
     if (!user) return null
 
     return (
@@ -393,7 +408,8 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
         >
         
             <BottomSheetContent className="border-primary-0 bg-background-0 px-5 flex-1 h-full" >
-                <Box className="flex-1 bg-background-0 gap-4 justify-start items-center">
+                {isReady && (
+                <AnimatedBox entering={FadeInDown.duration(400)} className="flex-1 bg-background-0 gap-4 justify-start items-center">
                     <Box className="flex-1 justify-start items-start px-5 w-[100%]">
                         
                         <VStack className="gap-[18px] w-full">
@@ -438,7 +454,8 @@ function EditPromptsSheet({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (val
                                 
                         </VStack>
                     </Box>
-                </Box>
+                </AnimatedBox>
+                )}
             </BottomSheetContent>
         </BottomSheet>
     );
