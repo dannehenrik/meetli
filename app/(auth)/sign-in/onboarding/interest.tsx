@@ -137,7 +137,7 @@ export default function interest() {
                                 </Checkbox>
 
                                 <Checkbox
-                                value="non-binary"  
+                                value="nonBinary"  
                                 size="md"
                                 className="bg-background-50 py-3 px-4 rounded-lg justify-between"
                                 >

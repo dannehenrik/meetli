@@ -207,7 +207,7 @@ export function InterestFilter() {
                 </Checkbox>
 
                 <Checkbox
-                value="non-binary"  
+                value="nonBinary"  
                 size="md"
                 className="bg-background-50 border border-background-200 py-3 px-4 rounded-lg justify-between"
                 >
