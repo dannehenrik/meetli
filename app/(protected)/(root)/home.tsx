@@ -9,10 +9,11 @@ import { ChevronDownIcon, Icon } from "@/components/ui/icon";
 import { ScrollView } from "@/components/ui/scroll-view";
 import Animated, { FadeInRight } from "react-native-reanimated";
 import SwipeScreen from "@/components/screens/home/swipe-screen";
-import { FilterBottomSheet } from "@/components/screens/home/filter";
 import { useFullUser } from "@/hooks/user/useFullUser";
 import { Spinner } from "@/components/ui/spinner";
 import { User } from "@/types";
+import { FilterBottomSheet } from "@/components/shared/filter";
+import { triggerHaptic } from "@/utils/haptics";
 // import SwipeScreen from "@/components/screens/home/swipe-screen";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -41,24 +42,25 @@ function FilterLayout() {
             <Pressable
                 className="rounded-md flex items-center justify-center mr-2 p-4"
                 onPress={() => {
-                setDefaultOpen(undefined);
-                setIsOpen(true);
+                    triggerHaptic('button')
+                    setDefaultOpen(undefined);
+                    setIsOpen(true);
                 }}
             >
                 <Icon as={FilterIcon} className="w-4 h-4" />
             </Pressable>
-            {/* <FilterBottomSheet
+            <FilterBottomSheet
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 {...defaultOpenProp}
-            /> */}
+            />
             <ScrollView
                 horizontal
                 bounces={false}
                 showsHorizontalScrollIndicator={false}
             >
                 <Box className="flex flex-row items-center">
-                {["Age", "Distance", "Height", "Looking For"].map((item) => (
+                {["Age", "Distance", "Looking For"].map((item) => (
                     <Button
                     className="px-3 py-2 rounded-3xl mr-2 bg-background-50 data-[active=true]:bg-background-100"
                     size="sm"
@@ -109,7 +111,7 @@ export default function Index() {
     <>
         <Header />
         <Box className="pt-2 pb-4 flex-col flex-1">
-            {/* <FilterLayout /> */}
+            <FilterLayout />
             <ExploreLayout user={user} />
         </Box>
     </>

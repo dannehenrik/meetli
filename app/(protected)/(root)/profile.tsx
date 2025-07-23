@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { router, Router } from "expo-router";
-import { LogoIcon, BoltIcon, HelpCenterIcon } from "@/components/shared/icons";
+import { LogoIcon, BoltIcon, HelpCenterIcon, FilterIcon } from "@/components/shared/icons";
 import { Headset,  } from "lucide-react-native";
 import { Heading } from "@/components/ui/heading";
 import { Box } from "@/components/ui/box";
@@ -24,6 +24,7 @@ import { useExtendedUser } from "@/hooks/user/useExtendedUser";
 import { useFullUser } from "@/hooks/user/useFullUser";
 import { User } from "@/types";
 import { triggerHaptic } from "@/utils/haptics";
+import { FilterBottomSheet } from "@/components/shared/filter";
 
 function Header() {
     return (
@@ -37,9 +38,14 @@ function Header() {
 }
 
 function ProfileHeader({user} : {user: User}) {
-    
+    const [isOpen, setIsOpen] = useState(false);
+    const [defaultOpen, setDefaultOpen] = useState<string | undefined>(undefined);
+    const defaultOpenProp = defaultOpen && {
+        defaultOpen: [defaultOpen?.toLocaleLowerCase().replace(" ", "-")],
+    };
 
     return (
+    <>
         <Box className="items-center flex-row justify-between">
             <Heading size="2xl" className="font-roboto text-[32px]">
                 {`${user.first_name}`}, {calculateAge(user.dob)}
@@ -49,18 +55,25 @@ function ProfileHeader({user} : {user: User}) {
                 size="sm"
                 onPress={() => {
                     triggerHaptic("button")
-                    router.push("/edit-profile");
+                    setDefaultOpen(undefined);
+                    setIsOpen(true);
                 }}
             >
                 <ButtonText className="text-typography-950 font-roboto data-[active=true]:text-typography-900">
-                Edit Profile
+                Filter
                 </ButtonText>
                 <ButtonIcon
-                as={EditIcon}
+                as={FilterIcon}
                 className="text-typography-950 font-roboto data-[active=true]:text-typography-900"
                 />
             </Button>
         </Box>
+        <FilterBottomSheet
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            {...defaultOpenProp}
+        />
+    </>
     );
 }
 
@@ -115,12 +128,17 @@ function ProfileProgress({user} : {user: User}) {
                 </Box>
             </Box>
             <Button
-                size="sm"
-                className="bg-background-950 data-[active=true]:bg-background-800 self-end"
+            size="sm"
+            className="bg-background-950 data-[active=true]:bg-background-800 self-end"
+            onPress={() => router.push("/edit-profile")}
             >
                 <ButtonText className="text-typography-0 font-roboto data-[active=true]:text-typography-50">
-                Add More Details
+                Edit Profile
                 </ButtonText>
+                <ButtonIcon
+                as={EditIcon}
+                className="text-typography-0 font-roboto data-[active=true]:text-typography-900"
+                />
             </Button>
         </Box>
     );
