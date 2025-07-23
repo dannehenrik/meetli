@@ -60,7 +60,7 @@ function FilterLayout() {
                 showsHorizontalScrollIndicator={false}
             >
                 <Box className="flex flex-row items-center">
-                {["Age", "Distance", "Looking For"].map((item) => (
+                {["Age", "Distance", "Gender", "Looking For"].map((item) => (
                     <Button
                     className="px-3 py-2 rounded-3xl mr-2 bg-background-50 data-[active=true]:bg-background-100"
                     size="sm"

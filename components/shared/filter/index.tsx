@@ -18,8 +18,9 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { ChevronDownIcon, ChevronUpIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { ScrollView } from "react-native-gesture-handler";
-import { accordionItems } from "./accordionItems";
+import { filterItems } from "./filterItems";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useFullUser } from "@/hooks/user/useFullUser";
 
 
 
@@ -34,7 +35,6 @@ export const FilterBottomSheet = ({
   defaultOpen?: string[];
 }) => {
     
-
     return (
         <BottomSheet
         isOpen={isOpen}
@@ -66,7 +66,7 @@ export const FilterBottomSheet = ({
               <Text className="text-typography-950 font-semibold text-lg mb-4">
                 Filter
               </Text>
-              <BottomSheetScrollView showsVerticalScrollIndicator={false} className="flex-1">
+              <BottomSheetScrollView showsVerticalScrollIndicator={false} className="flex-1" contentContainerStyle={{paddingBottom: 40}}>
                 <Accordion
                   size="md"
                   type="multiple"
@@ -74,7 +74,7 @@ export const FilterBottomSheet = ({
                   className="bg-transparent gap-3"
                   defaultValue={defaultOpen}
                 >
-                  {accordionItems.map((item) => {
+                  {filterItems.map((item) => {
                     const FormComponent = item.content;
                     return (
                       <AccordionItem
@@ -98,7 +98,7 @@ export const FilterBottomSheet = ({
                           </AccordionTrigger>
                         </AccordionHeader>
                         <AccordionContent>
-                          <FormComponent />
+                          <FormComponent/>
                         </AccordionContent>
                       </AccordionItem>
                     );

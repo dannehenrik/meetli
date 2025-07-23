@@ -25,7 +25,5 @@ export async function fetchFullUser() : Promise<User>{
 
     if (error || !data) { throw new Error("Something went wrong when fetching the user: " + error?.message) }
 
-    
-
     return data
 }
