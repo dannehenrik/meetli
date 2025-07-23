@@ -85,7 +85,7 @@ function FilterLayout() {
     );
 }
 
-function ExploreLayout({ user }: { user: User }) {
+function ExploreLayout() {
     const [swipeLeft, setSwipeLeft] = useState<(() => void) | undefined>();
     const [swipeRight, setSwipeRight] = useState<(() => void) | undefined>();
 
@@ -105,14 +105,13 @@ function ExploreLayout({ user }: { user: User }) {
 }
 
 export default function Index() {
-    const {data: user} = useFullUser();
-    if (!user) return <Spinner/>
+
     return (
     <>
         <Header />
         <Box className="pt-2 pb-4 flex-col flex-1">
             <FilterLayout />
-            <ExploreLayout user={user} />
+            <ExploreLayout />
         </Box>
     </>
   );

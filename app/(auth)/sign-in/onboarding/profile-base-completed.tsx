@@ -8,6 +8,8 @@ import { VStack } from "@/components/ui/vstack";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { useCoreUser } from "@/hooks/user/useCoreUser";
 import { useExtendedUser } from "@/hooks/user/useExtendedUser";
+import { CoreUser } from "@/types";
+import { calculateAge } from "@/utils/calculateAge";
 import { supabase } from "@/utils/supabase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router, usePathname } from "expo-router";
@@ -26,7 +28,7 @@ export default function ProfileBaseComplete() {
     const {data: user} = useCoreUser() //
 
     const mutation = useMutation({
-        mutationFn: async () => setOnboardingCompleted(user?.id ?? ""),
+        mutationFn: async () => setOnboardingCompleted(user),
         onError: (error) => {
             console.error(error.message)
             showErrorToast(i18n.t("messages.error.somethingWentWrong"));
@@ -88,8 +90,22 @@ export default function ProfileBaseComplete() {
     );
 }
 
+// Updates or add the user preferences (age and distance) and sets the onboarding as completed
+async function setOnboardingCompleted(user: CoreUser | undefined) {
+    if (!user) return 
 
-async function setOnboardingCompleted(userId: string) {
-    const {error} = await supabase.from('users').update({onboarding_completed: true}).eq('id', userId)
-    if (error) throw new Error("Something went wrong when setting the onboarding as complete: " + error.message);
+    const age = calculateAge(user.dob);
+    
+    const minAge = Math.floor((age / 2) + 9); //Based on some formula
+    const maxAge = Math.ceil((age * 2) - 14); //Based on some formula
+    const {error: preferencesError} = await supabase
+        .from('user_preferences')
+        .upsert({min_age: minAge, max_age: maxAge, distance: 50})
+        .eq('user_id', user.id)
+
+    if (preferencesError) throw new Error("Something went wrong when updating the user preferences: " + preferencesError.message);
+
+
+    const {error: onboardingError} = await supabase.from('users').update({onboarding_completed: true}).eq('id', user.id)
+    if (onboardingError) throw new Error("Something went wrong when setting the onboarding as complete: " + onboardingError.message);
 }
