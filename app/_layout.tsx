@@ -26,6 +26,9 @@ import { I18n } from 'i18n-js';
 import { translations } from '@/constants/translations'
 import { fetchUserStatus } from "@/server/auth/fetchUserStatus";
 import { fetchFullUser, useFullUser } from "@/hooks/user/useFullUser";
+import { checkAndFetchCoordinates, checkAndFetchLocation } from "@/utils/getLocation";
+import { supabase } from "@/utils/supabase";
+import { updateUserLocation } from "@/server/updateUserLocation";
 export const i18n = new I18n(translations);
 
 // Set the locale once at the beginning of your app.
@@ -72,7 +75,8 @@ export default function RootLayout() {
                 
 
                 if (userStatus?.onboarding_completed) {
-                    queryClient.setQueryData(['user', 'full'], await fetchFullUser())
+                    await updateUserLocation(userStatus.id)
+                    // queryClient.setQueryData(['user', 'full'], await fetchFullUser())
                 }
 
                 // ✅ Pre-populate user data into TanStack cache
@@ -117,4 +121,5 @@ export default function RootLayout() {
         </QueryClientProvider>
     );
 }
+
 

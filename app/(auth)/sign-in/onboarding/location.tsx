@@ -8,6 +8,7 @@ import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { useAwesomeToast } from "@/hooks/toasts";
 import { useCoreUser } from "@/hooks/user/useCoreUser";
+import { updateUserLocation } from "@/server/updateUserLocation";
 import { LocationType } from "@/types";
 import { getCoordinates } from "@/utils/getLocation";
 import { triggerHaptic } from "@/utils/haptics";
@@ -193,13 +194,4 @@ export default function LocationScreen() {
     );
 }
 
-async function updateUserLocation(userId: string) {
-    const coordinates = await getCoordinates();
-    await updateUser(userId, coordinates)
-}
-
-async function updateUser(userId: string, location: LocationType) {
-    const {error} = await supabase.from('users').update({location: location}).eq('id', userId);
-    if (error) throw new Error("Something went wrong when updating the user: " + error.message)
-}
 
