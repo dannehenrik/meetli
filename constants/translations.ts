@@ -25,6 +25,7 @@ const englishLanguage = {
             emailSent: "Email sent!",
             emailValidationInstructions: "Enter the 6 digit code you just received",
             dataUpdated: "Data updated",
+            filterUpdated: "Filter updated"
         },
         info: {
             onlyThree: "You can only select 3 at a time",

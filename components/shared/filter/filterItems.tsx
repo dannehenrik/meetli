@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Checkbox,
   CheckboxGroup,
@@ -25,61 +25,31 @@ import {
     RadioIndicator,
     RadioLabel,
 } from "@/components/ui/radio";
-import { lookingForOptions } from "@/types";
+import { Gender, LookingFor, lookingForOptions, UserPreferences } from "@/types";
 import { useFullUser } from "@/hooks/user/useFullUser";
+import { FilterContext, useFilterContext } from ".";
 
-
-
-export const filterItems = [
-    {
-        key: "age",
-        title: "Age",
-        content: () => {
-            return (
-                <AgeFilter/>
-            )
-        },
-    },
-    {
-        key: "distance",
-        title: "Distance",
-        content: () => {
-            return (
-                <DistanceFilter/>
-            )
-        },
-    },
-     {
-        key: "gender",
-        title: "Who you want to date?",
-        content: () => {
-            return (<InterestFilter/>)
-        },
-    },
-    {
-        key: "looking-for",
-        title: "Looking for",
-        content: () => {
-            return (<LookingForFilter/>)
-        },
-    },
-];
-
-
-
-export function DistanceFilter() {
-    const [distance, setDistance] = useState<number>(50);
+interface FilterItemProps {
+    preferences: UserPreferences, 
+    setPreferences: (newValue: UserPreferences) => void,
+}
+export function DistanceFilter({preferences, setPreferences} : FilterItemProps) {
     const isImperial = usesImperialUnits();
-    
     const isDark = useColorScheme() === 'dark';
+
+    function setDistance(newValue: number) {
+        setPreferences({...preferences, distance: newValue})
+    }
+
+
             
     return (
         <VStack space="xl" className="pb-1">
             <HStack space="md" className="items-center">
                 <Text className="text-typography-950 bg-background-200 rounded-lg px-5 py-2">
                 {isImperial
-                    ? `${(distance * 0.6).toFixed(1)} mile`
-                    : `${distance} km`}
+                    ? `${(preferences.distance * 0.6).toFixed(1)} mile`
+                    : `${preferences.distance} km`}
                 </Text>
             </HStack>
 
@@ -88,13 +58,13 @@ export function DistanceFilter() {
                     width: "100%",
                 }}
                 minimumValue={20}
-                value={distance}
+                value={preferences.distance}
                 onValueChange={(value) => {
                     triggerHaptic("select")
                     setDistance(value)
                 }}
                 maximumValue={300}
-                step={1}
+                step={5}
                 minimumTrackTintColor="#F472B6"
                 maximumTrackTintColor={isDark ? '#535252' : '#E5E7EB'}
                 thumbTintColor="#EC4899"
@@ -103,33 +73,46 @@ export function DistanceFilter() {
     );
 }
 
-export function AgeFilter() {
-    const [minAge, setMinAge] = useState(18);
-    const [maxAge, setMaxAge] = useState(26);
+export function AgeFilter({preferences, setPreferences} : FilterItemProps) {
     const isDark = useColorScheme() === 'dark';
+
+    function setMaxAge(newValue: number) {
+        if (newValue < preferences.min_age) {
+            setPreferences({...preferences, max_age: newValue, min_age: newValue - 1})
+        } else {
+            setPreferences({...preferences, max_age: newValue})
+        }
+    }
+
+    function setMinAge(newValue: number) {
+        if (newValue > preferences.max_age) {
+            setPreferences({...preferences, min_age: newValue, max_age: newValue + 1})
+        } else {
+            setPreferences({...preferences, min_age: newValue})
+        }
+    }
+
+
 
     return (
         <VStack space="xl" className="pb-1">
             <HStack space="md" className="items-center">
                 <Text className="text-typography-950 rounded-lg bg-background-200 px-5 py-2">
-                {minAge}
+                {preferences.min_age}
                 </Text>
                 <Box className="bg-background-200 w-3.5 h-[1px] rounded-full" />
                 <Text className="text-typography-950 rounded-lg bg-background-200 px-5 py-2">
-                {maxAge}
+                {preferences.max_age}
                 </Text>
             </HStack>
 
             <Text className="text-sm ">Minimum Age</Text>
             <RNSlider
             style={{ width: "100%" }}
-            value={minAge}
+            value={preferences.min_age}
             onValueChange={(val) => {
                 triggerHaptic("select")
-                if (val > maxAge) {
-                    setMaxAge(val + 1)
-                }
-                setMinAge(val); // ✅ Prevent overlap
+                setMinAge(val)
             }}
             minimumValue={18}
             maximumValue={79}
@@ -142,14 +125,10 @@ export function AgeFilter() {
             <Text className="text-sm">Maximum Age</Text>
             <RNSlider
             style={{ width: "100%" }}
-            value={maxAge}
+            value={preferences.max_age}
             onValueChange={(val) => {
                 triggerHaptic("select")
-                if (val < minAge) {
-                    setMinAge(val - 1)
-                }
-                    
-                setMaxAge(val); // ✅ Prevent overlap
+                setMaxAge(val)
             }}
             minimumValue={19}
             maximumValue={80}
@@ -162,21 +141,18 @@ export function AgeFilter() {
     );
 }
 
-export function InterestFilter() {
-    const {data: user} = useFullUser();
-    useEffect(() => {
-        if (user && user.gender_preferences) {
-            setGenders(user.gender_preferences)
-        }
-    }, [user])
-    const [genders, setGenders] = useState<string[]>([]);
+export function InterestFilter({preferences, setPreferences} : FilterItemProps) {
+
+    function setInterest(newValue: Gender[]) {
+        setPreferences({...preferences, interest: newValue})
+    }
     return(
         //  <VStack className="gap-4">
             <CheckboxGroup
-                value={genders}
-                onChange={(keys) => {
+                value={preferences.interest}
+                onChange={(values: Gender[]) => {
                     triggerHaptic("select")
-                    setGenders(keys)
+                    setInterest(values)
                 }}
                 className="gap-3"
             >
@@ -219,22 +195,18 @@ export function InterestFilter() {
                     </CheckboxIndicator>
                 </Checkbox>
             </CheckboxGroup>
-        // </VStack>
     )
 }
 
-function LookingForFilter() {
-    const {data: user} = useFullUser();
-    useEffect(() => {
-        if (user && user.looking_for) {
-            setLookingFor(user.looking_for)
-        }
-    }, [user])
-    const [lookingFor, setLookingFor] = useState("");
+export function LookingForFilter({preferences, setPreferences} : FilterItemProps) {
+
+    function setLookingFor(newValue: LookingFor) {
+        setPreferences({...preferences, looking_for: newValue})
+    }
     return(
         <RadioGroup  
         className="gap-3"
-        value={lookingFor} 
+        value={preferences.looking_for} 
         onChange={(value) => {
             triggerHaptic("select")
             setLookingFor(value)

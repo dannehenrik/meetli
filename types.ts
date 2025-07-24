@@ -224,3 +224,13 @@ export const favorites = [
 ]
 
 
+export interface UserPreferences {
+    id: string,
+    interest: Gender[],
+    looking_for: LookingFor,
+    distance: number,
+    min_age: number,
+    max_age: number,
+}
+
+
