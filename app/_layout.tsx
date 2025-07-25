@@ -29,6 +29,7 @@ import { fetchFullUser, useFullUser } from "@/hooks/user/useFullUser";
 import { checkAndFetchCoordinates, checkAndFetchLocation } from "@/utils/getLocation";
 import { supabase } from "@/utils/supabase";
 import { updateUserLocation } from "@/server/updateUserLocation";
+import { updateUserStreak } from "@/server/updateUserStreak";
 export const i18n = new I18n(translations);
 
 // Set the locale once at the beginning of your app.
@@ -72,15 +73,16 @@ export default function RootLayout() {
 
                 // 🔑 Fetch user manually
                 const userStatus = await fetchUserStatus();
+                 // ✅ Pre-populate user data into TanStack cache
+                queryClient.setQueryData(['user', 'status'], userStatus);
                 
 
                 if (userStatus?.onboarding_completed) {
                     await updateUserLocation(userStatus.id)
+                    const activeStreak = await updateUserStreak();
+                    queryClient.setQueryData(['user', 'activeStreak'], {active_streak: activeStreak, last_active_day: new Date()});
                     // queryClient.setQueryData(['user', 'full'], await fetchFullUser())
                 }
-
-                // ✅ Pre-populate user data into TanStack cache
-                queryClient.setQueryData(['user', 'status'], userStatus);
 
                  // Hide native splash screen
                 await SplashScreenExpo.hideAsync();

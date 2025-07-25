@@ -585,6 +585,5 @@ async function fetchUsers(): Promise<User[]> {
 
     if (!data) return [];
 
-    console.log("Nu hämtades mer user data");
     return data;
 }

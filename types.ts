@@ -17,6 +17,8 @@ export interface CoreUser {
     looking_for: LookingFor,
     dob: Date, //Date of birth
     images: ImageType[],
+    last_active_day: Date,
+    active_streak: number,
 }
 
 
